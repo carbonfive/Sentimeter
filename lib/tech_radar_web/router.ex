@@ -16,6 +16,7 @@ defmodule TechRadarWeb.Router do
   scope "/", TechRadarWeb do
     # Use the default browser stack
     pipe_through(:browser)
+    resources "/trends", TrendController
 
     get("/", PageController, :index)
   end

@@ -1,0 +1,18 @@
+<h2>Show Trend</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @trend.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @trend.description %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: trend_path(@conn, :edit, @trend) %></span>
+<span><%= link "Back", to: trend_path(@conn, :index) %></span>

@@ -1,0 +1,5 @@
+<h2>Edit Trend</h2>
+
+<%= render "form.html", Map.put(assigns, :action, trend_path(@conn, :update, @trend)) %>
+
+<span><%= link "Back", to: trend_path(@conn, :index) %></span>
