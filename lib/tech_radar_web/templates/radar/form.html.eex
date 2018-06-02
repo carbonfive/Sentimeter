@@ -1,0 +1,71 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :intro, class: "control-label" %>
+    <%= textarea f, :intro, class: "form-control" %>
+    <%= error_tag f, :intro %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :name, class: "control-label" %>
+    <%= text_input f, :name, class: "form-control" %>
+    <%= error_tag f, :name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :innermost_level_name, class: "control-label" %>
+    <%= text_input f, :innermost_level_name, class: "form-control" %>
+    <%= error_tag f, :innermost_level_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :level_2_name, class: "control-label" %>
+    <%= text_input f, :level_2_name, class: "form-control" %>
+    <%= error_tag f, :level_2_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :level_3_name, class: "control-label" %>
+    <%= text_input f, :level_3_name, class: "form-control" %>
+    <%= error_tag f, :level_3_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :outermost_level_name, class: "control-label" %>
+    <%= text_input f, :outermost_level_name, class: "form-control" %>
+    <%= error_tag f, :outermost_level_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :category_1_name, class: "control-label" %>
+    <%= text_input f, :category_1_name, class: "form-control" %>
+    <%= error_tag f, :category_1_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :category_2_name, class: "control-label" %>
+    <%= text_input f, :category_2_name, class: "form-control" %>
+    <%= error_tag f, :category_2_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :category_3_name, class: "control-label" %>
+    <%= text_input f, :category_3_name, class: "form-control" %>
+    <%= error_tag f, :category_3_name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :category_4_name, class: "control-label" %>
+    <%= text_input f, :category_4_name, class: "form-control" %>
+    <%= error_tag f, :category_4_name %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

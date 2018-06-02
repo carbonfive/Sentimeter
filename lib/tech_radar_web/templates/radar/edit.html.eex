@@ -1,0 +1,5 @@
+<h2>Edit Radar</h2>
+
+<%= render "form.html", Map.put(assigns, :action, radar_path(@conn, :update, @radar)) %>
+
+<span><%= link "Back", to: radar_path(@conn, :index) %></span>

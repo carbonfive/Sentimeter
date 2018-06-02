@@ -101,4 +101,100 @@ defmodule TechRadar.Radars do
   def change_trend(%Trend{} = trend) do
     Trend.changeset(trend, %{})
   end
+
+  alias TechRadar.Radars.Radar
+
+  @doc """
+  Returns the list of radars.
+
+  ## Examples
+
+      iex> list_radars()
+      [%Radar{}, ...]
+
+  """
+  def list_radars do
+    Repo.all(Radar)
+  end
+
+  @doc """
+  Gets a single radar.
+
+  Raises `Ecto.NoResultsError` if the Radar does not exist.
+
+  ## Examples
+
+      iex> get_radar!(123)
+      %Radar{}
+
+      iex> get_radar!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_radar!(id), do: Repo.get!(Radar, id)
+
+  @doc """
+  Creates a radar.
+
+  ## Examples
+
+      iex> create_radar(%{field: value})
+      {:ok, %Radar{}}
+
+      iex> create_radar(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_radar(attrs \\ %{}) do
+    %Radar{}
+    |> Radar.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a radar.
+
+  ## Examples
+
+      iex> update_radar(radar, %{field: new_value})
+      {:ok, %Radar{}}
+
+      iex> update_radar(radar, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_radar(%Radar{} = radar, attrs) do
+    radar
+    |> Radar.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Radar.
+
+  ## Examples
+
+      iex> delete_radar(radar)
+      {:ok, %Radar{}}
+
+      iex> delete_radar(radar)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_radar(%Radar{} = radar) do
+    Repo.delete(radar)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking radar changes.
+
+  ## Examples
+
+      iex> change_radar(radar)
+      %Ecto.Changeset{source: %Radar{}}
+
+  """
+  def change_radar(%Radar{} = radar) do
+    Radar.changeset(radar, %{})
+  end
 end

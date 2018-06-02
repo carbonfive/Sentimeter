@@ -1,0 +1,44 @@
+<h2>Listing Radars</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Intro</th>
+      <th>Name</th>
+      <th>Innermost level name</th>
+      <th>Level 2 name</th>
+      <th>Level 3 name</th>
+      <th>Outermost level name</th>
+      <th>Category 1 name</th>
+      <th>Category 2 name</th>
+      <th>Category 3 name</th>
+      <th>Category 4 name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for radar <- @radars do %>
+    <tr>
+      <td><%= radar.intro %></td>
+      <td><%= radar.name %></td>
+      <td><%= radar.innermost_level_name %></td>
+      <td><%= radar.level_2_name %></td>
+      <td><%= radar.level_3_name %></td>
+      <td><%= radar.outermost_level_name %></td>
+      <td><%= radar.category_1_name %></td>
+      <td><%= radar.category_2_name %></td>
+      <td><%= radar.category_3_name %></td>
+      <td><%= radar.category_4_name %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: radar_path(@conn, :show, radar), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: radar_path(@conn, :edit, radar), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: radar_path(@conn, :delete, radar), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Radar", to: radar_path(@conn, :new) %></span>
