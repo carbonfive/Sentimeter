@@ -4,13 +4,33 @@ defmodule TechRadarWeb.RadarController do
   alias TechRadar.Radars
   alias TechRadar.Radars.Radar
 
+  @default_innermost_level_name "Adopt"
+  @default_level_2_name "Trial"
+  @default_level_3_name "Assess"
+  @default_outermost_level_name "Hold"
+  @default_category_1_name "Techniques"
+  @default_category_2_name "Tools"
+  @default_category_3_name "Languages & Frameworks"
+  @default_category_4_name "Platforms"
+
   def index(conn, _params) do
     radars = Radars.list_radars()
     render(conn, "index.html", radars: radars)
   end
 
   def new(conn, _params) do
-    changeset = Radars.change_radar(%Radar{})
+    changeset =
+      Radars.change_radar(%Radar{
+        innermost_level_name: @default_innermost_level_name,
+        level_2_name: @default_level_2_name,
+        level_3_name: @default_level_3_name,
+        outermost_level_name: @default_outermost_level_name,
+        category_1_name: @default_category_1_name,
+        category_2_name: @default_category_2_name,
+        category_3_name: @default_category_3_name,
+        category_4_name: @default_category_4_name
+      })
+
     render(conn, "new.html", changeset: changeset)
   end
 
@@ -20,6 +40,7 @@ defmodule TechRadarWeb.RadarController do
         conn
         |> put_flash(:info, "Radar created successfully.")
         |> redirect(to: radar_path(conn, :show, radar))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -44,6 +65,7 @@ defmodule TechRadarWeb.RadarController do
         conn
         |> put_flash(:info, "Radar updated successfully.")
         |> redirect(to: radar_path(conn, :show, radar))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", radar: radar, changeset: changeset)
     end
