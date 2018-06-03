@@ -31,7 +31,7 @@ defmodule TechRadarWeb.RadarController do
         category_4_name: @default_category_4_name
       })
 
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, trends: Radars.list_trends())
   end
 
   def create(conn, %{"radar" => radar_params}) do
@@ -42,7 +42,7 @@ defmodule TechRadarWeb.RadarController do
         |> redirect(to: radar_path(conn, :show, radar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, trends: Radars.list_trends())
     end
   end
 
@@ -54,7 +54,7 @@ defmodule TechRadarWeb.RadarController do
   def edit(conn, %{"id" => id}) do
     radar = Radars.get_radar!(id)
     changeset = Radars.change_radar(radar)
-    render(conn, "edit.html", radar: radar, changeset: changeset)
+    render(conn, "edit.html", radar: radar, changeset: changeset, trends: Radars.list_trends())
   end
 
   def update(conn, %{"id" => id, "radar" => radar_params}) do
@@ -67,7 +67,13 @@ defmodule TechRadarWeb.RadarController do
         |> redirect(to: radar_path(conn, :show, radar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", radar: radar, changeset: changeset)
+        render(
+          conn,
+          "edit.html",
+          radar: radar,
+          changeset: changeset,
+          trends: Radars.list_trends()
+        )
     end
   end
 

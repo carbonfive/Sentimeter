@@ -115,6 +115,7 @@ defmodule TechRadar.Radars do
   """
   def list_radars do
     Repo.all(Radar)
+    |> Repo.preload(:radar_trends)
   end
 
   @doc """
@@ -131,7 +132,10 @@ defmodule TechRadar.Radars do
       ** (Ecto.NoResultsError)
 
   """
-  def get_radar!(id), do: Repo.get!(Radar, id)
+  def get_radar!(id) do
+    Repo.get!(Radar, id)
+    |> Repo.preload(:radar_trends)
+  end
 
   @doc """
   Creates a radar.

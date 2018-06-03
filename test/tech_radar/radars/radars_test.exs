@@ -68,9 +68,45 @@ defmodule TechRadar.RadarsTest do
   describe "radars" do
     alias TechRadar.Radars.Radar
 
-    @valid_attrs %{category_1_name: "some category_1_name", category_2_name: "some category_2_name", category_3_name: "some category_3_name", category_4_name: "some category_4_name", innermost_level_name: "some innermost_level_name", intro: "some intro", level_2_name: "some level_2_name", level_3_name: "some level_3_name", name: "some name", outermost_level_name: "some outermost_level_name"}
-    @update_attrs %{category_1_name: "some updated category_1_name", category_2_name: "some updated category_2_name", category_3_name: "some updated category_3_name", category_4_name: "some updated category_4_name", innermost_level_name: "some updated innermost_level_name", intro: "some updated intro", level_2_name: "some updated level_2_name", level_3_name: "some updated level_3_name", name: "some updated name", outermost_level_name: "some updated outermost_level_name"}
-    @invalid_attrs %{category_1_name: nil, category_2_name: nil, category_3_name: nil, category_4_name: nil, innermost_level_name: nil, intro: nil, level_2_name: nil, level_3_name: nil, name: nil, outermost_level_name: nil}
+    @valid_attrs %{
+      category_1_name: "some category_1_name",
+      category_2_name: "some category_2_name",
+      category_3_name: "some category_3_name",
+      category_4_name: "some category_4_name",
+      innermost_level_name: "some innermost_level_name",
+      intro: "some intro",
+      level_2_name: "some level_2_name",
+      level_3_name: "some level_3_name",
+      name: "some name",
+      outermost_level_name: "some outermost_level_name",
+      radar_trends: []
+    }
+    @update_attrs %{
+      category_1_name: "some updated category_1_name",
+      category_2_name: "some updated category_2_name",
+      category_3_name: "some updated category_3_name",
+      category_4_name: "some updated category_4_name",
+      innermost_level_name: "some updated innermost_level_name",
+      intro: "some updated intro",
+      level_2_name: "some updated level_2_name",
+      level_3_name: "some updated level_3_name",
+      name: "some updated name",
+      outermost_level_name: "some updated outermost_level_name",
+      radar_trends: []
+    }
+    @invalid_attrs %{
+      category_1_name: nil,
+      category_2_name: nil,
+      category_3_name: nil,
+      category_4_name: nil,
+      innermost_level_name: nil,
+      intro: nil,
+      level_2_name: nil,
+      level_3_name: nil,
+      name: nil,
+      outermost_level_name: nil,
+      radar_trends: nil
+    }
 
     def radar_fixture(attrs \\ %{}) do
       {:ok, radar} =

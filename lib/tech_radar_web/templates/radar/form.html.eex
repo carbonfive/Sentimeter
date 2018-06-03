@@ -65,6 +65,27 @@
     <%= error_tag f, :category_4_name %>
   </div>
 
+  <div id="radar-trend-fields">
+    <h3>Radar Trends</h3>
+    <%= inputs_for f, :radar_trends, fn rt -> %>
+      <div class="row form-inline">
+        <div class="form-group col-md-6">
+          <%= label rt, :trend_id, "Trend", class: "control-label" %>
+          <%= select rt, :trend_id, Enum.map(@trends, &{&1.name, &1.id}), class: "form-control" %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= label rt, :category, "Category", class: "control-label" %>
+          <%= select rt, :category, category_options(@changeset), class: "form-control category-select" %>
+        </div>
+        <div class="form-group col-md-2">
+          <%= label rt, :delete, "Delete?", class: "control-label" %>
+          <%= checkbox rt, :delete %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= link_to_radar_trend_fields(@trends) %>
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
