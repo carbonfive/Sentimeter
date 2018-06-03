@@ -60,5 +60,7 @@ config :tech_radar, TechRadarWeb.Endpoint,
 
 # Configure your database
 config :tech_radar, TechRadar.Repo,
-  adapter: Ecto.Adapters.Postgres
-  # ssl: true
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL")
+
+# ssl: true

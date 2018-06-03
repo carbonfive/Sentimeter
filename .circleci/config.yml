@@ -4,9 +4,9 @@ jobs:
     docker:
       - image: circleci/elixir:1.6-node-browsers
       - image: postgres:9.6.2
-        env:
-          - POSTGRES_USER=ubuntu
-    working_directory: ~/razor-phoenix
+        environment:
+          POSTGRES_USER: ubuntu
+    working_directory: ~/tech-radar
     steps:
       - type: checkout
       - run: mix local.rebar --force
