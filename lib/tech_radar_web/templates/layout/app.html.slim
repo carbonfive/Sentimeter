@@ -21,7 +21,9 @@ html lang="en"
               span.icon-bar
           a.navbar-brand href="/" Tech Radar
           .collapse.navbar-collapse
-            ul.nav.navbar-nav.navbar-right
+            ul.nav.navbar-nav
+                li =link "Trends", to: trend_path(@conn, :index)
+                li =link "Radars", to: radar_path(@conn, :index)
               / = if @current_user do
               /   li.dropdown
               /     a.dropdown-toggle href="#" data-toggle="dropdown"
