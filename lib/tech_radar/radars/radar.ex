@@ -15,6 +15,7 @@ defmodule TechRadar.Radars.Radar do
     field(:level_3_name, :string)
     field(:name, :string)
     field(:outermost_level_name, :string)
+    field(:guid, Ecto.UUID, autogenerate: true)
     has_many(:radar_trends, RadarTrend, on_delete: :delete_all)
     has_many(:trends, through: [:radar_trends, :trend])
 

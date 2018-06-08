@@ -1,5 +1,6 @@
 defmodule TechRadar.RadarsTest do
   use TechRadar.DataCase
+  import TechRadar.Factory
 
   alias TechRadar.Radars
 
@@ -127,6 +128,11 @@ defmodule TechRadar.RadarsTest do
       assert Radars.get_radar!(radar.id) == radar
     end
 
+    test "get_radar_by_guid!/1 returns the radar with the given guid" do
+      radar = radar_fixture()
+      assert Radars.get_radar_by_guid!(radar.guid) |> Repo.preload(:radar_trends) == radar
+    end
+
     test "create_radar/1 with valid data creates a radar" do
       assert {:ok, %Radar{} = radar} = Radars.create_radar(@valid_attrs)
       assert radar.category_1_name == "some category_1_name"
@@ -176,6 +182,26 @@ defmodule TechRadar.RadarsTest do
     test "change_radar/1 returns a radar changeset" do
       radar = radar_fixture()
       assert %Ecto.Changeset{} = Radars.change_radar(radar)
+    end
+  end
+
+  describe "radar trends" do
+    test "get_trends_for_guid/1 returns trends for a radar grouped by category" do
+      radar = insert(:radar)
+
+      trends_by_category =
+        [1, 2, 3, 4]
+        |> Enum.map(fn num ->
+          {num,
+           [
+             insert(:radar_trend, category: num, radar: radar),
+             insert(:radar_trend, category: num, radar: radar)
+           ]
+           |> Enum.map(& &1.trend)}
+        end)
+        |> Map.new()
+
+      assert Radars.get_trends_by_radar_guid(radar.guid) == trends_by_category
     end
   end
 end

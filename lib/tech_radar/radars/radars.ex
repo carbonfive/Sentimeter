@@ -138,6 +138,51 @@ defmodule TechRadar.Radars do
   end
 
   @doc """
+  Gets a single radar by GUID.
+
+  Raises `Ecto.NoResultsError` if the Radar does not exist.
+
+  ## Examples
+
+      iex> get_radar_by_guid!("ADBCD-123")
+      %Radar{}
+
+      iex> get_radar_by_guid!("ADDJE-123")
+      ** (Ecto.NoResultsError)
+
+  """
+  @spec get_radar_by_guid!(guid :: Ecto.UUID.type()) :: %Radar{}
+  def get_radar_by_guid!(guid) do
+    Repo.get_by!(Radar, guid: guid)
+  end
+
+  @doc """
+  Gets all trends for a radar with given GUID, grouped by category
+
+  ## Examples
+
+      iex> get_trends_by_radar_guid("ADBCD-123")
+      %{
+        1: [%Trend{}]
+      %}
+
+  """
+  @spec get_trends_by_radar_guid(guid :: Ecto.UUID.type()) :: %{optional(number) => %Trend{}}
+  def get_trends_by_radar_guid(guid) do
+    query =
+      from(
+        trend in Trend,
+        join: radar_trend in assoc(trend, :radar_trends),
+        join: radar in assoc(radar_trend, :radar),
+        where: radar.guid == ^guid,
+        select: [radar_trend.category, trend]
+      )
+
+    Repo.all(query)
+    |> Enum.group_by(fn [category, _] -> category end, fn [_, trend] -> trend end)
+  end
+
+  @doc """
   Creates a radar.
 
   ## Examples

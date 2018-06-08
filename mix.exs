@@ -2,32 +2,43 @@ defmodule TechRadar.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :tech_radar,
-     version: "0.0.1",
-     elixir: "~> 1.6",
-     elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     start_permanent: Mix.env == :prod,
-     aliases: aliases(),
-     deps: deps(),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [
+      app: :tech_radar,
+      version: "0.0.1",
+      elixir: "~> 1.6",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
+      deps: deps(),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {TechRadar.Application, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :gettext,
-                    :phoenix_ecto, :postgrex],
-     extra_applications: [:logger, :runtime_tools]]
+    [
+      mod: {TechRadar.Application, []},
+      applications: [
+        :phoenix,
+        :phoenix_pubsub,
+        :phoenix_html,
+        :cowboy,
+        :gettext,
+        :phoenix_ecto,
+        :postgrex
+      ],
+      extra_applications: [:logger, :runtime_tools]
+    ]
   end
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -44,8 +55,8 @@ defmodule TechRadar.Mixfile do
       {:cowboy, "~> 1.0"},
       {:phoenix_slime, "~> 0.9.0"},
       {:wallaby, "~> 0.19.2", only: :test},
-      {:ex_machina, "~> 2.1", only: :test},
-   ]
+      {:ex_machina, "~> 2.2", only: :test}
+    ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
@@ -55,8 +66,10 @@ defmodule TechRadar.Mixfile do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-     "ecto.reset": ["ecto.drop", "ecto.setup"],
-     "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+    [
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+    ]
   end
 end

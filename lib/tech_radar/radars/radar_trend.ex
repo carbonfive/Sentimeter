@@ -2,13 +2,14 @@ defmodule TechRadar.Radars.RadarTrend do
   use Ecto.Schema
   import Ecto.Changeset
   alias TechRadar.Radars.RadarTrend
+  alias TechRadar.Radars.Radar
+  alias TechRadar.Radars.Trend
 
   schema "radar_trends" do
     field(:category, :integer)
-    field(:radar_id, :id)
-    field(:trend_id, :id)
     field(:delete, :boolean, virtual: true)
-
+    belongs_to(:trend, Trend)
+    belongs_to(:radar, Radar)
     timestamps()
   end
 
