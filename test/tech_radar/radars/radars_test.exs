@@ -197,7 +197,8 @@ defmodule TechRadar.RadarsTest do
              insert(:radar_trend, category: num, radar: radar),
              insert(:radar_trend, category: num, radar: radar)
            ]
-           |> Enum.map(& &1.trend)}
+           |> Enum.map(fn radar_trend -> {radar_trend.guid, radar_trend.trend} end)
+           |> Map.new()}
         end)
         |> Map.new()
 

@@ -175,11 +175,12 @@ defmodule TechRadar.Radars do
         join: radar_trend in assoc(trend, :radar_trends),
         join: radar in assoc(radar_trend, :radar),
         where: radar.guid == ^guid,
-        select: [radar_trend.category, trend]
+        select: [radar_trend.category, {radar_trend.guid, trend}]
       )
 
     Repo.all(query)
-    |> Enum.group_by(fn [category, _] -> category end, fn [_, trend] -> trend end)
+    |> Enum.group_by(fn [category, _] -> category end, fn [_, guid_trend] -> guid_trend end)
+    |> Enum.into(%{}, fn {category, guid_trends} -> {category, guid_trends |> Map.new()} end)
   end
 
   @doc """

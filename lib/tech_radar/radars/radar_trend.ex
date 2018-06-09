@@ -8,6 +8,7 @@ defmodule TechRadar.Radars.RadarTrend do
   schema "radar_trends" do
     field(:category, :integer)
     field(:delete, :boolean, virtual: true)
+    field(:guid, Ecto.UUID, autogenerate: true)
     belongs_to(:trend, Trend)
     belongs_to(:radar, Radar)
     timestamps()
