@@ -18,6 +18,13 @@ defmodule TechRadarWeb.Router do
     pipe_through(:browser)
     resources("/trends", TrendController)
     resources("/radars", RadarController)
+    get("/surveys/:uuid", SurveysController, :show)
+
+    resources(
+      "/survey_answers",
+      SurveyAnswerController,
+      only: [:create, :show, :edit, :update]
+    )
 
     get("/", PageController, :index)
   end

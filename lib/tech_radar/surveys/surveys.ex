@@ -9,19 +9,6 @@ defmodule TechRadar.Surveys do
   alias TechRadar.Surveys.SurveyAnswer
 
   @doc """
-  Returns the list of survey_answers.
-
-  ## Examples
-
-      iex> list_survey_answers()
-      [%SurveyAnswer{}, ...]
-
-  """
-  def list_survey_answers do
-    Repo.all(SurveyAnswer)
-  end
-
-  @doc """
   Gets a single survey_answer.
 
   Raises `Ecto.NoResultsError` if the Survey answer does not exist.

@@ -1,0 +1,13 @@
+<h2>Show Survey answer</h2>
+
+<ul>
+
+  <li>
+    <strong>Radar guid:</strong>
+    <%= @survey_answer.radar_guid %>
+  </li>
+
+
+</ul>
+
+<span><%= link "Edit", to: survey_answer_path(@conn, :edit, @survey_answer) %></span>
