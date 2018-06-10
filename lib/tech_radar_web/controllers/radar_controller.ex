@@ -1,7 +1,6 @@
 defmodule TechRadarWeb.RadarController do
   use TechRadarWeb, :controller
 
-  alias TechRadar.Radars
   alias TechRadar.Radars.Radar
 
   @default_innermost_level_name "Adopt"
@@ -13,14 +12,16 @@ defmodule TechRadarWeb.RadarController do
   @default_category_3_name "Languages & Frameworks"
   @default_category_4_name "Platforms"
 
+  @radars Application.get_env(:tech_radar, :radars)
+
   def index(conn, _params) do
-    radars = Radars.list_radars()
+    radars = @radars.list_radars()
     render(conn, "index.html", radars: radars)
   end
 
   def new(conn, _params) do
     changeset =
-      Radars.change_radar(%Radar{
+      @radars.change_radar(%Radar{
         innermost_level_name: @default_innermost_level_name,
         level_2_name: @default_level_2_name,
         level_3_name: @default_level_3_name,
@@ -31,36 +32,36 @@ defmodule TechRadarWeb.RadarController do
         category_4_name: @default_category_4_name
       })
 
-    render(conn, "new.html", changeset: changeset, trends: Radars.list_trends())
+    render(conn, "new.html", changeset: changeset, trends: @radars.list_trends())
   end
 
   def create(conn, %{"radar" => radar_params}) do
-    case Radars.create_radar(radar_params) do
+    case @radars.create_radar(radar_params) do
       {:ok, radar} ->
         conn
         |> put_flash(:info, "Radar created successfully.")
         |> redirect(to: radar_path(conn, :show, radar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset, trends: Radars.list_trends())
+        render(conn, "new.html", changeset: changeset, trends: @radars.list_trends())
     end
   end
 
   def show(conn, %{"id" => id}) do
-    radar = Radars.get_radar!(id)
+    radar = @radars.get_radar!(id)
     render(conn, "show.html", radar: radar)
   end
 
   def edit(conn, %{"id" => id}) do
-    radar = Radars.get_radar!(id)
-    changeset = Radars.change_radar(radar)
-    render(conn, "edit.html", radar: radar, changeset: changeset, trends: Radars.list_trends())
+    radar = @radars.get_radar!(id)
+    changeset = @radars.change_radar(radar)
+    render(conn, "edit.html", radar: radar, changeset: changeset, trends: @radars.list_trends())
   end
 
   def update(conn, %{"id" => id, "radar" => radar_params}) do
-    radar = Radars.get_radar!(id)
+    radar = @radars.get_radar!(id)
 
-    case Radars.update_radar(radar, radar_params) do
+    case @radars.update_radar(radar, radar_params) do
       {:ok, radar} ->
         conn
         |> put_flash(:info, "Radar updated successfully.")
@@ -72,14 +73,14 @@ defmodule TechRadarWeb.RadarController do
           "edit.html",
           radar: radar,
           changeset: changeset,
-          trends: Radars.list_trends()
+          trends: @radars.list_trends()
         )
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    radar = Radars.get_radar!(id)
-    {:ok, _radar} = Radars.delete_radar(radar)
+    radar = @radars.get_radar!(id)
+    {:ok, _radar} = @radars.delete_radar(radar)
 
     conn
     |> put_flash(:info, "Radar deleted successfully.")

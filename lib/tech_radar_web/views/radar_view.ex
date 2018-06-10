@@ -1,8 +1,10 @@
 defmodule TechRadarWeb.RadarView do
   use TechRadarWeb, :view
-  alias TechRadar.Radars
+
   alias TechRadar.Radars.Radar
   alias TechRadar.Radars.RadarTrend
+
+  @radars Application.get_env(:tech_radar, :radars)
 
   @spec category_options(%Ecto.Changeset{data: %Radar{}}) :: %{required(String.t()) => integer()}
   def category_options(%Ecto.Changeset{data: radar}) do
@@ -15,7 +17,7 @@ defmodule TechRadarWeb.RadarView do
   end
 
   def link_to_radar_trend_fields(trends) do
-    changeset = Radars.change_radar(%Radar{radar_trends: [%RadarTrend{}]})
+    changeset = @radars.change_radar(%Radar{radar_trends: [%RadarTrend{}]})
     form = Phoenix.HTML.FormData.to_form(changeset, [])
     fields = render_to_string(__MODULE__, "radar_trend_fields.html", f: form, trends: trends)
     link("Add Radar Trend", to: "#", "data-template": fields, id: "add-radar-trend")

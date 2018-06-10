@@ -12,8 +12,14 @@ config :tech_radar, TechRadarWeb.Endpoint,
   code_reloader: true,
   check_origin: false,
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
-  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
-                    cd: Path.expand("../assets", __DIR__)]]
+  watchers: [
+    node: [
+      "node_modules/brunch/bin/brunch",
+      "watch",
+      "--stdin",
+      cd: Path.expand("../assets", __DIR__)
+    ]
+  ]
 
 # ## SSL Support
 #
@@ -30,7 +36,6 @@ config :tech_radar, TechRadarWeb.Endpoint,
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on
 # different ports.
-
 
 # Watch static and templates for browser reloading.
 config :tech_radar, TechRadarWeb.Endpoint,
@@ -58,3 +63,5 @@ config :tech_radar, TechRadar.Repo,
   database: "tech_radar_dev",
   hostname: "localhost",
   pool_size: 10
+
+config(:tech_radar, :radars, TechRadar.Radars.RadarsImpl)

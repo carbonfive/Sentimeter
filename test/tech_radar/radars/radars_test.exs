@@ -2,7 +2,7 @@ defmodule TechRadar.RadarsTest do
   use TechRadar.DataCase
   import TechRadar.Factory
 
-  alias TechRadar.Radars
+  alias TechRadar.Radars.RadarsImpl, as: Radars
 
   describe "trends" do
     alias TechRadar.Radars.Trend

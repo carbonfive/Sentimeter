@@ -19,3 +19,5 @@ config :tech_radar, TechRadar.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :tech_radar, :sql_sandbox, true
+
+config(:tech_radar, :radars, TechRadar.Radars.RadarsImpl)

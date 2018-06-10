@@ -1,7 +1,12 @@
-defmodule TechRadar.Radars do
+defmodule TechRadar.Radars.RadarsImpl do
+  @behaviour TechRadar.Radars
+
   @moduledoc """
   The Radars context.
   """
+
+  import Ecto.Query, warn: false
+  alias TechRadar.Repo
 
   alias TechRadar.Radars.Trend
 
@@ -14,7 +19,9 @@ defmodule TechRadar.Radars do
       [%Trend{}, ...]
 
   """
-  @callback list_trends() :: [%Trend{}]
+  def list_trends do
+    Repo.all(Trend)
+  end
 
   @doc """
   Gets a single trend.
@@ -30,7 +37,7 @@ defmodule TechRadar.Radars do
       ** (Ecto.NoResultsError)
 
   """
-  @callback get_trend!(id :: number) :: %Trend{} | no_return
+  def get_trend!(id), do: Repo.get!(Trend, id)
 
   @doc """
   Creates a trend.
@@ -44,8 +51,11 @@ defmodule TechRadar.Radars do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback create_trend() :: {:ok, %Trend{}} | {:error, %Ecto.Changeset{}}
-  @callback create_trend(attrs :: Map.t()) :: {:ok, %Trend{}} | {:error, %Ecto.Changeset{}}
+  def create_trend(attrs \\ %{}) do
+    %Trend{}
+    |> Trend.changeset(attrs)
+    |> Repo.insert()
+  end
 
   @doc """
   Updates a trend.
@@ -59,8 +69,11 @@ defmodule TechRadar.Radars do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback update_trend(trend :: %Trend{}, attrs :: Map.t()) ::
-              {:ok, %Trend{}} | {:error, %Ecto.Changeset{}}
+  def update_trend(%Trend{} = trend, attrs) do
+    trend
+    |> Trend.changeset(attrs)
+    |> Repo.update()
+  end
 
   @doc """
   Deletes a Trend.
@@ -74,7 +87,9 @@ defmodule TechRadar.Radars do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback delete_trend(trend :: %Trend{}) :: {:ok, %Trend{}} | {:error, %Ecto.Changeset{}}
+  def delete_trend(%Trend{} = trend) do
+    Repo.delete(trend)
+  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking trend changes.
@@ -85,7 +100,9 @@ defmodule TechRadar.Radars do
       %Ecto.Changeset{source: %Trend{}}
 
   """
-  @callback change_trend(trend :: %Trend{}) :: %Ecto.Changeset{}
+  def change_trend(%Trend{} = trend) do
+    Trend.changeset(trend, %{})
+  end
 
   alias TechRadar.Radars.Radar
 
@@ -98,7 +115,10 @@ defmodule TechRadar.Radars do
       [%Radar{}, ...]
 
   """
-  @callback list_radars() :: [%Radar{}]
+  def list_radars do
+    Repo.all(Radar)
+    |> Repo.preload(:radar_trends)
+  end
 
   @doc """
   Gets a single radar.
@@ -114,7 +134,10 @@ defmodule TechRadar.Radars do
       ** (Ecto.NoResultsError)
 
   """
-  @callback get_radar!(id :: number) :: %Radar{} | no_return
+  def get_radar!(id) do
+    Repo.get!(Radar, id)
+    |> Repo.preload(:radar_trends)
+  end
 
   @doc """
   Gets a single radar by GUID.
@@ -130,7 +153,9 @@ defmodule TechRadar.Radars do
       ** (Ecto.NoResultsError)
 
   """
-  @callback get_radar_by_guid!(guid :: Ecto.UUID.type()) :: %Radar{} | no_return
+  def get_radar_by_guid!(guid) do
+    Repo.get_by!(Radar, guid: guid)
+  end
 
   @doc """
   Gets all trends for a radar with given GUID, grouped by category
@@ -143,9 +168,20 @@ defmodule TechRadar.Radars do
       %}
 
   """
-  @callback get_trends_by_radar_guid(guid :: Ecto.UUID.type()) :: %{
-              required(number) => %{required(Ecto.UUID) => %Trend{}}
-            }
+  def get_trends_by_radar_guid(guid) do
+    query =
+      from(
+        trend in Trend,
+        join: radar_trend in assoc(trend, :radar_trends),
+        join: radar in assoc(radar_trend, :radar),
+        where: radar.guid == ^guid,
+        select: [radar_trend.category, {radar_trend.guid, trend}]
+      )
+
+    Repo.all(query)
+    |> Enum.group_by(fn [category, _] -> category end, fn [_, guid_trend] -> guid_trend end)
+    |> Enum.into(%{}, fn {category, guid_trends} -> {category, guid_trends |> Map.new()} end)
+  end
 
   @doc """
   Creates a radar.
@@ -159,8 +195,11 @@ defmodule TechRadar.Radars do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback create_radar() :: {:ok, %Radar{}} | {:error, %Ecto.Changeset{}}
-  @callback create_radar(attrs :: Map.t()) :: {:ok, %Radar{}} | {:error, %Ecto.Changeset{}}
+  def create_radar(attrs \\ %{}) do
+    %Radar{}
+    |> Radar.changeset(attrs)
+    |> Repo.insert()
+  end
 
   @doc """
   Updates a radar.
@@ -174,8 +213,11 @@ defmodule TechRadar.Radars do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback update_radar(radar :: %Radar{}, attrs :: Map.t()) ::
-              {:ok, %Radar{}} | {:error, %Ecto.Changeset{}}
+  def update_radar(%Radar{} = radar, attrs) do
+    radar
+    |> Radar.changeset(attrs)
+    |> Repo.update()
+  end
 
   @doc """
   Deletes a Radar.
@@ -189,7 +231,9 @@ defmodule TechRadar.Radars do
       {:error, %Ecto.Changeset{}}
 
   """
-  @callback delete_radar(radar :: %Radar{}) :: {:ok, %Radar{}} | {:error, %Ecto.Changeset{}}
+  def delete_radar(%Radar{} = radar) do
+    Repo.delete(radar)
+  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking radar changes.
@@ -200,5 +244,7 @@ defmodule TechRadar.Radars do
       %Ecto.Changeset{source: %Radar{}}
 
   """
-  @callback change_radar(radar :: %Radar{}) :: %Ecto.Changeset{}
+  def change_radar(%Radar{} = radar) do
+    Radar.changeset(radar, %{})
+  end
 end
