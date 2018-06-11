@@ -1,19 +1,21 @@
 defmodule TechRadarWeb.TrendControllerTest do
   use TechRadarWeb.ConnCase
+  import Mox
+  alias TechRadar.RadarsMock
+  alias TechRadar.Radars.Trend
+  @create_attrs %{}
+  @update_attrs %{}
+  @invalid_attrs %{}
 
-  alias TechRadar.Radars.RadarsImpl, as: Radars
-
-  @create_attrs %{description: "some description", name: "some name"}
-  @update_attrs %{description: "some updated description", name: "some updated name"}
-  @invalid_attrs %{description: nil, name: nil}
-
-  def fixture(:trend) do
-    {:ok, trend} = Radars.create_trend(@create_attrs)
-    trend
+  def changeset(%Trend{} = trend, attrs \\ %{}) do
+    Ecto.Changeset.change(trend, attrs)
   end
+
+  setup :verify_on_exit!
 
   describe "index" do
     test "lists all trends", %{conn: conn} do
+      RadarsMock |> expect(:list_trends, fn -> [] end)
       conn = get(conn, trend_path(conn, :index))
       assert html_response(conn, 200) =~ "Listing Trends"
     end
@@ -21,6 +23,7 @@ defmodule TechRadarWeb.TrendControllerTest do
 
   describe "new trend" do
     test "renders form", %{conn: conn} do
+      RadarsMock |> expect(:change_trend, 1, fn trend -> changeset(trend) end)
       conn = get(conn, trend_path(conn, :new))
       assert html_response(conn, 200) =~ "New Trend"
     end
@@ -28,62 +31,63 @@ defmodule TechRadarWeb.TrendControllerTest do
 
   describe "create trend" do
     test "redirects to show when data is valid", %{conn: conn} do
+      RadarsMock |> expect(:create_trend, fn _ -> {:ok, %Trend{id: 1}} end)
       conn = post(conn, trend_path(conn, :create), trend: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == trend_path(conn, :show, id)
-
-      conn = get(conn, trend_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Trend"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
+      RadarsMock
+      |> expect(:create_trend, fn _ ->
+        {:error, changeset(%Trend{})}
+      end)
+
       conn = post(conn, trend_path(conn, :create), trend: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Trend"
     end
   end
 
   describe "edit trend" do
-    setup [:create_trend]
+    test "renders form for editing chosen trend", %{conn: conn} do
+      RadarsMock
+      |> expect(:change_trend, fn trend -> changeset(trend) end)
+      |> expect(:get_trend!, fn id -> %Trend{id: id} end)
 
-    test "renders form for editing chosen trend", %{conn: conn, trend: trend} do
-      conn = get(conn, trend_path(conn, :edit, trend))
+      conn = get(conn, trend_path(conn, :edit, %Trend{id: 1}))
       assert html_response(conn, 200) =~ "Edit Trend"
     end
   end
 
   describe "update trend" do
-    setup [:create_trend]
+    test "redirects when data is valid", %{conn: conn} do
+      RadarsMock
+      |> expect(:update_trend, fn trend, _params -> {:ok, trend} end)
+      |> expect(:get_trend!, fn id -> %Trend{id: id} end)
 
-    test "redirects when data is valid", %{conn: conn, trend: trend} do
-      conn = put(conn, trend_path(conn, :update, trend), trend: @update_attrs)
-      assert redirected_to(conn) == trend_path(conn, :show, trend)
-
-      conn = get(conn, trend_path(conn, :show, trend))
-      assert html_response(conn, 200) =~ "some updated description"
+      conn = put(conn, trend_path(conn, :update, %Trend{id: 1}), trend: @update_attrs)
+      assert redirected_to(conn) == trend_path(conn, :show, %Trend{id: 1})
     end
 
-    test "renders errors when data is invalid", %{conn: conn, trend: trend} do
-      conn = put(conn, trend_path(conn, :update, trend), trend: @invalid_attrs)
+    test "renders errors when data is invalid", %{conn: conn} do
+      RadarsMock
+      |> expect(:update_trend, fn trend, params -> {:error, changeset(trend, params)} end)
+      |> expect(:get_trend!, fn id -> %Trend{id: id} end)
+
+      conn = put(conn, trend_path(conn, :update, %Trend{id: 1}), trend: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Trend"
     end
   end
 
   describe "delete trend" do
-    setup [:create_trend]
+    test "deletes chosen trend", %{conn: conn} do
+      RadarsMock
+      |> expect(:delete_trend, fn trend -> {:ok, trend} end)
+      |> expect(:get_trend!, fn id -> %Trend{id: id} end)
 
-    test "deletes chosen trend", %{conn: conn, trend: trend} do
-      conn = delete(conn, trend_path(conn, :delete, trend))
+      conn = delete(conn, trend_path(conn, :delete, %Trend{id: 1}))
       assert redirected_to(conn) == trend_path(conn, :index)
-
-      assert_error_sent(404, fn ->
-        get(conn, trend_path(conn, :show, trend))
-      end)
     end
-  end
-
-  defp create_trend(_) do
-    trend = fixture(:trend)
-    {:ok, trend: trend}
   end
 end

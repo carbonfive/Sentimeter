@@ -20,4 +20,4 @@ config :tech_radar, TechRadar.Repo,
 
 config :tech_radar, :sql_sandbox, true
 
-config(:tech_radar, :radars, TechRadar.Radars.RadarsImpl)
+config(:tech_radar, :radars, TechRadar.RadarsMock)

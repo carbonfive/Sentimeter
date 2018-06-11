@@ -55,7 +55,8 @@ defmodule TechRadar.Mixfile do
       {:cowboy, "~> 1.0"},
       {:phoenix_slime, "~> 0.9.0"},
       {:wallaby, "~> 0.19.2", only: :test},
-      {:ex_machina, "~> 2.2", only: :test}
+      {:ex_machina, "~> 2.2", only: :test},
+      {:mox, "~> 0.3", only: :test}
     ]
   end
 
