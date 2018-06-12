@@ -3,8 +3,8 @@ defmodule TechRadar.SurveysTest do
 
   alias TechRadar.Surveys
 
-  describe "survey_answers" do
-    alias TechRadar.Surveys.SurveyAnswer
+  describe "survey_responses" do
+    alias TechRadar.Surveys.SurveyResponse
 
     @valid_attrs %{
       answers: %{"some answers" => 2},
@@ -16,56 +16,61 @@ defmodule TechRadar.SurveysTest do
     }
     @invalid_attrs %{answers: nil, radar_guid: nil}
 
-    def survey_answer_fixture(attrs \\ %{}) do
-      {:ok, survey_answer} =
+    def survey_response_fixture(attrs \\ %{}) do
+      {:ok, survey_response} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Surveys.create_survey_answer()
+        |> Surveys.create_survey_response()
 
-      survey_answer
+      survey_response
     end
 
-    test "get_survey_answer!/1 returns the survey_answer with given id" do
-      survey_answer = survey_answer_fixture()
-      assert Surveys.get_survey_answer!(survey_answer.id) == survey_answer
+    test "get_survey_response!/1 returns the survey_response with given id" do
+      survey_response = survey_response_fixture()
+      assert Surveys.get_survey_response!(survey_response.id) == survey_response
     end
 
-    test "create_survey_answer/1 with valid data creates a survey_answer" do
-      assert {:ok, %SurveyAnswer{} = survey_answer} = Surveys.create_survey_answer(@valid_attrs)
-      assert survey_answer.answers == %{"some answers" => 2}
-      assert survey_answer.radar_guid == "7488a646-e31f-11e4-aace-600308960662"
+    test "create_survey_response/1 with valid data creates a survey_response" do
+      assert {:ok, %SurveyResponse{} = survey_response} =
+               Surveys.create_survey_response(@valid_attrs)
+
+      assert survey_response.answers == %{"some answers" => 2}
+      assert survey_response.radar_guid == "7488a646-e31f-11e4-aace-600308960662"
     end
 
-    test "create_survey_answer/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Surveys.create_survey_answer(@invalid_attrs)
+    test "create_survey_response/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Surveys.create_survey_response(@invalid_attrs)
     end
 
-    test "update_survey_answer/2 with valid data updates the survey_answer" do
-      survey_answer = survey_answer_fixture()
-      assert {:ok, survey_answer} = Surveys.update_survey_answer(survey_answer, @update_attrs)
-      assert %SurveyAnswer{} = survey_answer
-      assert survey_answer.answers == %{"some answers" => 3}
-      assert survey_answer.radar_guid == "7488a646-e31f-11e4-aace-600308960668"
+    test "update_survey_response/2 with valid data updates the survey_response" do
+      survey_response = survey_response_fixture()
+
+      assert {:ok, survey_response} =
+               Surveys.update_survey_response(survey_response, @update_attrs)
+
+      assert %SurveyResponse{} = survey_response
+      assert survey_response.answers == %{"some answers" => 3}
+      assert survey_response.radar_guid == "7488a646-e31f-11e4-aace-600308960668"
     end
 
-    test "update_survey_answer/2 with invalid data returns error changeset" do
-      survey_answer = survey_answer_fixture()
+    test "update_survey_response/2 with invalid data returns error changeset" do
+      survey_response = survey_response_fixture()
 
       assert {:error, %Ecto.Changeset{}} =
-               Surveys.update_survey_answer(survey_answer, @invalid_attrs)
+               Surveys.update_survey_response(survey_response, @invalid_attrs)
 
-      assert survey_answer == Surveys.get_survey_answer!(survey_answer.id)
+      assert survey_response == Surveys.get_survey_response!(survey_response.id)
     end
 
-    test "delete_survey_answer/1 deletes the survey_answer" do
-      survey_answer = survey_answer_fixture()
-      assert {:ok, %SurveyAnswer{}} = Surveys.delete_survey_answer(survey_answer)
-      assert_raise Ecto.NoResultsError, fn -> Surveys.get_survey_answer!(survey_answer.id) end
+    test "delete_survey_response/1 deletes the survey_response" do
+      survey_response = survey_response_fixture()
+      assert {:ok, %SurveyResponse{}} = Surveys.delete_survey_response(survey_response)
+      assert_raise Ecto.NoResultsError, fn -> Surveys.get_survey_response!(survey_response.id) end
     end
 
-    test "change_survey_answer/1 returns a survey_answer changeset" do
-      survey_answer = survey_answer_fixture()
-      assert %Ecto.Changeset{} = Surveys.change_survey_answer(survey_answer)
+    test "change_survey_response/1 returns a survey_response changeset" do
+      survey_response = survey_response_fixture()
+      assert %Ecto.Changeset{} = Surveys.change_survey_response(survey_response)
     end
   end
 end

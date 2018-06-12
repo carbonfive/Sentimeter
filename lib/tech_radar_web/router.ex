@@ -21,8 +21,8 @@ defmodule TechRadarWeb.Router do
     get("/surveys/:uuid", SurveysController, :show)
 
     resources(
-      "/survey_answers",
-      SurveyAnswerController,
+      "/survey_responses",
+      SurveyResponseController,
       only: [:create, :show, :edit, :update]
     )
 

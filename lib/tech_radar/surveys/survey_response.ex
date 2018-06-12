@@ -1,9 +1,9 @@
-defmodule TechRadar.Surveys.SurveyAnswer do
+defmodule TechRadar.Surveys.SurveyResponse do
   use Ecto.Schema
   import Ecto.Changeset
-  alias TechRadar.Surveys.SurveyAnswer
+  alias TechRadar.Surveys.SurveyResponse
 
-  schema "survey_answers" do
+  schema "survey_responses" do
     field(:answers, {:map, :integer})
     field(:radar_guid, Ecto.UUID)
 
@@ -11,8 +11,8 @@ defmodule TechRadar.Surveys.SurveyAnswer do
   end
 
   @doc false
-  def changeset(%SurveyAnswer{} = survey_answer, attrs) do
-    survey_answer
+  def changeset(%SurveyResponse{} = survey_response, attrs) do
+    survey_response
     |> cast(attrs, [:radar_guid, :answers])
     |> validate_required([:radar_guid, :answers])
   end

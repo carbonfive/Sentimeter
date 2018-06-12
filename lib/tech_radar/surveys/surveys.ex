@@ -6,86 +6,86 @@ defmodule TechRadar.Surveys do
   import Ecto.Query, warn: false
   alias TechRadar.Repo
 
-  alias TechRadar.Surveys.SurveyAnswer
+  alias TechRadar.Surveys.SurveyResponse
 
   @doc """
-  Gets a single survey_answer.
+  Gets a single survey_response.
 
-  Raises `Ecto.NoResultsError` if the Survey answer does not exist.
+  Raises `Ecto.NoResultsError` if the Survey response does not exist.
 
   ## Examples
 
-      iex> get_survey_answer!(123)
-      %SurveyAnswer{}
+      iex> get_survey_response!(123)
+      %SurveyResponse{}
 
-      iex> get_survey_answer!(456)
+      iex> get_survey_response!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_survey_answer!(id), do: Repo.get!(SurveyAnswer, id)
+  def get_survey_response!(id), do: Repo.get!(SurveyResponse, id)
 
   @doc """
-  Creates a survey_answer.
+  Creates a survey_response.
 
   ## Examples
 
-      iex> create_survey_answer(%{field: value})
-      {:ok, %SurveyAnswer{}}
+      iex> create_survey_response(%{field: value})
+      {:ok, %SurveyResponse{}}
 
-      iex> create_survey_answer(%{field: bad_value})
+      iex> create_survey_response(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_survey_answer(attrs \\ %{}) do
-    %SurveyAnswer{}
-    |> SurveyAnswer.changeset(attrs)
+  def create_survey_response(attrs \\ %{}) do
+    %SurveyResponse{}
+    |> SurveyResponse.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a survey_answer.
+  Updates a survey_response.
 
   ## Examples
 
-      iex> update_survey_answer(survey_answer, %{field: new_value})
-      {:ok, %SurveyAnswer{}}
+      iex> update_survey_response(survey_response, %{field: new_value})
+      {:ok, %SurveyResponse{}}
 
-      iex> update_survey_answer(survey_answer, %{field: bad_value})
+      iex> update_survey_response(survey_response, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_survey_answer(%SurveyAnswer{} = survey_answer, attrs) do
-    survey_answer
-    |> SurveyAnswer.changeset(attrs)
+  def update_survey_response(%SurveyResponse{} = survey_response, attrs) do
+    survey_response
+    |> SurveyResponse.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a SurveyAnswer.
+  Deletes a SurveyResponse.
 
   ## Examples
 
-      iex> delete_survey_answer(survey_answer)
-      {:ok, %SurveyAnswer{}}
+      iex> delete_survey_response(survey_response)
+      {:ok, %SurveyResponse{}}
 
-      iex> delete_survey_answer(survey_answer)
+      iex> delete_survey_response(survey_response)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_survey_answer(%SurveyAnswer{} = survey_answer) do
-    Repo.delete(survey_answer)
+  def delete_survey_response(%SurveyResponse{} = survey_response) do
+    Repo.delete(survey_response)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking survey_answer changes.
+  Returns an `%Ecto.Changeset{}` for tracking survey_response changes.
 
   ## Examples
 
-      iex> change_survey_answer(survey_answer)
-      %Ecto.Changeset{source: %SurveyAnswer{}}
+      iex> change_survey_response(survey_response)
+      %Ecto.Changeset{source: %SurveyResponse{}}
 
   """
-  def change_survey_answer(%SurveyAnswer{} = survey_answer) do
-    SurveyAnswer.changeset(survey_answer, %{})
+  def change_survey_response(%SurveyResponse{} = survey_response) do
+    SurveyResponse.changeset(survey_response, %{})
   end
 end
