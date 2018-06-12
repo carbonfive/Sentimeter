@@ -4,14 +4,12 @@ defmodule TechRadarWeb.SurveyResponseControllerTest do
   alias TechRadar.Surveys
 
   @create_attrs %{
-    answers: %{"some answers" => 2},
     radar_guid: "7488a646-e31f-11e4-aace-600308960662"
   }
   @update_attrs %{
-    answers: %{"some answers" => 3},
     radar_guid: "7488a646-e31f-11e4-aace-600308960668"
   }
-  @invalid_attrs %{answers: nil, radar_guid: nil}
+  @invalid_attrs %{radar_guid: nil}
 
   def fixture(:survey_response) do
     {:ok, survey_response} = Surveys.create_survey_response(@create_attrs)

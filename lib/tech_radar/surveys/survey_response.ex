@@ -4,7 +4,6 @@ defmodule TechRadar.Surveys.SurveyResponse do
   alias TechRadar.Surveys.SurveyResponse
 
   schema "survey_responses" do
-    field(:answers, {:map, :integer})
     field(:radar_guid, Ecto.UUID)
 
     timestamps()
@@ -13,7 +12,7 @@ defmodule TechRadar.Surveys.SurveyResponse do
   @doc false
   def changeset(%SurveyResponse{} = survey_response, attrs) do
     survey_response
-    |> cast(attrs, [:radar_guid, :answers])
-    |> validate_required([:radar_guid, :answers])
+    |> cast(attrs, [:radar_guid])
+    |> validate_required([:radar_guid])
   end
 end

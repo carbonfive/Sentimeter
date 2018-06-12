@@ -7,14 +7,12 @@ defmodule TechRadar.SurveysTest do
     alias TechRadar.Surveys.SurveyResponse
 
     @valid_attrs %{
-      answers: %{"some answers" => 2},
       radar_guid: "7488a646-e31f-11e4-aace-600308960662"
     }
     @update_attrs %{
-      answers: %{"some answers" => 3},
       radar_guid: "7488a646-e31f-11e4-aace-600308960668"
     }
-    @invalid_attrs %{answers: nil, radar_guid: nil}
+    @invalid_attrs %{radar_guid: nil}
 
     def survey_response_fixture(attrs \\ %{}) do
       {:ok, survey_response} =
@@ -34,7 +32,6 @@ defmodule TechRadar.SurveysTest do
       assert {:ok, %SurveyResponse{} = survey_response} =
                Surveys.create_survey_response(@valid_attrs)
 
-      assert survey_response.answers == %{"some answers" => 2}
       assert survey_response.radar_guid == "7488a646-e31f-11e4-aace-600308960662"
     end
 
@@ -49,7 +46,6 @@ defmodule TechRadar.SurveysTest do
                Surveys.update_survey_response(survey_response, @update_attrs)
 
       assert %SurveyResponse{} = survey_response
-      assert survey_response.answers == %{"some answers" => 3}
       assert survey_response.radar_guid == "7488a646-e31f-11e4-aace-600308960668"
     end
 
