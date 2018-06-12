@@ -1,18 +1,23 @@
 defmodule TechRadar.SurveysTest do
   use TechRadar.DataCase
-
+  import Mox
   alias TechRadar.Surveys
+  alias TechRadar.RadarsMock
 
   describe "survey_responses" do
     alias TechRadar.Surveys.SurveyResponse
-
+    alias TechRadar.Surveys.SurveyAnswer
+    @create_guid "7488a646-e31f-11e4-aace-600308960662"
+    @update_guid "7488a646-e31f-11e4-aace-600308960668"
     @valid_attrs %{
-      radar_guid: "7488a646-e31f-11e4-aace-600308960662"
+      radar_guid: @create_guid,
+      survey_answers: [%{radar_trend_guid: @create_guid, answer: 1}]
     }
     @update_attrs %{
-      radar_guid: "7488a646-e31f-11e4-aace-600308960668"
+      radar_guid: @update_guid,
+      survey_answers: [%{radar_trend_guid: @update_guid, answer: 2}]
     }
-    @invalid_attrs %{radar_guid: nil}
+    @invalid_attrs %{radar_guid: nil, survey_answers: []}
 
     def survey_response_fixture(attrs \\ %{}) do
       {:ok, survey_response} =
@@ -32,7 +37,19 @@ defmodule TechRadar.SurveysTest do
       assert {:ok, %SurveyResponse{} = survey_response} =
                Surveys.create_survey_response(@valid_attrs)
 
-      assert survey_response.radar_guid == "7488a646-e31f-11e4-aace-600308960662"
+      assert survey_response.radar_guid == @create_guid
+
+      survey_answer =
+        Repo.one(
+          from(
+            sa in SurveyAnswer,
+            join: sr in assoc(sa, :survey_response),
+            where: sr.id == ^survey_response.id
+          )
+        )
+
+      assert survey_answer.radar_trend_guid == @create_guid
+      assert survey_answer.answer == 1
     end
 
     test "create_survey_response/1 with invalid data returns error changeset" do
@@ -46,7 +63,19 @@ defmodule TechRadar.SurveysTest do
                Surveys.update_survey_response(survey_response, @update_attrs)
 
       assert %SurveyResponse{} = survey_response
-      assert survey_response.radar_guid == "7488a646-e31f-11e4-aace-600308960668"
+      assert survey_response.radar_guid == @update_guid
+
+      survey_answer =
+        Repo.one(
+          from(
+            sa in SurveyAnswer,
+            join: sr in assoc(sa, :survey_response),
+            where: sr.id == ^survey_response.id
+          )
+        )
+
+      assert survey_answer.radar_trend_guid == @update_guid
+      assert survey_answer.answer == 2
     end
 
     test "update_survey_response/2 with invalid data returns error changeset" do

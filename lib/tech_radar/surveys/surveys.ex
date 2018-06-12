@@ -22,7 +22,10 @@ defmodule TechRadar.Surveys do
       ** (Ecto.NoResultsError)
 
   """
-  def get_survey_response!(id), do: Repo.get!(SurveyResponse, id)
+  def get_survey_response!(id) do
+    Repo.get!(SurveyResponse, id)
+    |> Repo.preload(:survey_answers)
+  end
 
   @doc """
   Creates a survey_response.
