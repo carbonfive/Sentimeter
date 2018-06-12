@@ -204,5 +204,24 @@ defmodule TechRadar.RadarsTest do
 
       assert Radars.get_trends_by_radar_guid(radar.guid) == trends_by_category
     end
+
+    test "radar_trend_guids_match_radar_guid/2 returns true if given radar trend guids exactly match radar_trend guid" do
+      radar = insert(:radar)
+      trends = 1..4 |> Enum.map(fn _ -> insert(:radar_trend, radar: radar) end)
+      trend_guids = trends |> Enum.map(& &1.guid)
+      assert Radars.radar_trend_guids_match_radar_guid(radar.guid, trend_guids) == true
+    end
+
+    test "radar_trend_guids_match_radar_guid/2 returns false if given radar trend guids do not match radar_trend guid" do
+      radar = insert(:radar)
+      trends = 1..4 |> Enum.map(fn _ -> insert(:radar_trend, radar: radar) end)
+      trend_guids = trends |> Enum.map(& &1.guid)
+      [_ | too_few_trend_guids] = trend_guids
+      wrong_trend_guids = ["apples" | too_few_trend_guids]
+      too_many_trend_guids = ["apples" | trend_guids]
+      assert Radars.radar_trend_guids_match_radar_guid(radar.guid, too_few_trend_guids) == false
+      assert Radars.radar_trend_guids_match_radar_guid(radar.guid, wrong_trend_guids) == false
+      assert Radars.radar_trend_guids_match_radar_guid(radar.guid, too_many_trend_guids) == false
+    end
   end
 end

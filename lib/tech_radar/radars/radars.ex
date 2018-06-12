@@ -152,13 +152,11 @@ defmodule TechRadar.Radars do
 
   ## Examples
 
-      iex> get_trends_by_radar_guid("ADBCD-123")
-      %{
-        1: [%Trend{}]
-      %}
+      iex> radar_trend_guids_match_radar_guid("ADBCD-123", ["CCDD-123", "JJJDDD-456"])
+      true
 
   """
-  @callback radar_trends_match_radar_guid(
+  @callback radar_trend_guids_match_radar_guid(
               guid :: Ecto.UUID.type(),
               radar_trend_guids :: [Ecto.UUID.type()]
             ) :: true | false

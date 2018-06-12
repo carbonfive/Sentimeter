@@ -7,7 +7,7 @@ defmodule TechRadar.Radars.RadarsImpl do
 
   import Ecto.Query, warn: false
   alias TechRadar.Repo
-
+  alias TechRadar.Radars.RadarTrend
   alias TechRadar.Radars.Trend
 
   @doc """
@@ -181,6 +181,30 @@ defmodule TechRadar.Radars.RadarsImpl do
     Repo.all(query)
     |> Enum.group_by(fn [category, _] -> category end, fn [_, guid_trend] -> guid_trend end)
     |> Enum.into(%{}, fn {category, guid_trends} -> {category, guid_trends |> Map.new()} end)
+  end
+
+  @doc """
+  Determine if the given radar trend guids cover the complete set of radar trends for the given radar guid
+
+  ## Examples
+
+      iex> radar_trend_guids_match_radar_guid("ADBCD-123", ["CCDD-123", "JJJDDD-456"])
+      true
+  """
+
+  def radar_trend_guids_match_radar_guid(guid, radar_trend_guids) do
+    expected_guids =
+      Repo.all(
+        from(
+          radar_trend in RadarTrend,
+          join: radar in assoc(radar_trend, :radar),
+          where: radar.guid == ^guid
+        )
+      )
+      |> Enum.map(& &1.guid)
+      |> Enum.sort()
+
+    radar_trend_guids |> Enum.sort() == expected_guids
   end
 
   @doc """
