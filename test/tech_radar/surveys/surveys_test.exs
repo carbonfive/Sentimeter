@@ -3,6 +3,79 @@ defmodule TechRadar.SurveysTest do
   import Mox
   alias TechRadar.Surveys
   alias TechRadar.RadarsMock
+  import TechRadar.Factory
+  alias TechRadar.RadarsMock
+
+  describe "surveys" do
+    setup do
+      radar = insert(:radar)
+
+      trends_by_category =
+        [1, 2, 3, 4]
+        |> Enum.map(fn num ->
+          {num,
+           [
+             insert(:radar_trend, category: num, radar: radar),
+             insert(:radar_trend, category: num, radar: radar)
+           ]}
+        end)
+        |> Enum.into(%{})
+
+      RadarsMock
+      |> expect(:get_radar_by_guid!, fn _ -> radar end)
+      |> expect(:get_trends_by_radar_guid, fn _ ->
+        trends_by_category
+        |> Enum.map(fn {num, radar_trends} ->
+          {num,
+           radar_trends
+           |> Enum.map(fn radar_trend -> {radar_trend.guid, radar_trend.trend} end)
+           |> Map.new()}
+        end)
+        |> Map.new()
+      end)
+
+      {:ok, radar: radar, trends_by_category: trends_by_category}
+    end
+
+    test "survey_from_radar_guid!/1 returns a survey struct with radar attributes", %{
+      radar: radar,
+      trends_by_category: trends_by_category
+    } do
+      survey = Surveys.survey_from_radar_guid!(radar.guid)
+      assert survey.radar_guid == radar.guid
+      assert survey.category_1_name == radar.category_1_name
+      assert survey.category_2_name == radar.category_2_name
+      assert survey.category_3_name == radar.category_3_name
+      assert survey.category_4_name == radar.category_4_name
+      assert survey.innermost_level_name == radar.innermost_level_name
+      assert survey.intro == radar.intro
+      assert survey.level_2_name == radar.level_2_name
+      assert survey.level_3_name == radar.level_3_name
+      assert survey.name == radar.name
+      assert survey.outermost_level_name == radar.outermost_level_name
+    end
+
+    test "survey_from_radar_guid!/1 returns a survey struct with trend categories", %{
+      radar: radar,
+      trends_by_category: trends_by_category
+    } do
+      survey = Surveys.survey_from_radar_guid!(radar.guid)
+
+      category_1_trends = Map.get(trends_by_category, 1) |> Enum.sort_by(& &1.guid)
+
+      Enum.zip(
+        survey.category_1_questions
+        |> Enum.sort_by(& &1.radar_trend_guid),
+        category_1_trends
+      )
+      |> Enum.each(fn {survey_question, radar_trend} ->
+        assert survey_question.radar_trend_guid == radar_trend.guid
+        trend = Repo.one(Ecto.assoc(radar_trend, :trend))
+        assert survey_question.trend.name == trend.name
+        assert survey_question.trend.description == trend.description
+      end)
+    end
+  end
 
   describe "survey_responses" do
     alias TechRadar.Surveys.SurveyResponse

@@ -7,6 +7,68 @@ defmodule TechRadar.Surveys do
   alias TechRadar.Repo
 
   alias TechRadar.Surveys.SurveyResponse
+  alias TechRadar.Surveys.Survey
+  alias TechRadar.Surveys.SurveyQuestion
+
+  @radars Application.get_env(:tech_radar, :radars)
+
+  @doc """
+  Build a survey schema from a radar GUID
+
+  Raises `Ecto.NoResultsError` if the radar does not exist
+
+  ## Examples
+
+      iex> survey_from_radar_guid!("ABS-123")
+      %Survey{}
+
+      iex> survey_from_radar_guid!("FFBS-123")
+      ** (Ecto.NoResultsError)
+  """
+
+  @spec survey_from_radar_guid!(guid :: Ecto.UUID.type()) :: %Survey{} | no_return
+  def survey_from_radar_guid!(guid) do
+    radar = @radars.get_radar_by_guid!(guid)
+    trends_by_radar_guid = @radars.get_trends_by_radar_guid(guid)
+
+    %Survey{
+      radar_guid: guid,
+      category_1_name: radar.category_1_name,
+      category_2_name: radar.category_2_name,
+      category_3_name: radar.category_3_name,
+      category_4_name: radar.category_4_name,
+      innermost_level_name: radar.innermost_level_name,
+      intro: radar.intro,
+      level_2_name: radar.level_2_name,
+      level_3_name: radar.level_3_name,
+      name: radar.name,
+      outermost_level_name: radar.outermost_level_name,
+      category_1_questions: trends_by_radar_guid |> survey_category_questions(1),
+      category_2_questions: trends_by_radar_guid |> survey_category_questions(2),
+      category_3_questions: trends_by_radar_guid |> survey_category_questions(3),
+      category_4_questions: trends_by_radar_guid |> survey_category_questions(4)
+    }
+  end
+
+  @spec survey_category_questions(
+          trends_by_radar_guid :: %{
+            required(number) => %{required(Ecto.UUID) => %TechRadar.Radars.Trend{}}
+          },
+          category :: number
+        ) :: [%SurveyQuestion{}]
+  defp survey_category_questions(trends_by_radar_guid, category) do
+    Map.get(trends_by_radar_guid, category)
+    |> Enum.map(fn {radar_trend_guid, trend} ->
+      %SurveyQuestion{
+        radar_trend_guid: radar_trend_guid,
+        answer: 1,
+        trend: %SurveyQuestion.Trend{
+          name: trend.name,
+          description: trend.description
+        }
+      }
+    end)
+  end
 
   @doc """
   Gets a single survey_response.
