@@ -148,6 +148,22 @@ defmodule TechRadar.Radars do
             }
 
   @doc """
+  Determine if the given radar trend guids cover the complete set of radar trends for the given radar guid
+
+  ## Examples
+
+      iex> get_trends_by_radar_guid("ADBCD-123")
+      %{
+        1: [%Trend{}]
+      %}
+
+  """
+  @callback radar_trends_match_radar_guid(
+              guid :: Ecto.UUID.type(),
+              radar_trend_guids :: [Ecto.UUID.type()]
+            ) :: true | false
+
+  @doc """
   Creates a radar.
 
   ## Examples

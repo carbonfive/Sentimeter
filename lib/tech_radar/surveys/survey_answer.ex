@@ -17,4 +17,14 @@ defmodule TechRadar.Surveys.SurveyAnswer do
     |> cast(attrs, [:radar_guid, :answers])
     |> validate_required([:radar_guid, :answers])
   end
+
+  defp validate_answers_complete(changeset) do
+    case changeset.valid? do
+      true ->
+        radar_guid = get_field(changeset, :radar_guid)
+        answer_guids = Map.keys(get_field(changeset, :answers))
+
+      _ -> changeset
+    end
+  end
 end
