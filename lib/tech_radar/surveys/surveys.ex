@@ -26,8 +26,11 @@ defmodule TechRadar.Surveys do
       ** (Ecto.NoResultsError)
   """
 
-  @spec survey_from_radar_guid!(guid :: Ecto.UUID.type()) :: %Survey{} | no_return
-  def survey_from_radar_guid!(guid) do
+  @spec survey_from_radar_guid!(
+          guid :: Ecto.UUID.type(),
+          answers :: %{optional(Ecto.UUID) => number}
+        ) :: %Survey{} | no_return
+  def survey_from_radar_guid!(guid, answers \\ %{}) do
     radar = @radars.get_radar_by_guid!(guid)
     trends_by_radar_guid = @radars.get_trends_by_radar_guid(guid)
 
@@ -43,25 +46,51 @@ defmodule TechRadar.Surveys do
       level_3_name: radar.level_3_name,
       name: radar.name,
       outermost_level_name: radar.outermost_level_name,
-      category_1_questions: trends_by_radar_guid |> survey_category_questions(1),
-      category_2_questions: trends_by_radar_guid |> survey_category_questions(2),
-      category_3_questions: trends_by_radar_guid |> survey_category_questions(3),
-      category_4_questions: trends_by_radar_guid |> survey_category_questions(4)
+      category_1_questions: trends_by_radar_guid |> survey_category_questions(1, answers),
+      category_2_questions: trends_by_radar_guid |> survey_category_questions(2, answers),
+      category_3_questions: trends_by_radar_guid |> survey_category_questions(3, answers),
+      category_4_questions: trends_by_radar_guid |> survey_category_questions(4, answers)
     }
+  end
+
+  @doc """
+  Build a survey schema from an existing response, pre-filling existing answers
+
+  Raises `Ecto.NoResultsError` if the radar does not exist
+
+  ## Examples
+
+      iex> survey_from_survey_response!(%SurveyResponse{})
+      %Survey{}
+
+      iex> survey_from_survey_response!(%SurveyResponse{})
+      ** (Ecto.NoResultsError)
+  """
+
+  @spec survey_from_survey_response!(survey_response :: %SurveyResponse{}) ::
+          %Survey{} | no_return
+  def survey_from_survey_response!(%SurveyResponse{} = survey_response) do
+    survey_answers =
+      Repo.all(Ecto.assoc(survey_response, :survey_answers))
+      |> Enum.map(fn survey_answer -> {survey_answer.radar_trend_guid, survey_answer.answer} end)
+      |> Enum.into(%{})
+
+    survey_from_radar_guid!(survey_response.radar_guid, survey_answers)
   end
 
   @spec survey_category_questions(
           trends_by_radar_guid :: %{
             required(number) => %{required(Ecto.UUID) => %TechRadar.Radars.Trend{}}
           },
-          category :: number
+          category :: number,
+          answers :: %{optional(Ecto.UUID) => number}
         ) :: [%SurveyQuestion{}]
-  defp survey_category_questions(trends_by_radar_guid, category) do
+  defp survey_category_questions(trends_by_radar_guid, category, answers) do
     Map.get(trends_by_radar_guid, category)
     |> Enum.map(fn {radar_trend_guid, trend} ->
       %SurveyQuestion{
         radar_trend_guid: radar_trend_guid,
-        answer: 1,
+        answer: Map.get(answers, radar_trend_guid, 1),
         trend: %SurveyQuestion.Trend{
           name: trend.name,
           description: trend.description

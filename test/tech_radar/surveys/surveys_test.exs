@@ -75,6 +75,41 @@ defmodule TechRadar.SurveysTest do
         assert survey_question.trend.description == trend.description
       end)
     end
+
+    test "survey_from_survey_response!/1 returns a survey struct with trends with answers", %{
+      radar: radar,
+      trends_by_category: trends_by_category
+    } do
+      survey_answers =
+        trends_by_category
+        |> Enum.flat_map(fn {_, radar_trends} ->
+          radar_trends
+          |> Enum.map(fn radar_trend ->
+            insert(:survey_answer, radar_trend_guid: radar_trend.guid)
+          end)
+        end)
+
+      survey_response =
+        insert(
+          :survey_response,
+          radar_guid: radar.guid,
+          survey_answers: survey_answers
+        )
+
+      survey = Surveys.survey_from_survey_response!(survey_response)
+      assert survey.radar_guid == radar.guid
+
+      survey_answers_by_guid =
+        survey_answers
+        |> Enum.map(fn survey_answer -> {survey_answer.radar_trend_guid, survey_answer.answer} end)
+        |> Enum.into(%{})
+
+      survey.category_1_questions
+      |> Enum.each(fn survey_question ->
+        survey_answer = Map.get(survey_answers_by_guid, survey_question.radar_trend_guid)
+        assert survey_answer == survey_question.answer
+      end)
+    end
   end
 
   describe "survey_responses" do

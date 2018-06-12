@@ -3,7 +3,8 @@ defmodule TechRadar.Factory do
   alias TechRadar.Radars.Trend
   alias TechRadar.Radars.Radar
   alias TechRadar.Radars.RadarTrend
-
+  alias TechRadar.Surveys.SurveyResponse
+  alias TechRadar.Surveys.SurveyAnswer
   # Sample user factory
   # def user_factory do
   #   %User{
@@ -39,6 +40,20 @@ defmodule TechRadar.Factory do
     %RadarTrend{
       category: sequence(:category, &rem(&1, 4)),
       trend: build(:trend)
+    }
+  end
+
+  def survey_response_factory do
+    %SurveyResponse{
+      radar_guid: Ecto.UUID.generate(),
+      survey_answers: []
+    }
+  end
+
+  def survey_answer_factory do
+    %SurveyAnswer{
+      radar_trend_guid: Ecto.UUID.generate(),
+      answer: sequence(:answer, &rem(&1, 4))
     }
   end
 end
