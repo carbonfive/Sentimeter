@@ -1,7 +1,9 @@
 
 <%= form_for @changeset, @action, [method: @method], fn f -> %>
   <h1 class="survey-form__survey-header"><%= input_value f, :name %></h1>
-  <p class="survey-form__survey-description"><%= input_value f, :intro %></p>
+  <div class="survey-form__survey-description">
+    <%= ((input_value f, :intro) || "")|> Earmark.as_html! |> raw %>
+  </div>
 
   <%= if @changeset.action do %>
     <div class="alert alert-danger">

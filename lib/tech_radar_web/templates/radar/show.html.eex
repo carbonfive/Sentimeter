@@ -1,16 +1,12 @@
-<h2>Show Radar</h2>
+<h2><%= @radar.name %></h2>
 
 <ul>
 
   <li>
     <strong>Intro:</strong>
-    <%= @radar.intro %>
+    <%= @radar.intro |> Earmark.as_html! |> raw %>
   </li>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @radar.name %>
-  </li>
 
   <li>
     <strong>Innermost level name:</strong>

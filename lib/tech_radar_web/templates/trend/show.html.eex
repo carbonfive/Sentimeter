@@ -9,7 +9,7 @@
 
   <li>
     <strong>Description:</strong>
-    <%= @trend.description %>
+    <%= @trend.description |> Earmark.as_html! |> raw %>
   </li>
 
 </ul>
