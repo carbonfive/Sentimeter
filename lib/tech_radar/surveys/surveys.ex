@@ -10,6 +10,7 @@ defmodule TechRadar.Surveys do
   alias TechRadar.Surveys.Survey
   alias TechRadar.Surveys.SurveyQuestion
 
+  @default_answer 3
   @radars Application.get_env(:tech_radar, :radars)
 
   @doc """
@@ -92,7 +93,7 @@ defmodule TechRadar.Surveys do
   defp survey_category_questions(trends_by_radar_guid, category, answer_data) do
     Map.get(trends_by_radar_guid, category, %{})
     |> Enum.map(fn {radar_trend_guid, trend} ->
-      {id, answer} = Map.get(answer_data, radar_trend_guid, {nil, 1})
+      {id, answer} = Map.get(answer_data, radar_trend_guid, {nil, @default_answer})
 
       %SurveyQuestion{
         id: id,
