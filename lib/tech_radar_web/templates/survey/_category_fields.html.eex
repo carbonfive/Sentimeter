@@ -1,0 +1,8 @@
+<%= inputs_for @f, @category_questions, fn fq -> %>
+  <%= hidden_input fq, :radar_trend_guid %>
+  <h4 class="survey-form__trend-header"><%= input_value(fq, :trend).name %></h4>
+  <p class="survey-form__trend-description"><%= input_value(fq, :trend).description %></p> 
+  <div class="form-group">
+    <%= select fq, :answer, level_options(@changeset), class: "form-control level-select" %>
+  </div>
+<% end %>

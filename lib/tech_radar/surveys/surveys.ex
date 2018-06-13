@@ -60,10 +60,10 @@ defmodule TechRadar.Surveys do
 
   ## Examples
 
-      iex> survey_from_survey_response!(%SurveyResponse{})
+      iex> survey_from_survey_response!(survey_response)
       %Survey{}
 
-      iex> survey_from_survey_response!(%SurveyResponse{})
+      iex> survey_from_survey_response!(survey_response)
       ** (Ecto.NoResultsError)
   """
 
@@ -86,7 +86,7 @@ defmodule TechRadar.Surveys do
           answers :: %{optional(Ecto.UUID) => number}
         ) :: [%SurveyQuestion{}]
   defp survey_category_questions(trends_by_radar_guid, category, answers) do
-    Map.get(trends_by_radar_guid, category)
+    Map.get(trends_by_radar_guid, category, %{})
     |> Enum.map(fn {radar_trend_guid, trend} ->
       %SurveyQuestion{
         radar_trend_guid: radar_trend_guid,
@@ -97,6 +97,20 @@ defmodule TechRadar.Surveys do
         }
       }
     end)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking survey changes.
+
+  ## Examples
+
+      iex> change_survey(survey)
+      %Ecto.Changeset{source: %Survey{}}
+
+  """
+  @spec change_survey(survey :: %Survey{}) :: %Ecto.Changeset{}
+  def change_survey(%Survey{} = survey) do
+    Survey.changeset(survey, %{})
   end
 
   @doc """
