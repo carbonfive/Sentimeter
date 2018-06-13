@@ -37,8 +37,8 @@ html lang="en"
 
     .container
       .row
-        a href="https://www.github.com/carbonfive/razor" target="_blank"
-          img src="#{static_path(@conn, "/images/razor_logo.jpg")}" class="img-responsive center-block"
+        img src="#{static_path(@conn, "/images/c5_16_9.png")}" class="img-responsive col-md-2"
+        h1 class="col-md-10" Tech Radar 
       =if info = get_flash(@conn, :info) do
         p.alert.alert-info role="alert"
           = info
