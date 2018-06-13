@@ -4,6 +4,7 @@ defmodule TechRadar.Surveys.Survey do
   alias TechRadar.Surveys.Survey
   alias TechRadar.Surveys.SurveyQuestion
 
+  @primary_key {:id, :id, autogenerate: false}
   embedded_schema do
     field(:radar_guid, Ecto.UUID)
     field(:category_1_name, :string)
@@ -16,10 +17,10 @@ defmodule TechRadar.Surveys.Survey do
     field(:level_3_name, :string)
     field(:name, :string)
     field(:outermost_level_name, :string)
-    embeds_many(:category_1_questions, SurveyQuestion)
-    embeds_many(:category_2_questions, SurveyQuestion)
-    embeds_many(:category_3_questions, SurveyQuestion)
-    embeds_many(:category_4_questions, SurveyQuestion)
+    embeds_many(:category_1_questions, SurveyQuestion, on_replace: :delete)
+    embeds_many(:category_2_questions, SurveyQuestion, on_replace: :delete)
+    embeds_many(:category_3_questions, SurveyQuestion, on_replace: :delete)
+    embeds_many(:category_4_questions, SurveyQuestion, on_replace: :delete)
   end
 
   def changeset(%Survey{} = survey, attrs) do

@@ -7,6 +7,32 @@ defmodule TechRadar.SurveysTest do
   alias TechRadar.RadarsMock
 
   describe "surveys" do
+    alias TechRadar.Surveys.SurveyResponse
+    alias TechRadar.Surveys.SurveyAnswer
+    @create_guid "7488a646-e31f-11e4-aace-600308960662"
+    @update_guid "7488a646-e31f-11e4-aace-600308960668"
+    @valid_attrs %{
+      radar_guid: @create_guid,
+      category_1_questions: [%{radar_trend_guid: @create_guid, answer: 1}],
+      category_2_questions: [],
+      category_3_questions: [],
+      category_4_questions: []
+    }
+    @update_attrs %{
+      radar_guid: @update_guid,
+      category_1_questions: [%{radar_trend_guid: @update_guid, answer: 2}],
+      category_2_questions: [],
+      category_3_questions: [],
+      category_4_questions: []
+    }
+    @invalid_attrs %{
+      radar_guid: nil,
+      category_1_questions: nil,
+      category_2_questions: [],
+      category_3_questions: [],
+      category_4_questions: []
+    }
+
     setup do
       radar = insert(:radar)
 
@@ -37,9 +63,17 @@ defmodule TechRadar.SurveysTest do
       {:ok, radar: radar, trends_by_category: trends_by_category}
     end
 
+    def survey_response_fixture_from_survey(attrs \\ %{}) do
+      {:ok, survey_response} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Surveys.create_survey_response_from_survey()
+
+      survey_response
+    end
+
     test "survey_from_radar_guid!/1 returns a survey struct with radar attributes", %{
-      radar: radar,
-      trends_by_category: trends_by_category
+      radar: radar
     } do
       survey = Surveys.survey_from_radar_guid!(radar.guid)
       assert survey.radar_guid == radar.guid
@@ -109,6 +143,61 @@ defmodule TechRadar.SurveysTest do
         survey_answer = Map.get(survey_answers_by_guid, survey_question.radar_trend_guid)
         assert survey_answer == survey_question.answer
       end)
+    end
+
+    test "create_survey_response_from_survey/1 with valid data creates a survey response" do
+      assert {:ok, %SurveyResponse{} = survey_response} =
+               Surveys.create_survey_response_from_survey(@valid_attrs)
+
+      assert survey_response.radar_guid == @create_guid
+
+      survey_answer =
+        Repo.one(
+          from(
+            sa in SurveyAnswer,
+            join: sr in assoc(sa, :survey_response),
+            where: sr.id == ^survey_response.id
+          )
+        )
+
+      assert survey_answer.radar_trend_guid == @create_guid
+      assert survey_answer.answer == 1
+    end
+
+    test "create_survey_response_from_survey/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} =
+               Surveys.create_survey_response_from_survey(@invalid_attrs)
+    end
+
+    test "update_survey_response_from_survey/2 with valid data updates the survey_response" do
+      survey_response = survey_response_fixture_from_survey()
+
+      assert {:ok, survey_response} =
+               Surveys.update_survey_response_from_survey(survey_response, @update_attrs)
+
+      assert %SurveyResponse{} = survey_response
+      assert survey_response.radar_guid == @update_guid
+
+      survey_answer =
+        Repo.one(
+          from(
+            sa in SurveyAnswer,
+            join: sr in assoc(sa, :survey_response),
+            where: sr.id == ^survey_response.id
+          )
+        )
+
+      assert survey_answer.radar_trend_guid == @update_guid
+      assert survey_answer.answer == 2
+    end
+
+    test "update_survey_response_from_survey/2 with invalid data returns error changeset" do
+      survey_response = survey_response_fixture_from_survey()
+
+      assert {:error, %Ecto.Changeset{}} =
+               Surveys.update_survey_response_from_survey(survey_response, @invalid_attrs)
+
+      assert survey_response == Surveys.get_survey_response!(survey_response.id)
     end
   end
 

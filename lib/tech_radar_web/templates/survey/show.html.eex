@@ -1,1 +1,6 @@
-<%= render "form.html", Map.put(assigns, :action, survey_path(@conn, :create)) %>
+<%= render "form.html", 
+    Map.merge(assigns, 
+      %{
+        action: survey_path(@conn, :create),
+        method: 'POST' 
+      }) %>

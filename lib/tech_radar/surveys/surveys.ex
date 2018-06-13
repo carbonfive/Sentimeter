@@ -28,13 +28,15 @@ defmodule TechRadar.Surveys do
 
   @spec survey_from_radar_guid!(
           guid :: Ecto.UUID.type(),
-          answers :: %{optional(Ecto.UUID) => number}
+          answers :: %{optional(Ecto.UUID) => number},
+          id :: integer() | nil
         ) :: %Survey{} | no_return
-  def survey_from_radar_guid!(guid, answers \\ %{}) do
+  def survey_from_radar_guid!(guid, answers \\ %{}, id \\ nil) do
     radar = @radars.get_radar_by_guid!(guid)
     trends_by_radar_guid = @radars.get_trends_by_radar_guid(guid)
 
     %Survey{
+      id: id,
       radar_guid: guid,
       category_1_name: radar.category_1_name,
       category_2_name: radar.category_2_name,
@@ -72,7 +74,9 @@ defmodule TechRadar.Surveys do
   def survey_from_survey_response!(%SurveyResponse{} = survey_response) do
     survey_answers =
       Repo.all(Ecto.assoc(survey_response, :survey_answers))
-      |> Enum.map(fn survey_answer -> {survey_answer.radar_trend_guid, survey_answer.answer} end)
+      |> Enum.map(fn survey_answer ->
+        {survey_answer.radar_trend_guid, {survey_answer.id, survey_answer.answer}}
+      end)
       |> Enum.into(%{})
 
     survey_from_radar_guid!(survey_response.radar_guid, survey_answers)
@@ -83,14 +87,17 @@ defmodule TechRadar.Surveys do
             required(number) => %{required(Ecto.UUID) => %TechRadar.Radars.Trend{}}
           },
           category :: number,
-          answers :: %{optional(Ecto.UUID) => number}
+          answers :: %{optional(Ecto.UUID) => {number, number}}
         ) :: [%SurveyQuestion{}]
-  defp survey_category_questions(trends_by_radar_guid, category, answers) do
+  defp survey_category_questions(trends_by_radar_guid, category, answer_data) do
     Map.get(trends_by_radar_guid, category, %{})
     |> Enum.map(fn {radar_trend_guid, trend} ->
+      {id, answer} = Map.get(answer_data, radar_trend_guid, {nil, 1})
+
       %SurveyQuestion{
+        id: id,
         radar_trend_guid: radar_trend_guid,
-        answer: Map.get(answers, radar_trend_guid, 1),
+        answer: answer,
         trend: %SurveyQuestion.Trend{
           name: trend.name,
           description: trend.description
@@ -111,6 +118,79 @@ defmodule TechRadar.Surveys do
   @spec change_survey(survey :: %Survey{}) :: %Ecto.Changeset{}
   def change_survey(%Survey{} = survey) do
     Survey.changeset(survey, %{})
+  end
+
+  @doc """
+  Creates a survey_response, but using attributes for a survey
+
+  ## Examples
+
+      iex> create_survey_response(%{field: value})
+      {:ok, %SurveyResponse{}}
+
+      iex> create_survey_response(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  @spec create_survey_response_from_survey(attrs :: Map.t()) ::
+          {:ok, %SurveyResponse{}} | {:error, %Ecto.Changeset{}}
+  def create_survey_response_from_survey(attrs \\ %{}) do
+    with changeset <- %Survey{} |> Survey.changeset(attrs),
+         {:ok, survey} <- Ecto.Changeset.apply_action(changeset, :replace),
+         attrs <- survey_response_params_from_survey(survey),
+         {:ok, survey_response} <- create_survey_response(attrs) do
+      {:ok, survey_response}
+    else
+      err -> err
+    end
+  end
+
+  @doc """
+  Updates a survey_response, but using attributes for a survey
+
+  ## Examples
+
+      iex> update_survey_response(survey_response, %{field: new_value})
+      {:ok, %SurveyResponse{}}
+
+      iex> update_survey_response(survey_response, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  @spec update_survey_response_from_survey(survey_response :: %SurveyResponse{}, attrs :: Map.t()) ::
+          {:ok, %SurveyResponse{}} | {:error, %Ecto.Changeset{}}
+  def update_survey_response_from_survey(%SurveyResponse{} = survey_response, attrs) do
+    with survey <- survey_from_survey_response!(survey_response),
+         changeset <- survey |> Survey.changeset(attrs),
+         {:ok, updated_survey} <- Ecto.Changeset.apply_action(changeset, :replace),
+         attrs <- survey_response_params_from_survey(updated_survey),
+         {:ok, updated_survey_response} <- update_survey_response(survey_response, attrs) do
+      {:ok, updated_survey_response}
+    else
+      err -> err
+    end
+  end
+
+  @spec survey_response_params_from_survey(survey :: %Survey{}) :: map()
+  defp survey_response_params_from_survey(%Survey{} = survey) do
+    %{
+      radar_guid: survey.radar_guid,
+      survey_answers:
+        [
+          survey.category_1_questions,
+          survey.category_2_questions,
+          survey.category_3_questions,
+          survey.category_4_questions
+        ]
+        |> List.flatten()
+        |> Enum.map(fn survey_question ->
+          %{
+            id: survey_question.id,
+            radar_trend_guid: survey_question.radar_trend_guid,
+            answer: survey_question.answer
+          }
+        end)
+    }
   end
 
   @doc """
