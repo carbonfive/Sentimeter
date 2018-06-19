@@ -6,24 +6,21 @@
 use Mix.Config
 
 # General application configuration
-config :tech_radar,
-  ecto_repos: [TechRadar.Repo]
+config :tech_radar, ecto_repos: [TechRadar.Repo]
 
 # Configures the endpoint
 config :tech_radar, TechRadarWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: TechRadarWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: TechRadar.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: TechRadar.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :phoenix, :template_engines,
-  slim: PhoenixSlime.Engine
+config :phoenix, :template_engines, slim: PhoenixSlime.Engine
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

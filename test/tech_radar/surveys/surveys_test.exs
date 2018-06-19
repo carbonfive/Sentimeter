@@ -1,7 +1,7 @@
 defmodule TechRadar.SurveysTest do
   use TechRadar.DataCase
   import Mox
-  alias TechRadar.Surveys
+  alias TechRadar.Surveys.SurveysImpl, as: Surveys
   alias TechRadar.RadarsMock
   import TechRadar.Factory
   alias TechRadar.RadarsMock

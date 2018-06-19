@@ -21,3 +21,4 @@ config :tech_radar, TechRadar.Repo,
 config :tech_radar, :sql_sandbox, true
 
 config(:tech_radar, :radars, TechRadar.RadarsMock)
+config(:tech_radar, :surveys, TechRadar.Surveys.SurveysImpl)

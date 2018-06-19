@@ -1,7 +1,7 @@
 defmodule TechRadarWeb.SurveyResponseControllerTest do
   use TechRadarWeb.ConnCase
 
-  alias TechRadar.Surveys
+  alias TechRadar.Surveys.SurveysImpl, as: Surveys
   alias TechRadar.RadarsMock
   import TechRadar.Factory
   import Mox

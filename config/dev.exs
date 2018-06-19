@@ -65,3 +65,4 @@ config :tech_radar, TechRadar.Repo,
   pool_size: 10
 
 config(:tech_radar, :radars, TechRadar.Radars.RadarsImpl)
+config(:tech_radar, :surveys, TechRadar.Surveys.SurveysImpl)
