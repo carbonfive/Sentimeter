@@ -266,4 +266,23 @@ defmodule TechRadar.Surveys.SurveysImpl do
   def change_survey_response(%SurveyResponse{} = survey_response) do
     SurveyResponse.changeset(survey_response, %{})
   end
+
+  @doc """
+  Gets all survey responses for a radar quid
+
+  ## Examples
+
+      iex> get_survey_responses_for_radar_guid("abc-123")
+      [%SurveyResponse{}]
+  """
+
+  def get_survey_responses_for_radar_guid(guid) do
+    Repo.all(
+      from(
+        survey_response in SurveyResponse,
+        where: survey_response.radar_guid == ^guid,
+        preload: :survey_answers
+      )
+    )
+  end
 end

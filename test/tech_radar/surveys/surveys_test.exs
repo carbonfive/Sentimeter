@@ -11,6 +11,7 @@ defmodule TechRadar.SurveysTest do
     alias TechRadar.Surveys.SurveyAnswer
     @create_guid "7488a646-e31f-11e4-aace-600308960662"
     @update_guid "7488a646-e31f-11e4-aace-600308960668"
+    @other_guid "7488a646-e31f-11e4-aace-600308960668"
     @valid_attrs %{
       radar_guid: @create_guid,
       category_1_questions: [%{radar_trend_guid: @create_guid, answer: 1}],
@@ -293,6 +294,13 @@ defmodule TechRadar.SurveysTest do
     test "change_survey_response/1 returns a survey_response changeset" do
       survey_response = survey_response_fixture()
       assert %Ecto.Changeset{} = Surveys.change_survey_response(survey_response)
+    end
+
+    test "get_survey_responses_for_radar_guid" do
+      survey_responses = [survey_response_fixture(), survey_response_fixture()]
+      other_survey_response = survey_response_fixture(%{radar_guid: @other_guid})
+
+      assert Surveys.get_survey_responses_for_radar_guid(@create_guid) == survey_responses
     end
   end
 end

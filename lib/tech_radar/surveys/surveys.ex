@@ -162,4 +162,14 @@ defmodule TechRadar.Surveys do
 
   """
   @callback change_survey_response(survey_response :: %SurveyResponse{}) :: %Ecto.Changeset{}
+
+  @doc """
+  Gets all survey responses for a radar quid
+
+  ## Examples
+
+      iex> get_survey_responses_for_radar_guid("abc-123")
+      [%SurveyResponse{}]
+  """
+  @callback get_survey_responses_for_radar_guid(guid :: Ecto.UUID) :: [%SurveyResponse{}]
 end
