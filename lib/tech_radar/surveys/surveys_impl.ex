@@ -1,5 +1,5 @@
 defmodule TechRadar.Surveys.SurveysImpl do
-  @behavior TechRadar.Surveys
+  @behaviour TechRadar.Surveys
   @moduledoc """
   The Surveys context.
   """

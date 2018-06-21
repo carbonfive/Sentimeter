@@ -5,7 +5,6 @@ defmodule TechRadar.Surveys do
 
   alias TechRadar.Surveys.SurveyResponse
   alias TechRadar.Surveys.Survey
-  alias TechRadar.Surveys.SurveyQuestion
 
   @doc """
   Build a survey schema from a radar GUID
@@ -26,7 +25,11 @@ defmodule TechRadar.Surveys do
               answers :: %{optional(Ecto.UUID) => number},
               id :: integer() | nil
             ) :: %Survey{} | no_return
-
+  @callback survey_from_radar_guid!(
+              guid :: Ecto.UUID.type(),
+              answers :: %{optional(Ecto.UUID) => number}
+            ) :: %Survey{} | no_return
+  @callback survey_from_radar_guid!(guid :: Ecto.UUID.type()) :: %Survey{} | no_return
   @doc """
   Build a survey schema from an existing response, pre-filling existing answers
 
