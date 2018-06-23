@@ -1,0 +1,1 @@
+<div id="report-graph" data-report-guid="<%= @guid %>"></div>

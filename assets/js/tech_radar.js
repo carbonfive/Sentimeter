@@ -1,3 +1,5 @@
+import GraphingRadar from "./graphing_radar/graphing_radar";
+
 export default function () {
   $('#js-demo').text('This text was injected by tech_radar.js.  Brunch with custom js is working.')
   $(document).ready(() => {
@@ -25,5 +27,7 @@ export default function () {
       });
       lastIndex = lastIndex + 1;
     });
+
+    $("#report-graph").each((index, elem) => GraphingRadar().build("#report-graph", $(elem).attr('data-report-guid')));
   });
 }

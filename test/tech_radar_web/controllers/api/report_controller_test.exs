@@ -74,7 +74,7 @@ defmodule TechRadarWeb.Api.ReportControllerTest do
 
   describe "show" do
     test "lists all reports", %{conn: conn, radar: radar} do
-      conn = get(conn, report_path(conn, :show, radar.guid))
+      conn = get(conn, api_report_path(conn, :show, radar.guid))
       refute json_response(conn, 200)["data"] == nil
     end
   end

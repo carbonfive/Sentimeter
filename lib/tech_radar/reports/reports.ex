@@ -61,7 +61,7 @@ defmodule TechRadar.Reports do
           category: category,
           radar_trend_guid: radar_trend_guid,
           name: trend.name,
-          description: trend.description
+          description: trend.description |> Earmark.as_html!
         }
       end)
     end)

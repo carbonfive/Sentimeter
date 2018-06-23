@@ -13,7 +13,7 @@ defmodule TechRadarWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/api", TechRadarWeb.Api do
+  scope "/api", TechRadarWeb.Api, as: :api do
     pipe_through(:api)
     resources("/reports", ReportController, param: "guid", only: [:show])
   end
@@ -24,6 +24,7 @@ defmodule TechRadarWeb.Router do
     resources("/trends", TrendController)
     resources("/radars", RadarController)
     resources("/surveys", SurveyController, param: "guid", only: [:show, :create])
+    resources("/reports", ReportController, param: "guid", only: [:show])
 
     resources(
       "/survey_responses",

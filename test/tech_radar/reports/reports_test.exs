@@ -94,7 +94,7 @@ defmodule TechRadar.ReportsTest do
 
         refute matching_trend == nil
         assert matching_trend.name == report_trend.name
-        assert matching_trend.description == report_trend.description
+        assert "<p>#{matching_trend.description}</p>\n" == report_trend.description
       end)
 
       assert length(report.responses) == length(survey_responses)

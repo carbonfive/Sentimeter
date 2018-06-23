@@ -16,6 +16,7 @@
       <td class="text-right">
         <span><%= link "Show", to: radar_path(@conn, :show, radar), class: "btn btn-default" %></span>
         <span><%= link "Show Survey", to: survey_path(@conn, :show, radar.guid), class: "btn btn-default" %></span>
+        <span><%= link "Show Report", to: report_path(@conn, :show, radar.guid), class: "btn btn-default" %></span>
         <span><%= link "Edit", to: radar_path(@conn, :edit, radar), class: "btn btn-default" %></span>
         <span><%= link "Delete", to: radar_path(@conn, :delete, radar), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger" %></span>
       </td>
