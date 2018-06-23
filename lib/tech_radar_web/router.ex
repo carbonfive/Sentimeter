@@ -13,6 +13,11 @@ defmodule TechRadarWeb.Router do
     plug(:accepts, ["json"])
   end
 
+  scope "/api", TechRadarWeb.Api do
+    pipe_through(:api)
+    resources("/reports", ReportController, param: "guid", only: [:show])
+  end
+
   scope "/", TechRadarWeb do
     # Use the default browser stack
     pipe_through(:browser)
@@ -28,9 +33,4 @@ defmodule TechRadarWeb.Router do
 
     get("/", PageController, :index)
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", TechRadar do
-  #   pipe_through :api
-  # end
 end
