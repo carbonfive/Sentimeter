@@ -15,11 +15,10 @@ const RadarPlotter = require('./graphing/radar');
 const MalformedDataError = require('./exceptions/malformedDataError');
 const ExceptionMessages = require('./util/exceptionMessages');
 
-const plotRadar = function (selector, title, blips) {
+const plotRadar = function (selector, title, blips, rings) {
   document.title = title;
   d3.selectAll(".loading").remove();
 
-  var rings = _.map(_.uniqBy(blips, 'ring'), 'ring');
   var ringMap = {};
   var maxRings = 4;
 
@@ -35,7 +34,7 @@ const plotRadar = function (selector, title, blips) {
     if (!quadrants[blip.quadrant]) {
       quadrants[blip.quadrant] = new Quadrant(_.capitalize(blip.quadrant));
     }
-    quadrants[blip.quadrant].add(new Blip(blip.name, ringMap[blip.ring], blip.isNew.toLowerCase() === 'true', blip.topic, blip.description))
+    quadrants[blip.quadrant].add(new Blip(blip.name, ringMap[blip.ring], blip.ringExact, blip.isNew.toLowerCase() === 'true', blip.topic, blip.description))
   });
 
   var radar = new Radar();
@@ -77,6 +76,11 @@ const ApiRadar = function (selector, reportGuid) {
         3: report.category_3_name,
         4: report.category_4_name
       };
+      const rings = [
+        report.innermost_level_name,
+        report.level_2_name, report.level_3_name,
+        report.outermost_level_name
+      ];
 
       const blips = _.map(report.report_trends, (reportTrend) => {
         const reportTrendAverage = report.report_trend_averages.find((reportTrendAverage) =>
@@ -88,10 +92,11 @@ const ApiRadar = function (selector, reportGuid) {
           isNew: "true",
           topic: null,
           description: reportTrend.description,
+          ringExact: reportTrendAverage.average,
           ring: ringNames[Math.round(reportTrendAverage.average)]
         };
       });
-      plotRadar(selector, report.name, blips);
+      plotRadar(selector, report.name, blips, rings);
     } catch (exception) {
       plotErrorMessage(selector, exception);
     }

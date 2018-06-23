@@ -200,9 +200,13 @@ const Radar = function (selector, size, radar) {
       var allBlipCoordinatesInRing = [];
 
       ringBlips.forEach(function (blip) {
+        const ringOffset = blip.ringExact() - ring.order() - 0.5;
+        const idealRadius = minRadius + ((maxRadius - minRadius) * ringOffset);
+        const idealMinRadius = Math.max(idealRadius - blip.width - 1, minRadius);
+        const idealMaxRadius = Math.min(idealRadius + blip.width + 1, maxRadius);
         const coordinates = findBlipCoordinates(blip,
-          minRadius,
-          maxRadius,
+          idealMinRadius,
+          idealMaxRadius,
           startAngle,
           allBlipCoordinatesInRing);
 
