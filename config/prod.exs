@@ -66,3 +66,4 @@ config :tech_radar, TechRadar.Repo,
   ssl: true
 
 config(:tech_radar, :radars, TechRadar.Radars.RadarsImpl)
+config(:tech_radar, :surveys, TechRadar.Surveys.SurveysImpl)
