@@ -1,24 +1,18 @@
 use Mix.Config
 
-# We run a server during test for Wallaby integration testing.
-config :tech_radar, TechRadarWeb.Endpoint,
-  http: [port: 4001],
-  server: true,
-  secret_key_base: "0123456789012345678901234567890123456789012345678901234567890123456789"
+# We don't run a server during test. If one is required,
+# you can enable the server option below.
+config :sentimeter, SentimeterWeb.Endpoint,
+  http: [port: 4002],
+  server: false
 
 # Print only warnings and errors during test
 config :logger, level: :warn
 
 # Configure your database
-config :tech_radar, TechRadar.Repo,
-  adapter: Ecto.Adapters.Postgres,
+config :sentimeter, Sentimeter.Repo,
   username: "postgres",
   password: "postgres",
-  database: "tech_radar_test",
+  database: "sentimeter_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
-
-config :tech_radar, :sql_sandbox, true
-
-config(:tech_radar, :radars, TechRadar.RadarsMock)
-config(:tech_radar, :surveys, TechRadar.SurveysMock)

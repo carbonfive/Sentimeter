@@ -1,0 +1,67 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <%= label f, :name %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= label f, :x_min_label %>
+  <%= text_input f, :x_min_label %>
+  <%= error_tag f, :x_min_label %>
+
+  <%= label f, :x_max_label %>
+  <%= text_input f, :x_max_label %>
+  <%= error_tag f, :x_max_label %>
+
+  <%= label f, :y_min_label %>
+  <%= text_input f, :y_min_label %>
+  <%= error_tag f, :y_min_label %>
+
+  <%= label f, :y_max_label %>
+  <%= text_input f, :y_max_label %>
+  <%= error_tag f, :y_max_label %>
+
+  <%= label f, :intro %>
+  <%= text_input f, :intro %>
+  <%= error_tag f, :intro %>
+
+  <%= label f, :section_1_desc %>
+  <%= text_input f, :section_1_desc %>
+  <%= error_tag f, :section_1_desc %>
+
+  <%= label f, :section_2_desc %>
+  <%= text_input f, :section_2_desc %>
+  <%= error_tag f, :section_2_desc %>
+
+  <%= label f, :closing %>
+  <%= text_input f, :closing %>
+  <%= error_tag f, :closing %>
+
+  <fieldset>
+  <div id="survey-trends-fields">
+    <%= inputs_for f, :survey_trends, fn st -> %>
+      <div class="row">
+        <div class="column column-90">
+          <%= label st, :trend_id, "Trend" %>
+          <%= select st, :trend_id, Enum.map(@trends, &{&1.name, &1.id}) %>
+        </div>
+        <div class="column column-10">
+          <%= label st, :delete, "Delete?" %>
+          <%= checkbox st, :delete %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%=link_to_survey_trend_fields(@trends)%>
+  </fieldset>
+
+
+  <div>
+    <%= submit "Save" %>
+  </div>
+<% end %>

@@ -1,0 +1,43 @@
+<h1>Listing Surveys</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>X min label</th>
+      <th>X max label</th>
+      <th>Y min label</th>
+      <th>Y max label</th>
+      <th>Intro</th>
+      <th>Section 1 desc</th>
+      <th>Section 2 desc</th>
+      <th>Closing</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for survey <- @surveys do %>
+    <tr>
+      <td><%= survey.name %></td>
+      <td><%= survey.x_min_label %></td>
+      <td><%= survey.x_max_label %></td>
+      <td><%= survey.y_min_label %></td>
+      <td><%= survey.y_max_label %></td>
+      <td><%= survey.intro %></td>
+      <td><%= survey.section_1_desc %></td>
+      <td><%= survey.section_2_desc %></td>
+      <td><%= survey.closing %></td>
+
+      <td>
+        <%= link "Show", to: Routes.survey_path(@conn, :show, survey) %>
+        <%= link "Edit", to: Routes.survey_path(@conn, :edit, survey) %>
+        <%= link "Delete", to: Routes.survey_path(@conn, :delete, survey), method: :delete, data: [confirm: "Are you sure?"] %>
+        <%= link "Reponses", to: Routes.survey_response_path(@conn, :index, survey) %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Survey", to: Routes.survey_path(@conn, :new) %></span>

@@ -1,0 +1,27 @@
+<h1>Show Response</h1>
+
+<ul>
+  <li>
+    <strong>X:</strong>
+    <%= @response.x %>
+  </li>
+
+  <li>
+    <strong>Y:</strong>
+    <%= @response.y %>
+  </li>
+
+  <li>
+    <strong>Trend:</strong>
+    <%= display_trend(@response) %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @response.email %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.survey_response_path(@conn, :edit, @survey_id, @response) %></span>
+<span><%= link "Back", to: Routes.survey_response_path(@conn, :index, @survey_id) %></span>
