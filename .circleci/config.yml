@@ -1,16 +1,20 @@
 version: 2.0
 jobs:
   build:
+    parallelism: 1
     docker:
-      - image: circleci/elixir:1.6-node-browsers
-      - image: postgres:9.6.2
+      - image: circleci/elixir:1.8.1-node-browsers
         environment:
-          POSTGRES_USER: ubuntu
-    working_directory: ~/tech-radar
+          MIX_ENV: test
+      - image: circleci/postgres:11.2-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: sentimeter_test
+          POSTGRES_PASSWORD:
+    working_directory: ~/sentimeter
     steps:
       - type: checkout
       - run: mix local.rebar --force
       - run: mix local.hex --force
       - run: mix deps.get
-      - run: cd assets && yarn && ./node_modules/.bin/brunch build && cd -
       - run: mix test

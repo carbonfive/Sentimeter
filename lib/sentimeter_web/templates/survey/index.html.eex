@@ -1,0 +1,24 @@
+<h1>Listing Surveys</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for survey <- @surveys do %>
+    <tr>
+      <td><%= survey.name %></td>
+      <td>
+        <%= link "Show", to: Routes.survey_path(@conn, :show, survey) %> |
+        <%= link "Edit", to: Routes.survey_path(@conn, :edit, survey) %> |
+        <%= link "Delete", to: Routes.survey_path(@conn, :delete, survey), method: :delete, data: [confirm: "Are you sure?"] %> |
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Survey", to: Routes.survey_path(@conn, :new) %></span>

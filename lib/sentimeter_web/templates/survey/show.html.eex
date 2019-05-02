@@ -1,0 +1,49 @@
+<h1><%= @survey.name %></h1>
+
+<ul>
+
+  <li>
+    <strong>X min label:</strong>
+    <%= @survey.x_min_label %>
+  </li>
+
+  <li>
+    <strong>X max label:</strong>
+    <%= @survey.x_max_label %>
+  </li>
+
+  <li>
+    <strong>Y min label:</strong>
+    <%= @survey.y_min_label %>
+  </li>
+
+  <li>
+    <strong>Y max label:</strong>
+    <%= @survey.y_max_label %>
+  </li>
+
+  <li>
+    <strong>Intro:</strong>
+    <%= @survey.intro %>
+  </li>
+
+  <li>
+    <strong>Section 1 description:</strong>
+    <%= @survey.section_1_desc %>
+  </li>
+
+  <li>
+    <strong>Section 2 description:</strong>
+    <%= @survey.section_2_desc %>
+  </li>
+
+  <li>
+    <strong>Closing:</strong>
+    <%= @survey.closing %>
+  </li>
+
+</ul>
+
+
+<span><%= link "Edit", to: Routes.survey_path(@conn, :edit, @survey) %></span> |
+<span><%= link "Back", to: Routes.survey_path(@conn, :index) %></span>
