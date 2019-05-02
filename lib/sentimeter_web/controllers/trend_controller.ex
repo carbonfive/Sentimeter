@@ -1,21 +1,22 @@
 defmodule SentimeterWeb.TrendController do
   use SentimeterWeb, :controller
 
-  alias Sentimeter.Trends
-  alias Sentimeter.Trends.Trend
+  alias Sentimeter.Surveys.Trend
+
+  @surveys Application.get_env(:sentimeter, :surveys)
 
   def index(conn, _params) do
-    trends = Trends.list_trends()
+    trends = @surveys.list_trends()
     render(conn, "index.html", trends: trends)
   end
 
   def new(conn, _params) do
-    changeset = Trends.change_trend(%Trend{})
+    changeset = @surveys.change_trend(%Trend{})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"trend" => trend_params}) do
-    case Trends.create_trend(trend_params) do
+    case @surveys.create_trend(trend_params) do
       {:ok, trend} ->
         conn
         |> put_flash(:info, "Trend created successfully.")
@@ -27,20 +28,20 @@ defmodule SentimeterWeb.TrendController do
   end
 
   def show(conn, %{"id" => id}) do
-    trend = Trends.get_trend!(id)
+    trend = @surveys.get_trend!(id)
     render(conn, "show.html", trend: trend)
   end
 
   def edit(conn, %{"id" => id}) do
-    trend = Trends.get_trend!(id)
-    changeset = Trends.change_trend(trend)
+    trend = @surveys.get_trend!(id)
+    changeset = @surveys.change_trend(trend)
     render(conn, "edit.html", trend: trend, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "trend" => trend_params}) do
-    trend = Trends.get_trend!(id)
+    trend = @surveys.get_trend!(id)
 
-    case Trends.update_trend(trend, trend_params) do
+    case @surveys.update_trend(trend, trend_params) do
       {:ok, trend} ->
         conn
         |> put_flash(:info, "Trend updated successfully.")
@@ -52,8 +53,8 @@ defmodule SentimeterWeb.TrendController do
   end
 
   def delete(conn, %{"id" => id}) do
-    trend = Trends.get_trend!(id)
-    {:ok, _trend} = Trends.delete_trend(trend)
+    trend = @surveys.get_trend!(id)
+    {:ok, _trend} = @surveys.delete_trend(trend)
 
     conn
     |> put_flash(:info, "Trend deleted successfully.")

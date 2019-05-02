@@ -2,8 +2,7 @@ defmodule Sentimeter.Fixtures do
   @moduledoc """
   This module creates some fixtures to be used in testing.
   """
-  alias Sentimeter.Surveys
-  alias Sentimeter.Trends
+  alias Sentimeter.Surveys.SurveysImpl, as: Surveys
 
   def survey(attrs \\ %{}) do
     valid_attrs = %{
@@ -27,12 +26,12 @@ defmodule Sentimeter.Fixtures do
   end
 
   def trend(attrs \\ %{}) do
-    valid_attrs = %{name: "some name"}
+    valid_attrs = %{name: "some name", description: "terrible tech"}
 
     {:ok, trend} =
       attrs
       |> Enum.into(valid_attrs)
-      |> Trends.create_trend()
+      |> Surveys.create_trend()
 
     trend
   end

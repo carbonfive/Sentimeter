@@ -73,3 +73,5 @@ config :sentimeter, Sentimeter.Repo,
   database: "sentimeter_dev",
   hostname: "localhost",
   pool_size: 10
+
+config(:sentimeter, :surveys, Sentimeter.Surveys.SurveysImpl)

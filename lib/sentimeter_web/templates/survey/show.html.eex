@@ -1,11 +1,6 @@
-<h1>Show Survey</h1>
+<h1><%= @survey.name %></h1>
 
 <ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @survey.name %>
-  </li>
 
   <li>
     <strong>X min label:</strong>
@@ -49,6 +44,6 @@
 
 </ul>
 
-<span><%= link "View Reponses", to: Routes.survey_response_path(@conn, :index, @survey) %></span> |
+
 <span><%= link "Edit", to: Routes.survey_path(@conn, :edit, @survey) %></span> |
 <span><%= link "Back", to: Routes.survey_path(@conn, :index) %></span>

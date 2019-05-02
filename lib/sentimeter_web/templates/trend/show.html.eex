@@ -7,6 +7,11 @@
     <%= @trend.name %>
   </li>
 
+  <li>
+    <strong>Description:</strong>
+    <%= @trend.description |> Earmark.as_html! |> raw %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: Routes.trend_path(@conn, :edit, @trend) %></span>

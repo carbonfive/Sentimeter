@@ -1,7 +1,69 @@
 defmodule Sentimeter.SurveysTest do
   use Sentimeter.DataCase
 
-  alias Sentimeter.Surveys
+  alias Sentimeter.Surveys.SurveysImpl, as: Surveys
+
+  describe "trends" do
+    alias Sentimeter.Surveys.Trend
+
+    @valid_attrs %{description: "some description", name: "some name"}
+    @update_attrs %{description: "some updated description", name: "some updated name"}
+    @invalid_attrs %{description: nil, name: nil}
+
+    def trend_fixture(attrs \\ %{}) do
+      {:ok, trend} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Surveys.create_trend()
+
+      trend
+    end
+
+    test "list_trends/0 returns all trends" do
+      trend = trend_fixture()
+      assert Surveys.list_trends() == [trend]
+    end
+
+    test "get_trend!/1 returns the trend with given id" do
+      trend = trend_fixture()
+      assert Surveys.get_trend!(trend.id) == trend
+    end
+
+    test "create_trend/1 with valid data creates a trend" do
+      assert {:ok, %Trend{} = trend} = Surveys.create_trend(@valid_attrs)
+      assert trend.description == "some description"
+      assert trend.name == "some name"
+    end
+
+    test "create_trend/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Surveys.create_trend(@invalid_attrs)
+    end
+
+    test "update_trend/2 with valid data updates the trend" do
+      trend = trend_fixture()
+      assert {:ok, trend} = Surveys.update_trend(trend, @update_attrs)
+      assert %Trend{} = trend
+      assert trend.description == "some updated description"
+      assert trend.name == "some updated name"
+    end
+
+    test "update_trend/2 with invalid data returns error changeset" do
+      trend = trend_fixture()
+      assert {:error, %Ecto.Changeset{}} = Surveys.update_trend(trend, @invalid_attrs)
+      assert trend == Surveys.get_trend!(trend.id)
+    end
+
+    test "delete_trend/1 deletes the trend" do
+      trend = trend_fixture()
+      assert {:ok, %Trend{}} = Surveys.delete_trend(trend)
+      assert_raise Ecto.NoResultsError, fn -> Surveys.get_trend!(trend.id) end
+    end
+
+    test "change_trend/1 returns a trend changeset" do
+      trend = trend_fixture()
+      assert %Ecto.Changeset{} = Surveys.change_trend(trend)
+    end
+  end
 
   describe "surveys" do
     alias Sentimeter.Surveys.Survey

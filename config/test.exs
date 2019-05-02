@@ -16,3 +16,5 @@ config :sentimeter, Sentimeter.Repo,
   database: "sentimeter_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config(:sentimeter, :surveys, Sentimeter.SurveysMock)

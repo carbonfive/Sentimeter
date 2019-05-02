@@ -12,6 +12,7 @@
 <%= for trend <- @trends do %>
     <tr>
       <td><%= trend.name %></td>
+      <td><%= trend.description |> Earmark.as_html! |> raw %></td>
 
       <td>
         <%= link "Show", to: Routes.trend_path(@conn, :show, trend) %>

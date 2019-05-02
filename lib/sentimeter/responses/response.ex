@@ -2,14 +2,13 @@ defmodule Sentimeter.Responses.Response do
   use Ecto.Schema
   import Ecto.Changeset
   alias Sentimeter.Surveys
-  alias Sentimeter.Trends
 
   schema "responses" do
-    field :email, :string
-    field :x, :float
-    field :y, :float
-    belongs_to :survey, Surveys.Survey
-    belongs_to :trend, Trends.Trend
+    field(:email, :string)
+    field(:x, :float)
+    field(:y, :float)
+    belongs_to(:survey, Surveys.Survey)
+    belongs_to(:trend, Surveys.Trend)
 
     timestamps()
   end

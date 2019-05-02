@@ -2,12 +2,11 @@ defmodule Sentimeter.Surveys.SurveyTrend do
   use Ecto.Schema
   import Ecto.Changeset
   alias Sentimeter.Surveys
-  alias Sentimeter.Trends
 
   schema "survey_trends" do
     field(:delete, :boolean, virtual: true)
     belongs_to(:survey, Surveys.Survey)
-    belongs_to(:trend, Trends.Trend)
+    belongs_to(:trend, Surveys.Trend)
     timestamps()
   end
 

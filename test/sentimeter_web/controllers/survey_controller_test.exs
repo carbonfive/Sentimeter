@@ -1,19 +1,28 @@
 defmodule SentimeterWeb.SurveyControllerTest do
   use SentimeterWeb.ConnCase
+  import Mox
+  alias Sentimeter.SurveysMock
+  alias Sentimeter.Surveys.Survey
 
-  alias Sentimeter.Surveys
+  @create_attrs %{}
+  @update_attrs %{}
+  @invalid_attrs %{}
 
-  @create_attrs %{closing: "some closing", intro: "some intro", name: "some name", section_1_desc: "some section_1_desc", section_2_desc: "some section_2_desc", x_max_label: "some x_max_label", x_min_label: "some x_min_label", y_max_label: "some y_max_label", y_min_label: "some y_min_label"}
-  @update_attrs %{closing: "some updated closing", intro: "some updated intro", name: "some updated name", section_1_desc: "some updated section_1_desc", section_2_desc: "some updated section_2_desc", x_max_label: "some updated x_max_label", x_min_label: "some updated x_min_label", y_max_label: "some updated y_max_label", y_min_label: "some updated y_min_label"}
-  @invalid_attrs %{closing: nil, intro: nil, name: nil, section_1_desc: nil, section_2_desc: nil, x_max_label: nil, x_min_label: nil, y_max_label: nil, y_min_label: nil}
-
-  def fixture(:survey) do
-    {:ok, survey} = Surveys.create_survey(@create_attrs)
-    survey
+  def changeset(%Survey{} = survey, attrs \\ %{}) do
+    Ecto.Changeset.change(survey, attrs)
   end
+
+  setup do
+    SurveysMock |> stub(:change_survey, fn survey -> changeset(survey) end)
+    SurveysMock |> stub(:list_trends, fn -> [] end)
+    :ok
+  end
+
+  setup :verify_on_exit!
 
   describe "index" do
     test "lists all surveys", %{conn: conn} do
+      SurveysMock |> expect(:list_surveys, fn -> [] end)
       conn = get(conn, Routes.survey_path(conn, :index))
       assert html_response(conn, 200) =~ "Listing Surveys"
     end
@@ -21,6 +30,7 @@ defmodule SentimeterWeb.SurveyControllerTest do
 
   describe "new survey" do
     test "renders form", %{conn: conn} do
+      SurveysMock |> expect(:change_survey, 1, fn survey -> changeset(survey) end)
       conn = get(conn, Routes.survey_path(conn, :new))
       assert html_response(conn, 200) =~ "New Survey"
     end
@@ -28,61 +38,63 @@ defmodule SentimeterWeb.SurveyControllerTest do
 
   describe "create survey" do
     test "redirects to show when data is valid", %{conn: conn} do
+      SurveysMock |> expect(:create_survey, fn _ -> {:ok, %Survey{id: 1}} end)
       conn = post(conn, Routes.survey_path(conn, :create), survey: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == Routes.survey_path(conn, :show, id)
-
-      conn = get(conn, Routes.survey_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Survey"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
+      SurveysMock
+      |> expect(:create_survey, fn _ ->
+        {:error, changeset(%Survey{})}
+      end)
+
       conn = post(conn, Routes.survey_path(conn, :create), survey: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Survey"
     end
   end
 
   describe "edit survey" do
-    setup [:create_survey]
+    test "renders form for editing chosen survey", %{conn: conn} do
+      SurveysMock
+      |> expect(:change_survey, fn survey -> changeset(survey) end)
+      |> expect(:get_survey!, fn id -> %Survey{id: id} end)
 
-    test "renders form for editing chosen survey", %{conn: conn, survey: survey} do
-      conn = get(conn, Routes.survey_path(conn, :edit, survey))
+      conn = get(conn, Routes.survey_path(conn, :edit, %Survey{id: 1}))
       assert html_response(conn, 200) =~ "Edit Survey"
     end
   end
 
   describe "update survey" do
-    setup [:create_survey]
+    test "redirects when data is valid", %{conn: conn} do
+      SurveysMock
+      |> expect(:update_survey, fn survey, _params -> {:ok, survey} end)
+      |> expect(:get_survey!, fn id -> %Survey{id: id} end)
 
-    test "redirects when data is valid", %{conn: conn, survey: survey} do
-      conn = put(conn, Routes.survey_path(conn, :update, survey), survey: @update_attrs)
-      assert redirected_to(conn) == Routes.survey_path(conn, :show, survey)
-
-      conn = get(conn, Routes.survey_path(conn, :show, survey))
-      assert html_response(conn, 200) =~ "some updated closing"
+      conn = put(conn, Routes.survey_path(conn, :update, %Survey{id: 1}), survey: @update_attrs)
+      assert redirected_to(conn) == Routes.survey_path(conn, :show, %Survey{id: 1})
     end
 
-    test "renders errors when data is invalid", %{conn: conn, survey: survey} do
-      conn = put(conn, Routes.survey_path(conn, :update, survey), survey: @invalid_attrs)
+    test "renders errors when data is invalid", %{conn: conn} do
+      SurveysMock
+      |> expect(:update_survey, fn survey, params -> {:error, changeset(survey, params)} end)
+      |> expect(:get_survey!, fn id -> %Survey{id: id} end)
+
+      conn = put(conn, Routes.survey_path(conn, :update, %Survey{id: 1}), survey: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Survey"
     end
   end
 
   describe "delete survey" do
-    setup [:create_survey]
+    test "deletes chosen survey", %{conn: conn} do
+      SurveysMock
+      |> expect(:delete_survey, fn survey -> {:ok, survey} end)
+      |> expect(:get_survey!, fn id -> %Survey{id: id} end)
 
-    test "deletes chosen survey", %{conn: conn, survey: survey} do
-      conn = delete(conn, Routes.survey_path(conn, :delete, survey))
+      conn = delete(conn, Routes.survey_path(conn, :delete, %Survey{id: 1}))
       assert redirected_to(conn) == Routes.survey_path(conn, :index)
-      assert_error_sent 404, fn ->
-        get(conn, Routes.survey_path(conn, :show, survey))
-      end
     end
-  end
-
-  defp create_survey(_) do
-    survey = fixture(:survey)
-    {:ok, survey: survey}
   end
 end
