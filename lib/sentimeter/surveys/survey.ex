@@ -2,7 +2,6 @@ defmodule Sentimeter.Surveys.Survey do
   use Ecto.Schema
   import Ecto.Changeset
   alias Sentimeter.Surveys.SurveyTrend
-  alias Sentimeter.Surveys.Trend
 
   schema "surveys" do
     field(:closing, :string)
@@ -14,6 +13,7 @@ defmodule Sentimeter.Surveys.Survey do
     field(:x_min_label, :string)
     field(:y_max_label, :string)
     field(:y_min_label, :string)
+    field(:guid, Ecto.UUID, autogenerate: true)
     has_many(:survey_trends, SurveyTrend, on_delete: :delete_all)
     has_many(:trends, through: [:survey_trends, :trend])
     timestamps()

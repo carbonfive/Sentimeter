@@ -116,50 +116,50 @@ defmodule Sentimeter.Surveys do
   """
   @callback get_survey!(id :: number) :: %Survey{} | no_return
 
-  # @doc """
-  # Gets a single survey by GUID.
+  @doc """
+  Gets a single survey by GUID.
 
-  # Raises `Ecto.NoResultsError` if the Survey does not exist.
+  Raises `Ecto.NoResultsError` if the Survey does not exist.
 
-  # ## Examples
+  ## Examples
 
-  #     iex> get_survey_by_guid!("ADBCD-123")
-  #     %Survey{}
+      iex> get_survey_by_guid!("ADBCD-123")
+      %Survey{}
 
-  #     iex> get_survey_by_guid!("ADDJE-123")
-  #     ** (Ecto.NoResultsError)
+      iex> get_survey_by_guid!("ADDJE-123")
+      ** (Ecto.NoResultsError)
 
-  # """
-  # @callback get_survey_by_guid!(guid :: Ecto.UUID.type()) :: %Survey{} | no_return
+  """
+  @callback get_survey_by_guid!(guid :: Ecto.UUID.type()) :: %Survey{} | no_return
 
-  # @doc """
-  # Gets all trends for a survey with given GUID, grouped by category
+  @doc """
+  Gets all trends for a survey with given GUID, grouped by category
 
-  # ## Examples
+  ## Examples
 
-  #     iex> get_trends_by_survey_guid("ADBCD-123")
-  #     %{
-  #       1: [%Trend{}]
-  #     %}
+      iex> get_trends_by_survey_guid("ADBCD-123")
+      %{
+        1: [%Trend{}]
+      %}
 
-  # """
-  # @callback get_trends_by_survey_guid(guid :: Ecto.UUID.type()) :: %{
-  #             required(number) => %{required(Ecto.UUID) => %Trend{}}
-  #           }
+  """
+  @callback get_trends_by_survey_guid(guid :: Ecto.UUID.type()) :: %{
+              required(number) => %{required(Ecto.UUID) => %Trend{}}
+            }
 
-  # @doc """
-  # Determine if the given survey trend guids cover the complete set of survey trends for the given survey guid
+  @doc """
+  Determine if the given survey trend guids cover the complete set of survey trends for the given survey guid
 
-  # ## Examples
+  ## Examples
 
-  #     iex> survey_trend_guids_match_survey_guid("ADBCD-123", ["CCDD-123", "JJJDDD-456"])
-  #     true
+      iex> survey_trend_guids_match_survey_guid("ADBCD-123", ["CCDD-123", "JJJDDD-456"])
+      true
 
-  # """
-  # @callback survey_trend_guids_match_survey_guid(
-  #             guid :: Ecto.UUID.type(),
-  #             survey_trend_guids :: [Ecto.UUID.type()]
-  #           ) :: true | false
+  """
+  @callback survey_trend_guids_match_survey_guid(
+              guid :: Ecto.UUID.type(),
+              survey_trend_guids :: [Ecto.UUID.type()]
+            ) :: true | false
 
   @doc """
   Creates a survey.

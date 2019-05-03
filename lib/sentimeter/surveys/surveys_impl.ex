@@ -8,6 +8,7 @@ defmodule Sentimeter.Surveys.SurveysImpl do
   import Ecto.Query, warn: false
   alias Sentimeter.Repo
   alias Sentimeter.Surveys.Trend
+  alias Sentimeter.Surveys.SurveyTrend
 
   @doc """
   Returns the list of trends.
@@ -116,6 +117,7 @@ defmodule Sentimeter.Surveys.SurveysImpl do
   """
   def list_surveys do
     Repo.all(Survey)
+    |> Repo.preload(:survey_trends)
   end
 
   @doc """
@@ -135,6 +137,72 @@ defmodule Sentimeter.Surveys.SurveysImpl do
   def get_survey!(id) do
     Repo.get!(Survey, id)
     |> Repo.preload(:survey_trends)
+  end
+
+  @doc """
+  Gets a single survey by GUID.
+
+  Raises `Ecto.NoResultsError` if the Survey does not exist.
+
+  ## Examples
+
+      iex> get_survey_by_guid!("ADBCD-123")
+      %Survey{}
+
+      iex> get_survey_by_guid!("ADDJE-123")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_survey_by_guid!(guid) do
+    Repo.get_by!(Survey, guid: guid)
+  end
+
+  @doc """
+  Gets all trends for a survey with given GUID, grouped by category
+
+  ## Examples
+
+      iex> get_trends_by_survey_guid("ADBCD-123")
+      %{
+        1: [%Trend{}]
+      %}
+
+  """
+  def get_trends_by_survey_guid(guid) do
+    query =
+      from(
+        trend in Trend,
+        join: survey_trend in assoc(trend, :survey_trends),
+        join: survey in assoc(survey_trend, :survey),
+        where: survey.guid == ^guid,
+        select: {survey_trend.guid, trend}
+      )
+
+    Repo.all(query) |> Map.new()
+  end
+
+  @doc """
+  Determine if the given survey trend guids cover the complete set of survey trends for the given survey guid
+
+  ## Examples
+
+      iex> survey_trend_guids_match_survey_guid("ADBCD-123", ["CCDD-123", "JJJDDD-456"])
+      true
+  """
+
+  def survey_trend_guids_match_survey_guid(guid, survey_trend_guids) do
+    expected_guids =
+      Repo.all(
+        from(
+          survey_trend in SurveyTrend,
+          join: survey in assoc(survey_trend, :survey),
+          where: survey.guid == ^guid
+        )
+      )
+      |> Enum.map(& &1.guid)
+      |> Enum.sort()
+
+    survey_trend_guids |> Enum.sort() == expected_guids
   end
 
   @doc """

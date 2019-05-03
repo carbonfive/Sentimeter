@@ -5,6 +5,7 @@ defmodule Sentimeter.Surveys.SurveyTrend do
 
   schema "survey_trends" do
     field(:delete, :boolean, virtual: true)
+    field(:guid, Ecto.UUID, autogenerate: true)
     belongs_to(:survey, Surveys.Survey)
     belongs_to(:trend, Surveys.Trend)
     timestamps()

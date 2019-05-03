@@ -77,7 +77,8 @@ defmodule Sentimeter.SurveysTest do
       x_max_label: "some x_max_label",
       x_min_label: "some x_min_label",
       y_max_label: "some y_max_label",
-      y_min_label: "some y_min_label"
+      y_min_label: "some y_min_label",
+      survey_trends: []
     }
     @update_attrs %{
       closing: "some updated closing",
@@ -88,7 +89,8 @@ defmodule Sentimeter.SurveysTest do
       x_max_label: "some updated x_max_label",
       x_min_label: "some updated x_min_label",
       y_max_label: "some updated y_max_label",
-      y_min_label: "some updated y_min_label"
+      y_min_label: "some updated y_min_label",
+      survey_trends: []
     }
     @invalid_attrs %{
       closing: nil,
@@ -99,7 +101,8 @@ defmodule Sentimeter.SurveysTest do
       x_max_label: nil,
       x_min_label: nil,
       y_max_label: nil,
-      y_min_label: nil
+      y_min_label: nil,
+      survey_trends: nil
     }
 
     def survey_fixture(attrs \\ %{}) do
@@ -119,6 +122,11 @@ defmodule Sentimeter.SurveysTest do
     test "get_survey!/1 returns the survey with given id" do
       survey = survey_fixture()
       assert Surveys.get_survey!(survey.id) == survey
+    end
+
+    test "get_survey_by_guid!/1 returns the survey with the given guid" do
+      survey = survey_fixture()
+      assert Surveys.get_survey_by_guid!(survey.guid) |> Repo.preload(:survey_trends) == survey
     end
 
     test "create_survey/1 with valid data creates a survey" do
@@ -167,6 +175,64 @@ defmodule Sentimeter.SurveysTest do
     test "change_survey/1 returns a survey changeset" do
       survey = survey_fixture()
       assert %Ecto.Changeset{} = Surveys.change_survey(survey)
+    end
+  end
+
+  describe "survey trends" do
+    alias Sentimeter.Fixtures
+
+    test "get_trends_for_guid/1 returns trends for a survey grouped by category" do
+      survey = Fixtures.survey()
+
+      trends =
+        1..4
+        |> Enum.map(fn n -> Fixtures.trend() end)
+        |> Enum.map(fn trend ->
+          Fixtures.survey_trend(%{trend_id: trend.id, survey_id: survey.id})
+          |> Repo.preload(:trend)
+        end)
+        |> Enum.map(fn survey_trend -> {survey_trend.guid, survey_trend.trend} end)
+        |> Map.new()
+
+      assert Surveys.get_trends_by_survey_guid(survey.guid) == trends
+    end
+
+    test "survey_trend_guids_match_survey_guid/2 returns true if given survey trend guids exactly match survey_trend guid" do
+      survey = Fixtures.survey()
+
+      trends =
+        1..4
+        |> Enum.map(fn n -> Fixtures.trend() end)
+        |> Enum.map(fn trend ->
+          Fixtures.survey_trend(%{trend_id: trend.id, survey_id: survey.id})
+        end)
+
+      trend_guids = trends |> Enum.map(& &1.guid)
+      assert Surveys.survey_trend_guids_match_survey_guid(survey.guid, trend_guids) == true
+    end
+
+    test "survey_trend_guids_match_survey_guid/2 returns false if given survey trend guids do not match survey_trend guid" do
+      survey = Fixtures.survey()
+
+      trends =
+        1..4
+        |> Enum.map(fn n -> Fixtures.trend() end)
+        |> Enum.map(fn trend ->
+          Fixtures.survey_trend(%{trend_id: trend.id, survey_id: survey.id})
+        end)
+
+      trend_guids = trends |> Enum.map(& &1.guid)
+      [_ | too_few_trend_guids] = trend_guids
+      wrong_trend_guids = ["apples" | too_few_trend_guids]
+      too_many_trend_guids = ["apples" | trend_guids]
+
+      assert Surveys.survey_trend_guids_match_survey_guid(survey.guid, too_few_trend_guids) ==
+               false
+
+      assert Surveys.survey_trend_guids_match_survey_guid(survey.guid, wrong_trend_guids) == false
+
+      assert Surveys.survey_trend_guids_match_survey_guid(survey.guid, too_many_trend_guids) ==
+               false
     end
   end
 end
