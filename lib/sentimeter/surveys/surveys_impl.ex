@@ -134,6 +134,7 @@ defmodule Sentimeter.Surveys.SurveysImpl do
   """
   def get_survey!(id) do
     Repo.get!(Survey, id)
+    |> Repo.preload(:survey_trends)
   end
 
   @doc """

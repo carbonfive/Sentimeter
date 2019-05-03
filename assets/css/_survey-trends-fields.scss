@@ -1,0 +1,15 @@
+.survey-trends-fields__row {
+  display: grid;
+  grid-template-columns: auto 100px;
+}
+
+.survey-trends-fields__trend {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+.survey-trends-fields__trend-delete {
+  padding-left: 10px;
+  grid-column-start: 2;
+  grid-column-end: 3
+}

@@ -1,10 +1,10 @@
 <h1>Listing Trends</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Name</th>
-
+      <th>Description</th>
       <th></th>
     </tr>
   </thead>
@@ -15,9 +15,9 @@
       <td><%= trend.description |> Earmark.as_html! |> raw %></td>
 
       <td>
-        <%= link "Show", to: Routes.trend_path(@conn, :show, trend) %>
-        <%= link "Edit", to: Routes.trend_path(@conn, :edit, trend) %>
-        <%= link "Delete", to: Routes.trend_path(@conn, :delete, trend), method: :delete, data: [confirm: "Are you sure?"] %>
+        <%= link "Show", to: Routes.trend_path(@conn, :show, trend), class: "button" %>
+        <%= link "Edit", to: Routes.trend_path(@conn, :edit, trend), class: "button" %>
+        <%= link "Delete", to: Routes.trend_path(@conn, :delete, trend), class: "button button--warning", method: :delete, data: [confirm: "Are you sure?"] %>
       </td>
     </tr>
 <% end %>

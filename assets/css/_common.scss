@@ -1,0 +1,97 @@
+table.table {
+  border-spacing: 0;
+  width: 100%;
+
+  td,
+  th {
+    border-bottom: .1rem solid white;
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+  }
+
+  td:first-child,
+  th:first-child {
+    padding-left: 0;
+  }
+
+  td:last-child,
+  th:last-child {
+    padding-right: 0;
+  }
+}
+
+.button {
+  display: inline-block;
+  background-color: $light-green;
+  color: $white;
+  font-size: 20px;
+  line-height: 26px;
+  padding: 12px;
+  border: none;
+  text-decoration: none;
+  @include font-medium
+}
+
+.button--wide {
+  padding-left: 36px;
+  padding-right: 36px;
+}
+
+.form-footer {
+  margin-top: 16px;
+  padding-right: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.button--warning {
+  background-color: $hot-pink;
+}
+
+.control-label {
+  color: $light-grey;
+  font-size: 20px;
+  @include font-medium;
+  line-height: 26px;
+}
+
+.form-group {
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  input, textarea, select {
+    display: block;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+}
+
+.form-group-inline {
+  display: flex;
+  flex-direction: row;
+
+  label {
+    margin-right: 10px;
+  }
+  input, textarea, select {
+    flex: 1
+  }
+  margin-bottom: 16px;
+}
+
+.form-control {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border: 1px solid $grey;	
+    border-radius: 3px;	
+    background-color: $white;
+    font-size: 14px;
+    line-height: 20px;
+    padding-left: 10px;
+    color: $dark-grey;
+    @include font-regular;
+    @include secondary-font;
+    box-shadow: inset 0 1px 3px 0 $semi-transparent-black;
+} 

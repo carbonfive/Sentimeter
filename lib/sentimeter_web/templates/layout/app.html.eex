@@ -5,19 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Sentimeter</title>
+    <link rel="stylesheet" href="https://use.typekit.net/lzv2gmb.css">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="<%= Routes.survey_path(@conn, :index) %>">Surveys</a></li>
-            <li><a href="<%= Routes.trend_path(@conn, :index) %>">Trends</a></li>
-          </ul>
-        </nav>
-        <h3>Sentimeter Admin</h3>
-      </section>
+    <header id="header">
+      <div class="title">
+        <img class="title__logo" src="<%= Routes.static_path(@conn, "/images/sentimeter_icon.svg") %>"/>
+        <span class="title__text">Sentimeter</span>
+      </div>
     </header>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>

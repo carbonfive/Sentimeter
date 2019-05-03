@@ -1,0 +1,26 @@
+@mixin default-font {
+  font-family: futura-pt, sans-serif;
+}
+
+@mixin font-regular {
+  font-style: normal;
+  font-weight: 400;
+}
+
+@mixin font-bold {
+  font-style: normal;
+  font-weight: 700
+}
+
+@mixin font-medium {
+  font-style: normal;
+  font-weight: 500;
+}
+
+@mixin secondary-font {
+  font-family: aktiv-grotesk, sans-serif;
+}
+
+@mixin tertiary-font {
+  font-family: freight-display-pro, serif;
+}

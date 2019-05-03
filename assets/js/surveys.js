@@ -2,7 +2,8 @@ import $ from "jquery";
 window.$ = $;
 export default () => {
   $(document).ready(() => {
-    let lastIndex = $("#survey-trends-fields .row").length;
+    let lastIndex = $("#survey-trends-fields .survey-trends-fields__row")
+      .length;
     $("#add-survey-trend").on("click", function(e) {
       e.preventDefault();
 

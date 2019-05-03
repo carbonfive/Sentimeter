@@ -5,63 +5,85 @@
     </div>
   <% end %>
 
-  <%= label f, :name %>
-  <%= text_input f, :name %>
+  <div class="form-group">
+  <%= label f, :name, class: "control-label" %>
+  <%= text_input f, :name, class: "form-control"%>
   <%= error_tag f, :name %>
+  </div>
 
-  <%= label f, :x_min_label %>
-  <%= text_input f, :x_min_label %>
+  <div class="form-group">
+  <%= label f, :x_min_label, class: "control-label" %>
+  <%= text_input f, :x_min_label, class: "form-control"%>
   <%= error_tag f, :x_min_label %>
-
-  <%= label f, :x_max_label %>
-  <%= text_input f, :x_max_label %>
+  </div>
+  
+  <div class="form-group">
+  <%= label f, :x_max_label, class: "control-label" %>
+  <%= text_input f, :x_max_label, class: "form-control"%>
   <%= error_tag f, :x_max_label %>
-
-  <%= label f, :y_min_label %>
-  <%= text_input f, :y_min_label %>
+  </div>
+  
+  <div class="form-group">
+  <%= label f, :y_min_label, class: "control-label" %>
+  <%= text_input f, :y_min_label, class: "form-control" %>
   <%= error_tag f, :y_min_label %>
-
-  <%= label f, :y_max_label %>
-  <%= text_input f, :y_max_label %>
+  </div>
+  
+  <div class="form-group">
+  <%= label f, :y_max_label, class: "control-label" %>
+  <%= text_input f, :y_max_label, class: "form-control" %>
   <%= error_tag f, :y_max_label %>
-
-  <%= label f, :intro %>
-  <%= text_input f, :intro %>
+  </div>
+  
+  <div class="form-group">
+  <%= label f, :intro, class: "control-label" %>
+  <%= textarea f, :intro, rows: "8", class: "form-control" %>
   <%= error_tag f, :intro %>
-
-  <%= label f, :section_1_desc %>
-  <%= text_input f, :section_1_desc %>
+  </div>
+  
+  <div class="form-group">
+  <%= label f, :section_1_desc, class: "control-label" do %>
+    Section One Description
+  <% end %>
+  <%= textarea f, :section_1_desc, rows: "8", class: "form-control" %>
   <%= error_tag f, :section_1_desc %>
-
-  <%= label f, :section_2_desc %>
-  <%= text_input f, :section_2_desc %>
+  </div>
+  
+  <div class="form-group">
+  <%= label f, :section_2_desc, class: "control-label" do %>
+    Section Two Description
+  <% end %>
+  <%= textarea f, :section_2_desc, rows: "8", class: "form-control" %>
   <%= error_tag f, :section_2_desc %>
-
-  <%= label f, :closing %>
-  <%= text_input f, :closing %>
+  </div>
+  
+  <div class="form-group">
+  <%= label f, :closing, class: "control-label" %>
+  <%= textarea f, :closing, rows: "8", class: "form-control" %>
   <%= error_tag f, :closing %>
-
+  </div>
+  
   <fieldset>
   <div id="survey-trends-fields">
     <%= inputs_for f, :survey_trends, fn st -> %>
-      <div class="row">
-        <div class="column column-90">
-          <%= label st, :trend_id, "Trend" %>
-          <%= select st, :trend_id, Enum.map(@trends, &{&1.name, &1.id}) %>
+      <div class="survey-trends-fields__row">
+        <div class="survey-trends-fields__trend form-group-inline">
+          <%= label st, :trend_id, "Trend", class: "control-label" %>
+          <%= select st, :trend_id, Enum.map(@trends, &{&1.name, &1.id}), class: "form-control" %>
         </div>
-        <div class="column column-10">
-          <%= label st, :delete, "Delete?" %>
+        <div class="survey-trends-fields__trend-delete">
+          <%= label st, :delete, "Delete?", class: "control-label" %>
           <%= checkbox st, :delete %>
         </div>
       </div>
     <% end %>
   </div>
-
+  <div>
   <%=link_to_survey_trend_fields(@trends)%>
+  </div>
   </fieldset>
 
-
-  <div>
-    <%= submit "Save" %>
+  <div class="form-footer">
+    <%= submit "Save", class: "button button--wide" %>
   </div>
 <% end %>
