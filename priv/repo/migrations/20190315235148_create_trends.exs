@@ -7,6 +7,5 @@ defmodule Sentimeter.Repo.Migrations.CreateTrends do
 
       timestamps()
     end
-
   end
 end

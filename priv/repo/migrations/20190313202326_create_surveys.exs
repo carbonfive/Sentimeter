@@ -15,6 +15,5 @@ defmodule Sentimeter.Repo.Migrations.CreateSurveys do
 
       timestamps()
     end
-
   end
 end

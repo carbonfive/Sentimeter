@@ -1,146 +1,104 @@
-# defmodule SentimeterWeb.ResponseControllerTest do
-#   use SentimeterWeb.ConnCase
+defmodule SentimeterWeb.ResponseControllerTest do
+  use SentimeterWeb.ConnCase
+  import Mox
+  alias Sentimeter.ResponsesMock
+  alias Sentimeter.Responses.Response
 
-#   alias Sentimeter.Responses
-#   alias Sentimeter.Fixtures
+  @create_attrs %{}
+  @update_attrs %{}
+  @invalid_attrs %{}
 
-#   @create_attrs %{email: "some email", x: 0.5, y: 0.5}
-#   @update_attrs %{email: "some updated email", x: 0.7, y: 0.7}
-#   @invalid_attrs %{email: nil, trend_id: nil, x: nil, y: nil}
+  def changeset(%Response{} = response, attrs \\ %{}) do
+    Ecto.Changeset.change(response, attrs)
+  end
 
-#   def fixture(:response, %{survey_id: survey_id, trend_id: trend_id}) do
-#     {:ok, response} =
-#       @create_attrs
-#       |> Enum.into(%{survey_id: survey_id, trend_id: trend_id})
-#       |> Responses.create_response()
+  setup do
+    ResponsesMock |> stub(:change_response, fn response -> changeset(response) end)
+    :ok
+  end
 
-#     response
-#   end
+  setup :verify_on_exit!
 
-#   def fixture(:survey) do
-#     Fixtures.survey()
-#   end
+  describe "index" do
+    test "lists all responses", %{conn: conn} do
+      ResponsesMock |> expect(:list_responses, fn -> [] end)
+      conn = get(conn, Routes.response_path(conn, :index))
+      assert html_response(conn, 200) =~ "Listing Responses"
+    end
+  end
 
-#   def fixture(:trend) do
-#     Fixtures.trend()
-#   end
+  describe "new response" do
+    test "renders form", %{conn: conn} do
+      ResponsesMock |> expect(:change_response, 1, fn response -> changeset(response) end)
+      conn = get(conn, Routes.response_path(conn, :new))
+      assert html_response(conn, 200) =~ "New Response"
+    end
+  end
 
-#   describe "index" do
-#     setup [:create_survey]
+  describe "create response" do
+    test "redirects to show when data is valid", %{conn: conn} do
+      ResponsesMock |> expect(:create_response, fn _ -> {:ok, %Response{id: 1}} end)
 
-#     test "lists all responses", %{conn: conn, survey: survey} do
-#       conn = get(conn, Routes.survey_response_path(conn, :index, survey))
-#       assert html_response(conn, 200) =~ "Listing Responses"
-#     end
-#   end
+      conn = post(conn, Routes.response_path(conn, :create), response: @create_attrs)
 
-#   describe "new response" do
-#     setup [:create_survey]
+      assert %{id: id} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.response_path(conn, :show, id)
+    end
 
-#     test "renders form", %{conn: conn, survey: survey} do
-#       conn = get(conn, Routes.survey_response_path(conn, :new, survey))
-#       assert html_response(conn, 200) =~ "New Response"
-#     end
-#   end
+    test "renders errors when data is invalid", %{conn: conn} do
+      ResponsesMock
+      |> expect(:create_response, fn _ ->
+        {:error, changeset(%Response{})}
+      end)
 
-#   describe "create response" do
-#     setup [:create_survey, :create_trend]
+      conn = post(conn, Routes.response_path(conn, :create), response: @invalid_attrs)
+      assert html_response(conn, 200) =~ "New Response"
+    end
+  end
 
-#     test "redirects to show when data is valid", %{
-#       conn: conn,
-#       survey: survey,
-#       trend: %{id: trend_id}
-#     } do
-#       attrs = @create_attrs |> Enum.into(%{trend_id: trend_id})
+  describe "edit response" do
+    test "renders form for editing chosen response", %{conn: conn} do
+      ResponsesMock
+      |> expect(:change_response, fn response -> changeset(response) end)
+      |> expect(:get_response!, fn id -> %Response{id: id} end)
 
-#       conn = post(conn, Routes.survey_response_path(conn, :create, survey), response: attrs)
+      conn = get(conn, Routes.response_path(conn, :edit, %Response{id: 1}))
+      assert html_response(conn, 200) =~ "Edit Response"
+    end
+  end
 
-#       assert %{id: id} = redirected_params(conn)
-#       assert redirected_to(conn) == Routes.survey_response_path(conn, :show, survey, id)
+  describe "update response" do
+    test "redirects when data is valid", %{conn: conn} do
+      ResponsesMock
+      |> expect(:update_response, fn response, _params -> {:ok, response} end)
+      |> expect(:get_response!, fn id -> %Response{id: id} end)
 
-#       conn = get(conn, Routes.survey_response_path(conn, :show, survey, id))
-#       assert html_response(conn, 200) =~ "Show Response"
-#     end
+      conn =
+        put(conn, Routes.response_path(conn, :update, %Response{id: 1}), response: @update_attrs)
 
-#     test "renders errors when data is invalid", %{conn: conn, survey: survey} do
-#       conn =
-#         post(conn, Routes.survey_response_path(conn, :create, survey), response: @invalid_attrs)
+      assert redirected_to(conn) == Routes.response_path(conn, :show, %Response{id: 1})
+    end
 
-#       assert html_response(conn, 200) =~ "New Response"
-#     end
-#   end
+    test "renders errors when data is invalid", %{conn: conn} do
+      ResponsesMock
+      |> expect(:update_response, fn response, params -> {:error, changeset(response, params)} end)
+      |> expect(:get_response!, fn id -> %Response{id: id} end)
 
-#   describe "edit response" do
-#     setup [:create_response]
+      conn =
+        put(conn, Routes.response_path(conn, :update, %Response{id: 1}), response: @invalid_attrs)
 
-#     test "renders form for editing chosen response", %{
-#       conn: conn,
-#       response: response,
-#       survey: survey
-#     } do
-#       conn = get(conn, Routes.survey_response_path(conn, :edit, survey, response))
-#       assert html_response(conn, 200) =~ "Edit Response"
-#     end
-#   end
+      assert html_response(conn, 200) =~ "Edit Response"
+    end
+  end
 
-#   describe "update response" do
-#     setup [:create_response]
+  describe "delete response" do
+    test "deletes chosen response", %{conn: conn} do
+      ResponsesMock
+      |> expect(:delete_response, fn response -> {:ok, response} end)
+      |> expect(:get_response!, fn id -> %Response{id: id} end)
 
-#     test "redirects when data is valid", %{
-#       conn: conn,
-#       response: response,
-#       survey: survey,
-#       trend: %{id: trend_id}
-#     } do
-#       conn =
-#         put(conn, Routes.survey_response_path(conn, :update, survey, response),
-#           response: @update_attrs |> Enum.into(%{trend_id: trend_id})
-#         )
-
-#       assert redirected_to(conn) == Routes.survey_response_path(conn, :show, survey, response)
-
-#       conn = get(conn, Routes.survey_response_path(conn, :show, survey, response))
-#       assert html_response(conn, 200) =~ "some updated email"
-#     end
-
-#     test "renders errors when data is invalid", %{conn: conn, response: response, survey: survey} do
-#       conn =
-#         put(conn, Routes.survey_response_path(conn, :update, survey, response),
-#           response: @invalid_attrs
-#         )
-
-#       assert html_response(conn, 200) =~ "Edit Response"
-#     end
-#   end
-
-#   describe "delete response" do
-#     setup [:create_response]
-
-#     test "deletes chosen response", %{conn: conn, response: response, survey: survey} do
-#       conn = delete(conn, Routes.survey_response_path(conn, :delete, survey, response))
-#       assert redirected_to(conn) == Routes.survey_response_path(conn, :index, survey)
-
-#       assert_error_sent 404, fn ->
-#         get(conn, Routes.survey_response_path(conn, :show, survey, response))
-#       end
-#     end
-#   end
-
-#   defp create_response(_) do
-#     survey = fixture(:survey)
-#     trend = fixture(:trend)
-
-#     response =
-#       fixture(:response, %{survey_id: Map.get(survey, :id), trend_id: Map.get(trend, :id)})
-
-#     {:ok, response: response, survey: survey, trend: trend}
-#   end
-
-#   defp create_survey(_) do
-#     {:ok, survey: fixture(:survey)}
-#   end
-
-#   defp create_trend(_) do
-#     {:ok, trend: fixture(:trend)}
-#   end
-# end
+      conn = delete(conn, Routes.response_path(conn, :delete, %Response{id: 1}))
+      assert redirected_to(conn) == Routes.response_path(conn, :index)
+    end
+  end
+end

@@ -1,25 +1,20 @@
 defmodule Sentimeter.Responses do
   @moduledoc """
-  The Responses context.
+  The Surveys context.
   """
-
-  import Ecto.Query, warn: false
-  alias Sentimeter.Repo
 
   alias Sentimeter.Responses.Response
 
   @doc """
-  Returns the list of matching responses.
+  Returns the list of responses.
 
   ## Examples
 
-  iex> find_responses(survey_id: 1)
-  [%Response{}, ...]
+      iex> list_responses()
+      [%Response{}, ...]
 
   """
-  def find_responses(opts \\ []) do
-    Response |> Ecto.Query.where(^opts) |> Repo.all() |> load_response_associations()
-  end
+  @callback list_responses() :: [%Response{}]
 
   @doc """
   Gets a single response.
@@ -35,7 +30,7 @@ defmodule Sentimeter.Responses do
       ** (Ecto.NoResultsError)
 
   """
-  def get_response!(id), do: Repo.get!(Response, id) |> load_response_associations()
+  @callback get_response!(id :: number) :: %Response{} | no_return
 
   @doc """
   Creates a response.
@@ -49,15 +44,8 @@ defmodule Sentimeter.Responses do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_response(attrs \\ %{}) do
-    %Response{}
-    |> Response.changeset(attrs)
-    |> Repo.insert()
-    |> case do
-      {:ok, response} -> {:ok, load_response_associations(response)}
-      error -> error
-    end
-  end
+  @callback create_response() :: {:ok, %Response{}} | {:error, %Ecto.Changeset{}}
+  @callback create_response(attrs :: Map.t()) :: {:ok, %Response{}} | {:error, %Ecto.Changeset{}}
 
   @doc """
   Updates a response.
@@ -71,15 +59,8 @@ defmodule Sentimeter.Responses do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_response(%Response{} = response, attrs) do
-    response
-    |> Response.changeset(attrs)
-    |> Repo.update()
-    |> case do
-      {:ok, response} -> {:ok, load_response_associations(response)}
-      error -> error
-    end
-  end
+  @callback update_response(response :: %Response{}, attrs :: Map.t()) ::
+              {:ok, %Response{}} | {:error, %Ecto.Changeset{}}
 
   @doc """
   Deletes a Response.
@@ -93,9 +74,8 @@ defmodule Sentimeter.Responses do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_response(%Response{} = response) do
-    Repo.delete(response)
-  end
+  @callback delete_response(response :: %Response{}) ::
+              {:ok, %Response{}} | {:error, %Ecto.Changeset{}}
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking response changes.
@@ -106,13 +86,5 @@ defmodule Sentimeter.Responses do
       %Ecto.Changeset{source: %Response{}}
 
   """
-  def change_response(%Response{} = response) do
-    Response.changeset(response, %{})
-  end
-
-  defp load_response_associations(response) do
-    response
-    |> Repo.preload(:survey)
-    |> Repo.preload(:trend)
-  end
+  @callback change_response(response :: %Response{}) :: %Ecto.Changeset{}
 end

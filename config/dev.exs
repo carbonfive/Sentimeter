@@ -75,3 +75,4 @@ config :sentimeter, Sentimeter.Repo,
   pool_size: 10
 
 config(:sentimeter, :surveys, Sentimeter.Surveys.SurveysImpl)
+config(:sentimeter, :responses, Sentimeter.Responses.ResponsesImpl)

@@ -5,21 +5,17 @@
     </div>
   <% end %>
 
-  <%= label f, :x %>
-  <%= number_input f, :x, step: "any" %>
-  <%= error_tag f, :x %>
-
-  <%= label f, :y %>
-  <%= number_input f, :y, step: "any" %>
-  <%= error_tag f, :y %>
-
-  <%= label f, :trend_id, "Trend", class: "control-label" %>
-  <%= select f, :trend_id, Enum.map(@trends, &{&1.name, &1.id}), class: "form-control" %>
-  <%= error_tag f, :trend_id %>
-
   <%= label f, :email %>
   <%= text_input f, :email %>
   <%= error_tag f, :email %>
+
+  <%= label f, :survey_guid %>
+  <%= text_input f, :survey_guid %>
+  <%= error_tag f, :survey_guid %>
+
+  <%= label f, :guid %>
+  <%= text_input f, :guid %>
+  <%= error_tag f, :guid %>
 
   <div>
     <%= submit "Save" %>

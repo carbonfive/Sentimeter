@@ -1,82 +1,151 @@
-# defmodule Sentimeter.ResponsesTest do
-#   use Sentimeter.DataCase
+defmodule Sentimeter.ResponsesTest do
+  use Sentimeter.DataCase
 
-#   alias Sentimeter.Responses
-#   alias Sentimeter.Fixtures
+  alias Sentimeter.Responses.ResponsesImpl, as: Responses
 
-#   describe "responses" do
-#     alias Sentimeter.Responses.Response
+  describe "responses" do
+    alias Sentimeter.Responses.Response
 
-#     @valid_attrs %{email: "some email", x: 0.5, y: 0.5}
-#     @update_attrs %{email: "some updated email", x: 0.7, y: 0.7, survey_id: 2}
-#     @invalid_attrs %{email: nil, trend_id: nil, x: nil, y: nil}
+    @valid_attrs %{
+      email: "some email",
+      survey_guid: "7488a646-e31f-11e4-aace-600308960662"
+    }
+    @update_attrs %{
+      email: "some updated email",
+      survey_guid: "7488a646-e31f-11e4-aace-600308960668"
+    }
+    @invalid_attrs %{email: nil, guid: nil, survey_guid: nil}
 
-#     def response_fixture(attrs \\ %{}) do
-#       survey_id = Fixtures.survey() |> Map.get(:id)
-#       trend_id = Fixtures.trend() |> Map.get(:id)
+    def response_fixture(attrs \\ %{}) do
+      {:ok, response} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Responses.create_response()
 
-#       {:ok, response} =
-#         attrs
-#         |> Enum.into(%{survey_id: survey_id, trend_id: trend_id})
-#         |> Enum.into(@valid_attrs)
-#         |> Responses.create_response()
+      response
+    end
 
-#       response
-#     end
+    test "list_responses/0 returns all responses" do
+      response = response_fixture()
+      assert Responses.list_responses() == [response]
+    end
 
-#     test "get_response!/1 returns the response with given id" do
-#       response = response_fixture()
-#       assert Responses.get_response!(response.id) == response
-#     end
+    test "get_response!/1 returns the response with given id" do
+      response = response_fixture()
+      assert Responses.get_response!(response.id) == response
+    end
 
-#     test "create_response/1 with valid data creates a response" do
-#       attrs =
-#         %{
-#           survey_id: Map.get(Fixtures.survey(), :id),
-#           trend_id: Map.get(Fixtures.trend(), :id)
-#         }
-#         |> Enum.into(@valid_attrs)
+    test "create_response/1 with valid data creates a response" do
+      assert {:ok, %Response{} = response} = Responses.create_response(@valid_attrs)
+      assert response.email == "some email"
+      assert response.survey_guid == "7488a646-e31f-11e4-aace-600308960662"
+    end
 
-#       assert {:ok, %Response{} = response} = Responses.create_response(attrs)
-#       assert response.email == "some email"
-#       assert response.x == 0.5
-#     end
+    test "create_response/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Responses.create_response(@invalid_attrs)
+    end
 
-#     test "create_response/1 with invalid data returns error changeset" do
-#       assert {:error, %Ecto.Changeset{}} = Responses.create_response(@invalid_attrs)
-#     end
+    test "update_response/2 with valid data updates the response" do
+      response = response_fixture()
+      assert {:ok, %Response{} = response} = Responses.update_response(response, @update_attrs)
+      assert response.email == "some updated email"
+      assert response.survey_guid == "7488a646-e31f-11e4-aace-600308960668"
+    end
 
-#     test "update_response/2 with valid data updates the response" do
-#       response = response_fixture()
+    test "update_response/2 with invalid data returns error changeset" do
+      response = response_fixture()
+      assert {:error, %Ecto.Changeset{}} = Responses.update_response(response, @invalid_attrs)
+      assert response == Responses.get_response!(response.id)
+    end
 
-#       attrs =
-#         %{
-#           survey_id: Map.get(Fixtures.survey(), :id),
-#           trend_id: Map.get(Fixtures.trend(), :id)
-#         }
-#         |> Enum.into(@update_attrs)
+    test "delete_response/1 deletes the response" do
+      response = response_fixture()
+      assert {:ok, %Response{}} = Responses.delete_response(response)
+      assert_raise Ecto.NoResultsError, fn -> Responses.get_response!(response.id) end
+    end
 
-#       assert {:ok, %Response{} = response} = Responses.update_response(response, attrs)
-#       assert response.email == "some updated email"
-#       assert response.x == 0.7
-#       assert response.y == 0.7
-#     end
+    test "change_response/1 returns a response changeset" do
+      response = response_fixture()
+      assert %Ecto.Changeset{} = Responses.change_response(response)
+    end
+  end
 
-#     test "update_response/2 with invalid data returns error changeset" do
-#       response = response_fixture()
-#       assert {:error, %Ecto.Changeset{}} = Responses.update_response(response, @invalid_attrs)
-#       assert response == Responses.get_response!(response.id)
-#     end
+  describe "answer" do
+    alias Sentimeter.Responses.Answer
 
-#     test "delete_response/1 deletes the response" do
-#       response = response_fixture()
-#       assert {:ok, %Response{}} = Responses.delete_response(response)
-#       assert_raise Ecto.NoResultsError, fn -> Responses.get_response!(response.id) end
-#     end
+    @valid_attrs %{
+      survey_trend_guid: "7488a646-e31f-11e4-aace-600308960662",
+      thoughts: "some thoughts",
+      would_recommend: :yes,
+      x: 1,
+      y: 2
+    }
+    @update_attrs %{
+      survey_trend_guid: "7488a646-e31f-11e4-aace-600308960668",
+      thoughts: "some updated thoughts",
+      would_recommend: :no,
+      x: 3,
+      y: 4
+    }
+    @invalid_attrs %{survey_trend_guid: nil, thoughts: nil, would_recommend: nil, x: nil, y: nil}
 
-#     test "change_response/1 returns a response changeset" do
-#       response = response_fixture()
-#       assert %Ecto.Changeset{} = Responses.change_response(response)
-#     end
-#   end
-# end
+    def answer_fixture(attrs \\ %{}) do
+      {:ok, answer} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Responses.create_answer()
+
+      answer
+    end
+
+    test "list_answer/0 returns all answer" do
+      answer = answer_fixture()
+      assert Responses.list_answer() == [answer]
+    end
+
+    test "get_answer!/1 returns the answer with given id" do
+      answer = answer_fixture()
+      assert Responses.get_answer!(answer.id) == answer
+    end
+
+    test "create_answer/1 with valid data creates a answer" do
+      assert {:ok, %Answer{} = answer} = Responses.create_answer(@valid_attrs)
+      assert answer.survey_trend_guid == "7488a646-e31f-11e4-aace-600308960662"
+      assert answer.thoughts == "some thoughts"
+      assert answer.would_recommend == :yes
+      assert answer.x == 1
+      assert answer.y == 2
+    end
+
+    test "create_answer/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Responses.create_answer(@invalid_attrs)
+    end
+
+    test "update_answer/2 with valid data updates the answer" do
+      answer = answer_fixture()
+      assert {:ok, %Answer{} = answer} = Responses.update_answer(answer, @update_attrs)
+      assert answer.survey_trend_guid == "7488a646-e31f-11e4-aace-600308960668"
+      assert answer.thoughts == "some updated thoughts"
+      assert answer.would_recommend == :no
+      assert answer.x == 3
+      assert answer.y == 4
+    end
+
+    test "update_answer/2 with invalid data returns error changeset" do
+      answer = answer_fixture()
+      assert {:error, %Ecto.Changeset{}} = Responses.update_answer(answer, @invalid_attrs)
+      assert answer == Responses.get_answer!(answer.id)
+    end
+
+    test "delete_answer/1 deletes the answer" do
+      answer = answer_fixture()
+      assert {:ok, %Answer{}} = Responses.delete_answer(answer)
+      assert_raise Ecto.NoResultsError, fn -> Responses.get_answer!(answer.id) end
+    end
+
+    test "change_answer/1 returns a answer changeset" do
+      answer = answer_fixture()
+      assert %Ecto.Changeset{} = Responses.change_answer(answer)
+    end
+  end
+end

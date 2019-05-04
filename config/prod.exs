@@ -17,6 +17,7 @@ config :sentimeter, SentimeterWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 config(:sentimeter, :surveys, Sentimeter.Surveys.SurveysImpl)
+config(:sentimeter, :responses, Sentimeter.Responses.ResponsesImpl)
 
 # ## SSL Support
 #

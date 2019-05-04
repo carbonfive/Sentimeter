@@ -1,5 +1,6 @@
 <h1>Edit Response</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.survey_response_path(@conn, :update, @survey_id, @response)) %>
+<%= render "form.html", Map.put(assigns, :action, Routes.response_path(@conn, :update, @response)) %>
 
-<span><%= link "Back", to: Routes.survey_response_path(@conn, :index, @survey_id) %></span>
+<span><%= link "Back", to: Routes.response_path(@conn, :index) %></span>
+ 

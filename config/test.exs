@@ -18,3 +18,4 @@ config :sentimeter, Sentimeter.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config(:sentimeter, :surveys, Sentimeter.SurveysMock)
+config(:sentimeter, :responses, Sentimeter.ResponsesMock)

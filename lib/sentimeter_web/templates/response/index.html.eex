@@ -3,10 +3,9 @@
 <table>
   <thead>
     <tr>
-      <th>X</th>
-      <th>Y</th>
-      <th>Trend</th>
       <th>Email</th>
+      <th>Survey guid</th>
+      <th>Guid</th>
 
       <th></th>
     </tr>
@@ -14,20 +13,18 @@
   <tbody>
 <%= for response <- @responses do %>
     <tr>
-      <td><%= response.x %></td>
-      <td><%= response.y %></td>
-      <td><%= display_trend(response) %></td>
       <td><%= response.email %></td>
+      <td><%= response.survey_guid %></td>
+      <td><%= response.guid %></td>
 
       <td>
-        <%= link "Show", to: Routes.survey_response_path(@conn, :show, @survey_id, response) %>
-        <%= link "Edit", to: Routes.survey_response_path(@conn, :edit, @survey_id, response) %>
-        <%= link "Delete", to: Routes.survey_response_path(@conn, :delete, @survey_id, response), method: :delete, data: [confirm: "Are you sure?"] %>
+        <%= link "Show", to: Routes.response_path(@conn, :show, response) %>
+        <%= link "Edit", to: Routes.response_path(@conn, :edit, response) %>
+        <%= link "Delete", to: Routes.response_path(@conn, :delete, response), method: :delete, data: [confirm: "Are you sure?"] %>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
 
-<span><%= link "New Response", to: Routes.survey_response_path(@conn, :new, @survey_id) %></span> |
-<span><%= link "Back to Survey", to: Routes.survey_path(@conn, :show, @survey_id) %></span>
+<span><%= link "New Response", to: Routes.response_path(@conn, :new) %></span>

@@ -18,17 +18,14 @@ defmodule SentimeterWeb.Router do
 
     get("/", PageController, :index)
 
-    resources "/surveys", SurveyController do
-      #  resources "/responses", ResponseController
-    end
+    resources "/surveys", SurveyController
+    resources "/responses", ResponseController
 
     resources("/trends", TrendController)
   end
 
   scope "/api", SentimeterWeb do
     pipe_through(:api)
-
-    # get "/surveys/:survey_id/responses", Api.ResponseController, :index
   end
 
   # Other scopes may use custom stacks.
