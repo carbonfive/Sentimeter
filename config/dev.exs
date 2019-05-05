@@ -76,3 +76,5 @@ config :sentimeter, Sentimeter.Repo,
 
 config(:sentimeter, :surveys, Sentimeter.Surveys.SurveysImpl)
 config(:sentimeter, :responses, Sentimeter.Responses.ResponsesImpl)
+config(:sentimeter, :invitations, Sentimeter.Invitations.InvitationsImpl)
+config :sentimeter, Sentimeter.Invitations.Mailer, adapter: Bamboo.LocalAdapter

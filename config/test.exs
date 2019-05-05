@@ -19,3 +19,5 @@ config :sentimeter, Sentimeter.Repo,
 
 config(:sentimeter, :surveys, Sentimeter.SurveysMock)
 config(:sentimeter, :responses, Sentimeter.ResponsesMock)
+config(:sentimeter, :invitations, Sentimeter.InvitationsMock)
+config :sentimeter, Sentimeter.Invitations.Mailer, adapter: Bamboo.TestAdapter

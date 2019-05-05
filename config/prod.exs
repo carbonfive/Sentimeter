@@ -18,6 +18,11 @@ config :sentimeter, SentimeterWeb.Endpoint,
 config :logger, level: :info
 config(:sentimeter, :surveys, Sentimeter.Surveys.SurveysImpl)
 config(:sentimeter, :responses, Sentimeter.Responses.ResponsesImpl)
+config(:sentimeter, :invitations, Sentimeter.Invitations.InvitationsImpl)
+
+config :sentimeter, Sentimeter.Invitations.Mailer,
+  adapter: Bamboo.SendGridAdapter,
+  api_key: {:system, "SENDGRID_API_KEY"}
 
 # ## SSL Support
 #

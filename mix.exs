@@ -44,7 +44,8 @@ defmodule Sentimeter.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:mox, "~> 0.5", only: :test},
-      {:earmark, "~> 1.3"}
+      {:earmark, "~> 1.3"},
+      {:bamboo, "~> 1.2"}
     ]
   end
 

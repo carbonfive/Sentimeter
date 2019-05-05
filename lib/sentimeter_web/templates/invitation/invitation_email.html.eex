@@ -1,0 +1,3 @@
+<p>You've been invited to offer feedback about your experiences using sentimeter!</p>
+
+<p><%= link("Click here to get started", to: Routes.response_url(SentimeterWeb.Endpoint, :edit, @response_guid)) %></p>
