@@ -7,8 +7,10 @@ defmodule Sentimeter.Responses.ResponsesImpl do
 
   import Ecto.Query, warn: false
   alias Sentimeter.Repo
-
+  alias Ecto.Multi
   alias Sentimeter.Responses.Response
+
+  @invitations Application.get_env(:sentimeter, :invitations)
 
   @doc """
   Returns the list of responses.
@@ -102,6 +104,50 @@ defmodule Sentimeter.Responses.ResponsesImpl do
   """
   def change_response(%Response{} = response) do
     Response.changeset(response, %{})
+  end
+
+  @doc """
+  Create multiple responses from list of emails for the given survey guid
+  and send invitations
+
+  ## Examples
+
+      iex> create_responses([email], survey_guid)
+      {:ok, [%Response{}]}
+
+      iex> create_responses([bad_email], survey_guid)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_responses(emails, survey_guid) do
+    result =
+      Enum.with_index(emails)
+      |> Enum.reduce(Multi.new(), fn {email, index}, multi ->
+        Multi.insert(
+          multi,
+          {:response, index},
+          %Response{}
+          |> Response.changeset(%{email: email, survey_guid: survey_guid})
+        )
+      end)
+      |> Repo.transaction()
+
+    with {:ok, response_tuples} <- result do
+      responses = response_tuples |> Enum.map(fn {_, response} -> response end)
+
+      Task.Supervisor.async_stream_nolink(
+        Sentimeter.Invitations.InvitationsSender,
+        responses,
+        fn response ->
+          @invitations.send_invitation(%{email: response.email, response_guid: response.guid})
+        end
+      )
+      |> Stream.run()
+
+      {:ok, responses}
+    else
+      {:error, _, changeset, _} -> {:error, changeset}
+    end
   end
 
   alias Sentimeter.Responses.Answer

@@ -87,4 +87,20 @@ defmodule Sentimeter.Responses do
 
   """
   @callback change_response(response :: %Response{}) :: %Ecto.Changeset{}
+
+  @doc """
+  Create multiple responses from list of emails for the given survey guid
+  and send invitations
+
+  ## Examples
+
+      iex> create_responses([email], survey_guid)
+      {:ok, [%Response{}]}
+
+      iex> create_responses([bad_email], survey_guid)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  @callback create_responses(emails :: [String.t()], response_guid: Ecto.UUID.t()) ::
+              {:ok, [%Response{}]} | {:error, %Ecto.Changeset{}}
 end

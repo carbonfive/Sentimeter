@@ -1,17 +1,18 @@
 defmodule Sentimeter.ResponsesTest do
   use Sentimeter.DataCase
-
+  import Mox
+  alias Sentimeter.InvitationsMock
   alias Sentimeter.Responses.ResponsesImpl, as: Responses
 
   describe "responses" do
     alias Sentimeter.Responses.Response
 
     @valid_attrs %{
-      email: "some email",
+      email: "example@example.com",
       survey_guid: "7488a646-e31f-11e4-aace-600308960662"
     }
     @update_attrs %{
-      email: "some updated email",
+      email: "new-example@example.com",
       survey_guid: "7488a646-e31f-11e4-aace-600308960668"
     }
     @invalid_attrs %{email: nil, guid: nil, survey_guid: nil}
@@ -37,7 +38,7 @@ defmodule Sentimeter.ResponsesTest do
 
     test "create_response/1 with valid data creates a response" do
       assert {:ok, %Response{} = response} = Responses.create_response(@valid_attrs)
-      assert response.email == "some email"
+      assert response.email == "example@example.com"
       assert response.survey_guid == "7488a646-e31f-11e4-aace-600308960662"
     end
 
@@ -48,7 +49,7 @@ defmodule Sentimeter.ResponsesTest do
     test "update_response/2 with valid data updates the response" do
       response = response_fixture()
       assert {:ok, %Response{} = response} = Responses.update_response(response, @update_attrs)
-      assert response.email == "some updated email"
+      assert response.email == "new-example@example.com"
       assert response.survey_guid == "7488a646-e31f-11e4-aace-600308960668"
     end
 
@@ -67,6 +68,55 @@ defmodule Sentimeter.ResponsesTest do
     test "change_response/1 returns a response changeset" do
       response = response_fixture()
       assert %Ecto.Changeset{} = Responses.change_response(response)
+    end
+
+    test "create_responses/2 with valid data creates responses" do
+      InvitationsMock |> stub(:send_invitation, fn _ -> nil end)
+
+      valid_emails = [
+        "apples@apples.com",
+        "oranges@oranges.com",
+        "cheese@cheese.com"
+      ]
+
+      survey_guid = "7488a646-e31f-11e4-aace-600308960668"
+
+      assert {:ok, responses} = Responses.create_responses(valid_emails, survey_guid)
+
+      assert length(responses) == length(valid_emails)
+
+      Enum.zip(responses, valid_emails)
+      |> Enum.each(fn {response, valid_email} ->
+        assert %Response{} = response
+        assert response.email == valid_email
+        assert response.survey_guid == survey_guid
+      end)
+    end
+
+    test "create_responses/2 with valid data sends invitations" do
+      valid_emails = [
+        "apples@apples.com",
+        "oranges@oranges.com",
+        "cheese@cheese.com"
+      ]
+
+      InvitationsMock |> expect(:send_invitation, length(valid_emails), fn _ -> nil end)
+
+      survey_guid = "7488a646-e31f-11e4-aace-600308960668"
+
+      Responses.create_responses(valid_emails, survey_guid)
+    end
+
+    test "create_responses/2 with invalid data creates no responses and returns errors" do
+      invalid_emails = [
+        "cheese",
+        "oranges@oranges.com",
+        "cheese@cheese.com"
+      ]
+
+      survey_guid = "7488a646-e31f-11e4-aace-600308960668"
+
+      assert {:error, %Ecto.Changeset{}} = Responses.create_responses(invalid_emails, survey_guid)
     end
   end
 

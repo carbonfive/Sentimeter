@@ -11,9 +11,10 @@ defmodule Sentimeter.Application do
       # Start the Ecto repository
       Sentimeter.Repo,
       # Start the endpoint when the application starts
-      SentimeterWeb.Endpoint
+      SentimeterWeb.Endpoint,
       # Starts a worker by calling: Sentimeter.Worker.start_link(arg)
       # {Sentimeter.Worker, arg},
+      {Task.Supervisor, name: Sentimeter.Invitations.InvitationsSender}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
