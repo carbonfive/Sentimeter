@@ -5,6 +5,7 @@ defmodule Sentimeter.Fixtures do
   alias Sentimeter.Surveys.Trend
   alias Sentimeter.Surveys.Survey
   alias Sentimeter.Surveys.SurveyTrend
+  alias Sentimeter.Responses.Response
   alias Sentimeter.Repo
 
   @spec survey() :: %Survey{} | %Ecto.Changeset{}
@@ -58,5 +59,19 @@ defmodule Sentimeter.Fixtures do
       |> Repo.insert()
 
     survey_trend
+  end
+
+  def response(attrs \\ %{}) do
+    valid_attrs = %{
+      email: "example@example.com",
+      survey_guid: "7488a646-e31f-11e4-aace-600308960662"
+    }
+
+    {:ok, response} =
+      %Response{}
+      |> Response.changeset(attrs |> Enum.into(valid_attrs))
+      |> Repo.insert()
+
+    response
   end
 end

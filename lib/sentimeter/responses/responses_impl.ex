@@ -13,16 +13,16 @@ defmodule Sentimeter.Responses.ResponsesImpl do
   @invitations Application.get_env(:sentimeter, :invitations)
 
   @doc """
-  Returns the list of responses.
+  Returns responses for the given survey
 
   ## Examples
 
-      iex> list_responses()
+      iex> responses_for_survey_guid("AADDBB-")
       [%Response{}, ...]
 
   """
-  def list_responses do
-    Repo.all(Response)
+  def responses_for_survey_guid(survey_guid) do
+    Repo.all(from(response in Response, where: response.survey_guid == ^survey_guid))
   end
 
   @doc """
@@ -42,22 +42,20 @@ defmodule Sentimeter.Responses.ResponsesImpl do
   def get_response!(id), do: Repo.get!(Response, id)
 
   @doc """
-  Creates a response.
+  Gets a single response by guid
+
+  Raises `Ecto.NoResultsError` if the Response does not exist.
 
   ## Examples
 
-      iex> create_response(%{field: value})
-      {:ok, %Response{}}
+      iex> get_response_guid!("ABCDD-EED")
+      %Response{}
 
-      iex> create_response(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      iex> get_response_guid!("ABCDD-FFF")
+      ** (Ecto.NoResultsError)
 
   """
-  def create_response(attrs \\ %{}) do
-    %Response{}
-    |> Response.changeset(attrs)
-    |> Repo.insert()
-  end
+  def get_response_by_guid!(guid), do: Repo.get_by!(Response, guid: guid)
 
   @doc """
   Updates a response.

@@ -19,5 +19,5 @@
 
 </ul>
 
-<span><%= link "Edit", to: Routes.response_path(@conn, :edit, @response) %></span>
-<span><%= link "Back", to: Routes.response_path(@conn, :index) %></span>
+<span><%= link "Edit", to: Routes.response_path(@conn, :edit, @response.guid) %></span>
+<span><%= link "Back", to: Routes.survey_response_path(@conn, :index, @survey) %></span>

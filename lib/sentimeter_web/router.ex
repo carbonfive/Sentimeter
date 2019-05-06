@@ -1,6 +1,10 @@
 defmodule SentimeterWeb.Router do
   use SentimeterWeb, :router
 
+  if Mix.env() == :dev do
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
+  end
+
   pipeline :browser do
     plug(:accepts, ["html"])
     plug(:fetch_session)
@@ -18,8 +22,13 @@ defmodule SentimeterWeb.Router do
 
     get("/", PageController, :index)
 
-    resources "/surveys", SurveyController
-    resources "/responses", ResponseController
+    resources "/surveys", SurveyController do
+      resources "/responses", ResponseController, only: [:index, :create]
+    end
+
+    resources "/responses", ResponseController,
+      param: "guid",
+      only: [:show, :edit, :update, :delete]
 
     resources("/trends", TrendController)
   end

@@ -6,15 +6,15 @@ defmodule Sentimeter.Responses do
   alias Sentimeter.Responses.Response
 
   @doc """
-  Returns the list of responses.
+  Returns responses for the given survey
 
   ## Examples
 
-      iex> list_responses()
+      iex> responses_for_survey_guid("AADDBB-")
       [%Response{}, ...]
 
   """
-  @callback list_responses() :: [%Response{}]
+  @callback responses_for_survey_guid(survey_guid :: Ecto.UUID.t()) :: [%Response{}]
 
   @doc """
   Gets a single response.
@@ -33,19 +33,20 @@ defmodule Sentimeter.Responses do
   @callback get_response!(id :: number) :: %Response{} | no_return
 
   @doc """
-  Creates a response.
+  Gets a single response by guid
+
+  Raises `Ecto.NoResultsError` if the Response does not exist.
 
   ## Examples
 
-      iex> create_response(%{field: value})
-      {:ok, %Response{}}
+      iex> get_response_guid!("ABCDD-EED")
+      %Response{}
 
-      iex> create_response(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      iex> get_response_guid!("ABCDD-FFF")
+      ** (Ecto.NoResultsError)
 
   """
-  @callback create_response() :: {:ok, %Response{}} | {:error, %Ecto.Changeset{}}
-  @callback create_response(attrs :: Map.t()) :: {:ok, %Response{}} | {:error, %Ecto.Changeset{}}
+  @callback get_response_by_guid!(guid :: Ecto.UUID.t()) :: %Response{} | no_return
 
   @doc """
   Updates a response.

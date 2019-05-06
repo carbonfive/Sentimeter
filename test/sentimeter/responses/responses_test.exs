@@ -4,8 +4,11 @@ defmodule Sentimeter.ResponsesTest do
   alias Sentimeter.InvitationsMock
   alias Sentimeter.Responses.ResponsesImpl, as: Responses
 
+  setup :verify_on_exit!
+
   describe "responses" do
     alias Sentimeter.Responses.Response
+    alias Sentimeter.Fixtures
 
     @valid_attrs %{
       email: "example@example.com",
@@ -18,17 +21,17 @@ defmodule Sentimeter.ResponsesTest do
     @invalid_attrs %{email: nil, guid: nil, survey_guid: nil}
 
     def response_fixture(attrs \\ %{}) do
-      {:ok, response} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Responses.create_response()
-
-      response
+      attrs
+      |> Enum.into(@valid_attrs)
+      |> Fixtures.response()
     end
 
-    test "list_responses/0 returns all responses" do
-      response = response_fixture()
-      assert Responses.list_responses() == [response]
+    test "responses_for_survey_guid/1 returns all responses matching survey guid" do
+      matching_response = response_fixture(%{survey_guid: "7488a646-e31f-11e4-aace-600308960668"})
+      not_matching_response = response_fixture()
+      responses = Responses.responses_for_survey_guid("7488a646-e31f-11e4-aace-600308960668")
+      assert Enum.member?(responses, matching_response) == true
+      assert Enum.member?(responses, not_matching_response) == false
     end
 
     test "get_response!/1 returns the response with given id" do
@@ -36,14 +39,9 @@ defmodule Sentimeter.ResponsesTest do
       assert Responses.get_response!(response.id) == response
     end
 
-    test "create_response/1 with valid data creates a response" do
-      assert {:ok, %Response{} = response} = Responses.create_response(@valid_attrs)
-      assert response.email == "example@example.com"
-      assert response.survey_guid == "7488a646-e31f-11e4-aace-600308960662"
-    end
-
-    test "create_response/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Responses.create_response(@invalid_attrs)
+    test "get_response_by_guid!/1 returns the response with given guid" do
+      response = response_fixture()
+      assert Responses.get_response_by_guid!(response.guid) == response
     end
 
     test "update_response/2 with valid data updates the response" do
