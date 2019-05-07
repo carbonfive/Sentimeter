@@ -10,8 +10,8 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :sentimeter, SentimeterWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [host: "example.com", port: 80],
+  url: [scheme: "https", host: "sentimeter-test.herokuapp.com", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -19,10 +19,6 @@ config :logger, level: :info
 config(:sentimeter, :surveys, Sentimeter.Surveys.SurveysImpl)
 config(:sentimeter, :responses, Sentimeter.Responses.ResponsesImpl)
 config(:sentimeter, :invitations, Sentimeter.Invitations.InvitationsImpl)
-
-config :sentimeter, Sentimeter.Invitations.Mailer,
-  adapter: Bamboo.SendGridAdapter,
-  api_key: {:system, "SENDGRID_API_KEY"}
 
 # ## SSL Support
 #
@@ -58,21 +54,16 @@ config :sentimeter, Sentimeter.Invitations.Mailer,
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
 
-# ## Using releases (distillery)
+# ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
-# to start the server for all endpoints:
-#
-#     config :phoenix, :serve_endpoints, true
-#
-# Alternatively, you can configure exactly which server to
-# start per endpoint:
+# to start each relevant endpoint:
 #
 #     config :sentimeter, SentimeterWeb.Endpoint, server: true
 #
-# Note you can't rely on `System.get_env/1` when using releases.
-# See the releases documentation accordingly.
+# Then you can assemble a release by caling `mix release`.
+# See `mix help release` for more information.
 
-# Finally import the config/prod.secret.exs which should be versioned
-# separately.
+# Finally import the config/prod.secret.exs which loads secrets
+# and configuration from environment variables.
 import_config "prod.secret.exs"
