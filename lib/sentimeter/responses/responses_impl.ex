@@ -9,8 +9,8 @@ defmodule Sentimeter.Responses.ResponsesImpl do
   alias Sentimeter.Repo
   alias Ecto.Multi
   alias Sentimeter.Responses.Response
-
   @invitations Application.get_env(:sentimeter, :invitations)
+  @surveys Application.get_env(:sentimeter, :surveys)
 
   @doc """
   Returns responses for the given survey
@@ -22,7 +22,9 @@ defmodule Sentimeter.Responses.ResponsesImpl do
 
   """
   def responses_for_survey_guid(survey_guid) do
-    Repo.all(from(response in Response, where: response.survey_guid == ^survey_guid))
+    Repo.all(
+      from(response in Response, where: response.survey_guid == ^survey_guid, preload: [:answers])
+    )
   end
 
   @doc """
@@ -39,7 +41,7 @@ defmodule Sentimeter.Responses.ResponsesImpl do
       ** (Ecto.NoResultsError)
 
   """
-  def get_response!(id), do: Repo.get!(Response, id)
+  def get_response!(id), do: Repo.get!(Response, id) |> Repo.preload(:answers)
 
   @doc """
   Gets a single response by guid
@@ -55,7 +57,9 @@ defmodule Sentimeter.Responses.ResponsesImpl do
       ** (Ecto.NoResultsError)
 
   """
-  def get_response_by_guid!(guid), do: Repo.get_by!(Response, guid: guid)
+  def get_response_by_guid!(guid) do
+    Repo.get_by!(Response, guid: guid) |> Repo.preload(:answers)
+  end
 
   @doc """
   Updates a response.
@@ -242,5 +246,63 @@ defmodule Sentimeter.Responses.ResponsesImpl do
   """
   def change_answer(%Answer{} = answer) do
     Answer.changeset(answer, %{})
+  end
+
+  alias Sentimeter.Responses.TrendChoiceForm
+  alias Sentimeter.Responses.TrendChoice
+
+  def trend_choice_form(%Response{} = response) do
+    answered_guids =
+      response.answers
+      |> Enum.into(%{}, fn answer -> {answer.survey_trend_guid, !answer.soft_delete} end)
+
+    %TrendChoiceForm{
+      trend_choices:
+        response.survey_guid
+        |> @surveys.get_trends_by_survey_guid
+        |> Enum.map(fn {survey_trend_guid, trend} ->
+          %TrendChoice{
+            survey_trend_guid: survey_trend_guid,
+            chosen: Map.get(answered_guids, survey_trend_guid, false),
+            trend: %TrendChoice.Trend{
+              name: trend.name,
+              description: trend.description
+            }
+          }
+        end)
+    }
+  end
+
+  def change_trend_choice_form(%TrendChoiceForm{} = trend_choice_form) do
+    TrendChoiceForm.changeset(trend_choice_form, %{})
+  end
+
+  def apply_trend_choice_form(%Response{} = response, attrs \\ %{}) do
+    trend_choice_form =
+      %TrendChoiceForm{} |> TrendChoiceForm.changeset(attrs) |> Ecto.Changeset.apply_changes()
+
+    answers_by_guid =
+      response.answers
+      |> Enum.map(fn answer -> {answer.survey_trend_guid, answer} end)
+      |> Map.new()
+
+    answers =
+      trend_choice_form.trend_choices
+      |> Enum.reduce([], fn trend_choice, existing_answers ->
+        answer = Map.get(answers_by_guid, trend_choice.survey_trend_guid)
+
+        cond do
+          answer != nil ->
+            [%{id: answer.id, soft_delete: !trend_choice.chosen} | existing_answers]
+
+          trend_choice.chosen ->
+            [%{survey_trend_guid: trend_choice.survey_trend_guid} | existing_answers]
+
+          true ->
+            existing_answers
+        end
+      end)
+
+    response |> Response.changeset(%{answers: answers})
   end
 end

@@ -6,11 +6,11 @@ defmodule Sentimeter.Fixtures do
   alias Sentimeter.Surveys.Survey
   alias Sentimeter.Surveys.SurveyTrend
   alias Sentimeter.Responses.Response
+  alias Sentimeter.Responses.Answer
   alias Sentimeter.Repo
 
-  @spec survey() :: %Survey{} | %Ecto.Changeset{}
-  @spec survey(attrs :: Map.t()) :: %Survey{} | %Ecto.Changeset{}
-  def survey(attrs \\ %{}) do
+  @spec survey_attrs(Map.t()) :: Map.t()
+  def survey_attrs(attrs \\ %{}) do
     valid_attrs = %{
       closing: "some closing",
       intro: "some intro",
@@ -24,25 +24,32 @@ defmodule Sentimeter.Fixtures do
       survey_trends: []
     }
 
+    attrs |> Enum.into(valid_attrs)
+  end
+
+  @spec survey() :: %Survey{} | %Ecto.Changeset{}
+  @spec survey(attrs :: Map.t()) :: %Survey{} | %Ecto.Changeset{}
+  def survey(attrs \\ %{}) do
     {:ok, survey} =
       %Survey{}
-      |> Survey.changeset(
-        attrs
-        |> Enum.into(valid_attrs)
-      )
+      |> Survey.changeset(survey_attrs(attrs))
       |> Repo.insert()
 
     survey
   end
 
+  @spec trend_attrs(Map.t()) :: Map.t()
+  def trend_attrs(attrs \\ %{}) do
+    valid_attrs = %{name: "some name", description: "terrible tech"}
+    attrs |> Enum.into(valid_attrs)
+  end
+
   @spec trend() :: %Trend{} | %Ecto.Changeset{}
   @spec trend(attrs :: Map.t()) :: %Trend{} | %Ecto.Changeset{}
   def trend(attrs \\ %{}) do
-    valid_attrs = %{name: "some name", description: "terrible tech"}
-
     {:ok, trend} =
       %Trend{}
-      |> Trend.changeset(attrs |> Enum.into(valid_attrs))
+      |> Trend.changeset(trend_attrs(attrs))
       |> Repo.insert()
 
     trend
@@ -61,17 +68,49 @@ defmodule Sentimeter.Fixtures do
     survey_trend
   end
 
-  def response(attrs \\ %{}) do
+  @spec response_attrs(Map.t()) :: Map.t()
+  def response_attrs(attrs \\ %{}) do
     valid_attrs = %{
       email: "example@example.com",
-      survey_guid: "7488a646-e31f-11e4-aace-600308960662"
+      survey_guid: "7488a646-e31f-11e4-aace-600308960662",
+      answers: []
     }
 
+    attrs |> Enum.into(valid_attrs)
+  end
+
+  @spec response() :: %Response{} | %Ecto.Changeset{}
+  @spec response(attrs :: Map.t()) :: %Response{} | %Ecto.Changeset{}
+  def response(attrs \\ %{}) do
     {:ok, response} =
       %Response{}
-      |> Response.changeset(attrs |> Enum.into(valid_attrs))
+      |> Response.changeset(response_attrs(attrs))
       |> Repo.insert()
 
     response
+  end
+
+  @spec answer_attrs(Map.t()) :: Map.t()
+  def answer_attrs(attrs \\ %{}) do
+    valid_attrs = %{
+      survey_trend_guid: "7488a646-e31f-11e4-aace-600308960662",
+      thoughts: "some thoughts",
+      would_recommend: :yes,
+      x: 1,
+      y: 2
+    }
+
+    attrs |> Enum.into(valid_attrs)
+  end
+
+  @spec answer() :: %Answer{} | %Ecto.Changeset{}
+  @spec answer(attrs :: Map.t()) :: %Answer{} | %Ecto.Changeset{}
+  def answer(attrs \\ %{}) do
+    {:ok, answer} =
+      %Answer{}
+      |> Answer.changeset(answer_attrs(attrs))
+      |> Repo.insert()
+
+    answer
   end
 end

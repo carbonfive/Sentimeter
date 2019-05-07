@@ -2,13 +2,14 @@ defmodule Sentimeter.ResponsesTest do
   use Sentimeter.DataCase
   import Mox
   alias Sentimeter.InvitationsMock
+  alias Sentimeter.SurveysMock
   alias Sentimeter.Responses.ResponsesImpl, as: Responses
+  alias Sentimeter.Fixtures
 
   setup :verify_on_exit!
 
   describe "responses" do
     alias Sentimeter.Responses.Response
-    alias Sentimeter.Fixtures
 
     @valid_attrs %{
       email: "example@example.com",
@@ -194,6 +195,215 @@ defmodule Sentimeter.ResponsesTest do
     test "change_answer/1 returns a answer changeset" do
       answer = answer_fixture()
       assert %Ecto.Changeset{} = Responses.change_answer(answer)
+    end
+  end
+
+  defp setup_trend_choice_data(context) do
+    guid_1 = "7488a646-e31f-11e4-aace-600308960662"
+    guid_2 = "7488a646-e31f-11e4-aace-600308960668"
+    guid_3 = "7488a646-e31f-11e4-aace-600308960669"
+    guid_4 = "7488a646-e31f-11e4-aace-600308960671"
+
+    response =
+      Fixtures.response(%{
+        answers: [
+          Fixtures.answer_attrs(%{survey_trend_guid: guid_1}),
+          Fixtures.answer_attrs(%{survey_trend_guid: guid_2, soft_delete: true})
+        ]
+      })
+
+    answer_1 = Enum.find(response.answers, fn answer -> answer.survey_trend_guid == guid_1 end)
+    answer_2 = Enum.find(response.answers, fn answer -> answer.survey_trend_guid == guid_2 end)
+    first_trend = Fixtures.trend(%{name: "cool", description: "really cool"})
+    second_trend = Fixtures.trend(%{name: "lame", description: "really lame"})
+    third_trend = Fixtures.trend(%{name: "apple", description: "sucks 2019"})
+    fourth_trend = Fixtures.trend(%{name: "orange", description: "sucks 2020"})
+
+    %{
+      guid_1: guid_1,
+      guid_2: guid_2,
+      guid_3: guid_3,
+      guid_4: guid_4,
+      answer_1: answer_1,
+      answer_2: answer_2,
+      first_trend: first_trend,
+      second_trend: second_trend,
+      third_trend: third_trend,
+      fourth_trend: fourth_trend,
+      response: response
+    }
+  end
+
+  defp create_trend_choice_form(%{
+         guid_1: guid_1,
+         guid_2: guid_2,
+         guid_3: guid_3,
+         first_trend: first_trend,
+         second_trend: second_trend,
+         third_trend: third_trend,
+         response: response
+       }) do
+    SurveysMock
+    |> expect(:get_trends_by_survey_guid, fn guid ->
+      assert guid == response.survey_guid
+
+      %{
+        guid_1 => first_trend,
+        guid_2 => second_trend,
+        guid_3 => third_trend
+      }
+    end)
+
+    form = Responses.trend_choice_form(response)
+
+    %{
+      trend_choices: form.trend_choices
+    }
+  end
+
+  defp create_trend_choice_attrs(%{
+         guid_1: guid_1,
+         guid_2: guid_2,
+         guid_3: guid_3,
+         guid_4: guid_4
+       }) do
+    %{
+      trend_choice_attrs: %{
+        trend_choices: [
+          %{
+            survey_trend_guid: guid_1,
+            chosen: false
+          },
+          %{
+            survey_trend_guid: guid_2,
+            chosen: true
+          },
+          %{
+            survey_trend_guid: guid_3,
+            chosen: true
+          },
+          %{
+            survey_trend_guid: guid_4
+          }
+        ]
+      }
+    }
+  end
+
+  describe "trend_choice_form/1 " do
+    setup [:setup_trend_choice_data, :create_trend_choice_form]
+
+    test "returns the right number of choices", %{trend_choices: trend_choices} do
+      assert length(trend_choices) == 3
+    end
+
+    test "sets chosen = true if there is an active answer", %{
+      trend_choices: trend_choices,
+      guid_1: guid_1,
+      first_trend: first_trend
+    } do
+      first_choice =
+        trend_choices
+        |> Enum.find(fn trend_choice -> trend_choice.survey_trend_guid == guid_1 end)
+
+      assert first_choice != nil
+      assert first_choice.chosen == true
+      assert first_choice.trend.name == first_trend.name
+      assert first_choice.trend.description == first_trend.description
+    end
+
+    test "sets chosen = false if there is an inactive answer", %{
+      trend_choices: trend_choices,
+      guid_2: guid_2,
+      second_trend: second_trend
+    } do
+      second_choice =
+        trend_choices
+        |> Enum.find(fn trend_choice -> trend_choice.survey_trend_guid == guid_2 end)
+
+      assert second_choice != nil
+      assert second_choice.chosen == false
+      assert second_choice.trend.name == second_trend.name
+      assert second_choice.trend.description == second_trend.description
+    end
+
+    test "sets chosen = false if there are no answers", %{
+      trend_choices: trend_choices,
+      guid_3: guid_3,
+      third_trend: third_trend
+    } do
+      third_choice =
+        trend_choices
+        |> Enum.find(fn trend_choice -> trend_choice.survey_trend_guid == guid_3 end)
+
+      assert third_choice != nil
+      assert third_choice.chosen == false
+      assert third_choice.trend.name == third_trend.name
+      assert third_choice.trend.description == third_trend.description
+    end
+  end
+
+  describe "apply_trend_change_form/2" do
+    setup [:setup_trend_choice_data, :create_trend_choice_attrs]
+
+    test "creates the right number of answers", %{
+      response: response,
+      trend_choice_attrs: trend_choice_attrs
+    } do
+      new_response =
+        Responses.apply_trend_choice_form(response, trend_choice_attrs)
+        |> Ecto.Changeset.apply_changes()
+
+      assert length(new_response.answers) == 3
+    end
+
+    test "modifies existing answers", %{
+      response: response,
+      trend_choice_attrs: trend_choice_attrs,
+      guid_1: guid_1,
+      guid_2: guid_2,
+      answer_1: answer_1,
+      answer_2: answer_2
+    } do
+      new_response =
+        Responses.apply_trend_choice_form(response, trend_choice_attrs)
+        |> Ecto.Changeset.apply_changes()
+
+      new_answer_1 =
+        Enum.find(new_response.answers, fn answer -> answer.survey_trend_guid == guid_1 end)
+
+      new_answer_2 =
+        Enum.find(new_response.answers, fn answer -> answer.survey_trend_guid == guid_2 end)
+
+      assert new_answer_1 != nil
+      assert new_answer_1.soft_delete == true
+      assert new_answer_1.x == answer_1.x
+      assert new_answer_1.y == answer_1.y
+      assert new_answer_1.would_recommend == answer_1.would_recommend
+      assert new_answer_1.thoughts == answer_1.thoughts
+
+      assert new_answer_2 != nil
+      assert new_answer_2.soft_delete == false
+      assert new_answer_2.x == answer_2.x
+      assert new_answer_2.y == answer_2.y
+      assert new_answer_2.would_recommend == answer_2.would_recommend
+      assert new_answer_2.thoughts == answer_2.thoughts
+    end
+
+    test "creates new answers", %{
+      response: response,
+      trend_choice_attrs: trend_choice_attrs,
+      guid_3: guid_3
+    } do
+      new_response =
+        Responses.apply_trend_choice_form(response, trend_choice_attrs)
+        |> Ecto.Changeset.apply_changes()
+
+      new_answer_3 =
+        Enum.find(new_response.answers, fn answer -> answer.survey_trend_guid == guid_3 end)
+
+      assert new_answer_3 != nil
+      assert new_answer_3.soft_delete == false
     end
   end
 end

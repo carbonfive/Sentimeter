@@ -10,6 +10,7 @@ defmodule Sentimeter.Responses.Answer do
     field :would_recommend, WouldRecommendAnswer
     field :x, :integer
     field :y, :integer
+    field :soft_delete, :boolean, default: false
     belongs_to(:response, Response)
 
     timestamps()
@@ -18,9 +19,9 @@ defmodule Sentimeter.Responses.Answer do
   @doc false
   def changeset(answer, attrs) do
     answer
-    |> cast(attrs, [:survey_trend_guid, :x, :y, :would_recommend, :thoughts])
+    |> cast(attrs, [:survey_trend_guid, :x, :y, :would_recommend, :thoughts, :soft_delete])
     |> validate_number(:x, greater_than: 0, less_than_or_equal_to: 5)
     |> validate_number(:y, greater_than: 0, less_than_or_equal_to: 5)
-    |> validate_required([:survey_trend_guid, :x, :y, :would_recommend, :thoughts])
+    |> validate_required([:survey_trend_guid, :x, :y, :would_recommend, :thoughts, :soft_delete])
   end
 end
