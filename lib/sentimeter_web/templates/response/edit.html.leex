@@ -18,16 +18,14 @@
       <%= hidden_input tc, :survey_trend_guid %>
       <label>
         <div class="trend-choice">
-          <%= checkbox tc, :chosen %>
-          <div class="trend-choice__trend">
-            <div class="trend-choice__name"><%= input_value(tc, :trend).name %></div>
-            <div class="trend-choice__description"><%= (input_value(tc, :trend).description) |> Earmark.as_html!(%Earmark.Options{breaks: false}) |> raw %></div>
-          </div>
+          <%= checkbox tc, :chosen, class: "trend-choice__choice" %>
+          <div class="trend-choice__name"><%= input_value(tc, :trend).name %></div>
+          <div class="trend-choice__description"><%= (input_value(tc, :trend).description) |> Earmark.as_html!(%Earmark.Options{breaks: false}) |> raw %></div>
         </div>
       </label>
     <% end %>
     <div class="form-footer">
-      <%= submit "Next", class: "button button--wide" %>
+      <%= submit "Next", onclick: 'window.scroll({top: 0, behavior: "smooth"});', class: "button button--wide" %>
     </div>
   <% end %>
 <% "answers" -> %>

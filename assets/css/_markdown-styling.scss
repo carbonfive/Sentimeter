@@ -11,4 +11,7 @@
     line-height: 26px;
     @include font-light;
   }
+  a, a:visited {
+    color: $light-grey
+  }
 }

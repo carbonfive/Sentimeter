@@ -270,6 +270,7 @@ defmodule Sentimeter.Responses.ResponsesImpl do
             }
           }
         end)
+        |> Enum.sort_by(& &1.trend.name)
     }
   end
 
