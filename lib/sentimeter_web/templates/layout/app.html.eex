@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="https://use.typekit.net/lzv2gmb.css">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
-  <body>
-    <header id="header">
+  <body class="<%= body_class(@conn) %>">
+    <header id="header" class="<%= header_class(@conn) %>" >
       <div class="title">
         <img class="title__logo" src="<%= Routes.static_path(@conn, "/images/sentimeter_icon.svg") %>"/>
         <span class="title__text">Sentimeter</span>

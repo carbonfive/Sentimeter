@@ -10,6 +10,7 @@ import _ from "../css/app.scss";
 // Import dependencies
 //
 import "phoenix_html";
+import "./liveview";
 
 // Import local files
 //
@@ -17,3 +18,4 @@ import "phoenix_html";
 // import socket from "./socket"
 import surveys from "./surveys";
 surveys();
+import "./responses";

@@ -13,3 +13,11 @@ body {
   @include default-font;
   @include font-regular;
 }
+
+.body {
+  background-color: $white;
+}
+
+.body--dark {
+  background-color: $black;
+}

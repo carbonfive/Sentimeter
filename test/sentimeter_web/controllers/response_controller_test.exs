@@ -5,6 +5,8 @@ defmodule SentimeterWeb.ResponseControllerTest do
   alias Sentimeter.SurveysMock
   alias Sentimeter.Responses.Response
   alias Sentimeter.Surveys.Survey
+  alias Sentimeter.Responses.TrendChoiceForm
+
   @create_attrs %{emails: "  bob@example.com \n jill@example.com "}
   @update_attrs %{}
   @invalid_attrs %{}
@@ -95,42 +97,15 @@ defmodule SentimeterWeb.ResponseControllerTest do
   describe "edit response" do
     test "renders form for editing chosen response", %{conn: conn} do
       ResponsesMock
-      |> expect(:change_response, fn response -> changeset(response) end)
       |> expect(:get_response_by_guid!, fn guid -> %Response{guid: guid, survey_guid: @guid} end)
+      |> expect(:trend_choice_form, fn _ -> %TrendChoiceForm{} end)
+      |> expect(:change_trend_choice_form, fn tcf -> TrendChoiceForm.changeset(tcf, %{}) end)
 
       SurveysMock
-      |> expect(:get_survey_by_guid!, fn guid -> %Survey{id: 1, guid: guid} end)
+      |> expect(:get_survey_by_guid!, fn guid -> %Survey{id: 1, guid: guid, intro: ""} end)
 
       conn = get(conn, Routes.response_path(conn, :edit, @guid))
-      assert html_response(conn, 200) =~ "Edit Response"
-    end
-  end
-
-  describe "update response" do
-    test "redirects when data is valid", %{conn: conn} do
-      ResponsesMock
-      |> expect(:update_response, fn response, _params -> {:ok, response} end)
-      |> expect(:get_response_by_guid!, fn guid -> %Response{guid: guid, survey_guid: @guid} end)
-
-      SurveysMock
-      |> expect(:get_survey_by_guid!, fn guid -> %Survey{id: 1, guid: guid} end)
-
-      conn = put(conn, Routes.response_path(conn, :update, @guid), response: @update_attrs)
-
-      assert redirected_to(conn) == Routes.response_path(conn, :show, @guid)
-    end
-
-    test "renders errors when data is invalid", %{conn: conn} do
-      ResponsesMock
-      |> expect(:update_response, fn response, params -> {:error, changeset(response, params)} end)
-      |> expect(:get_response_by_guid!, fn guid -> %Response{guid: guid, survey_guid: @guid} end)
-
-      SurveysMock
-      |> expect(:get_survey_by_guid!, fn guid -> %Survey{id: 1, guid: guid} end)
-
-      conn = put(conn, Routes.response_path(conn, :update, @guid), response: @invalid_attrs)
-
-      assert html_response(conn, 200) =~ "Edit Response"
+      assert html_response(conn, 200)
     end
   end
 

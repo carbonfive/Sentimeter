@@ -104,8 +104,8 @@ defmodule Sentimeter.Responses.ResponsesImpl do
       %Ecto.Changeset{source: %Response{}}
 
   """
-  def change_response(%Response{} = response) do
-    Response.changeset(response, %{})
+  def change_response(%Response{} = response, attrs \\ %{}) do
+    Response.changeset(response, attrs)
   end
 
   @doc """
@@ -296,12 +296,16 @@ defmodule Sentimeter.Responses.ResponsesImpl do
             [%{id: answer.id, soft_delete: !trend_choice.chosen} | existing_answers]
 
           trend_choice.chosen ->
-            [%{survey_trend_guid: trend_choice.survey_trend_guid} | existing_answers]
+            [
+              %{soft_delete: false, survey_trend_guid: trend_choice.survey_trend_guid}
+              | existing_answers
+            ]
 
           true ->
             existing_answers
         end
       end)
+      |> Enum.reverse()
 
     response |> Response.changeset(%{answers: answers})
   end

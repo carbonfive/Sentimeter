@@ -5,6 +5,10 @@
   padding-bottom: 18px;
 }
 
+.header--dark {
+  border-bottom: 2px solid rgba($white, 0.31)
+}
+
 .title {
   display: flex;
   flex-direction: row;

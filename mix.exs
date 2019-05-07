@@ -45,7 +45,8 @@ defmodule Sentimeter.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:mox, "~> 0.5", only: :test},
       {:earmark, "~> 1.3"},
-      {:bamboo, "~> 1.2"}
+      {:bamboo, "~> 1.2"},
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"}
     ]
   end
 

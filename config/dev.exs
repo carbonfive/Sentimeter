@@ -52,7 +52,8 @@ config :sentimeter, SentimeterWeb.Endpoint,
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/sentimeter_web/views/.*(ex)$},
-      ~r{lib/sentimeter_web/templates/.*(eex)$}
+      ~r{lib/sentimeter_web/templates/.*(eex)$},
+      ~r{lib/sentimeter_web/live/.*(ex)$}
     ]
   ]
 

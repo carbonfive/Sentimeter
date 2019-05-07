@@ -38,25 +38,8 @@ defmodule SentimeterWeb.ResponseController do
   end
 
   def edit(conn, %{"guid" => guid}) do
-    response = @responses.get_response_by_guid!(guid)
-    survey = @surveys.get_survey_by_guid!(response.survey_guid)
-    changeset = @responses.change_response(response)
-    render(conn, "edit.html", response: response, changeset: changeset, survey: survey)
-  end
-
-  def update(conn, %{"guid" => guid, "response" => response_params}) do
-    response = @responses.get_response_by_guid!(guid)
-    survey = @surveys.get_survey_by_guid!(response.survey_guid)
-
-    case @responses.update_response(response, response_params) do
-      {:ok, response} ->
-        conn
-        |> put_flash(:info, "Response updated successfully.")
-        |> redirect(to: Routes.response_path(conn, :show, response.guid))
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", response: response, changeset: changeset, survey: survey)
-    end
+    conn = assign(conn, :dark, true)
+    live_render(conn, SentimeterWeb.ResponseLive.Edit, session: %{guid: guid})
   end
 
   def delete(conn, %{"guid" => guid}) do

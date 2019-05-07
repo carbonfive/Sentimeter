@@ -1,5 +1,5 @@
 /* This file is for your main application css. */
-
+@import "../../deps/phoenix_live_view/assets/css/live_view.css";
 @import "./normalize.css.scss";
 @import "./media.scss";
 @import "./colors.scss";
@@ -8,3 +8,6 @@
 @import "./layout.scss";
 @import "./common.scss";
 @import "./survey-trends-fields.scss";
+@import "./markdown-styling.scss";
+@import "./response.scss";
+ 

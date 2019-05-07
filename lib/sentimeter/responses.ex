@@ -104,4 +104,8 @@ defmodule Sentimeter.Responses do
   """
   @callback create_responses(emails :: [String.t()], response_guid: Ecto.UUID.t()) ::
               {:ok, [%Response{}]} | {:error, %Ecto.Changeset{}}
+
+  alias Sentimeter.Responses.TrendChoiceForm
+  @callback trend_choice_form(response :: %Response{}) :: %TrendChoiceForm{}
+  @callback change_trend_choice_form(trend_choice_form :: %TrendChoiceForm{}) :: %Ecto.Changeset{}
 end

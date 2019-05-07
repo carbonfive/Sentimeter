@@ -15,7 +15,10 @@ config :sentimeter, SentimeterWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "iiZik3A9+l4tlSXGoNZf6QDADWLmVqQrtVmGdqf81AB70XojfMW9xl7p8VWRKGnH",
   render_errors: [view: SentimeterWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Sentimeter.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Sentimeter.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [
+    signing_salt: "dK9T8MpTkD8zearGN8YVTKyh5eIw7J1HuFXxY7W9W5v6ceq/0keDl7PH1wBxMsSK"
+  ]
 
 # Configures Elixir's Logger
 config :logger, :console,

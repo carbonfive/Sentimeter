@@ -37,6 +37,10 @@ table.table {
   padding-right: 36px;
 }
 
+.button--clickable {
+  cursor: pointer;
+}
+
 .form-footer {
   margin-top: 16px;
   padding-right: 16px;
@@ -47,6 +51,10 @@ table.table {
 
 .button--warning {
   background-color: $hot-pink;
+}
+
+.help-block {
+  color: $hot-pink;
 }
 
 .control-label {

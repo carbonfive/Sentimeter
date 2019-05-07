@@ -1,0 +1,14 @@
+.markdown {
+  h1 {
+    color: $white;
+    font-size: 36px;
+    line-height: 46px;
+    @include font-light;
+  }
+  p {
+    color: $light-grey;
+    font-size: 18px;
+    line-height: 26px;
+    @include font-light;
+  }
+}
