@@ -5,9 +5,16 @@ defmodule SentimeterWeb.Endpoint do
     websocket: true,
     longpoll: false
 
-  socket "/live", Phoenix.LiveView.Socket,
-    websocket: [timeout: 45_000],
-    longpoll: false
+  if Mix.env() == :prod do
+    socket "/live", Phoenix.LiveView.Socket,
+      websocket: [timeout: 45_000],
+      longpoll: false,
+      check_origin: ["https://sentimeter.carbonfive.com", "https://c5-sentimeter.herokuapp.com"]
+  else
+    socket "/live", Phoenix.LiveView.Socket,
+      websocket: [timeout: 45_000],
+      longpoll: false
+  end
 
   # Serve at "/" the static files from "priv/static" directory.
   #
