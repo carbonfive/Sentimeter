@@ -15,13 +15,12 @@
 
 <h2>Listing Responses</h2>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Email</th>
-      <th>Survey guid</th>
       <th>Guid</th>
-
+      <th># Answered</th>
       <th></th>
     </tr>
   </thead>
@@ -30,7 +29,7 @@
     <tr>
       <td><%= response.email %></td>
       <td><%= response.guid %></td>
-
+      <td><%= length(response.answers) %></td>
       <td>
         <%= link "Show", to: Routes.response_path(@conn, :show, response.guid) %>
         <%= link "Edit", to: Routes.response_path(@conn, :edit, response.guid) %>
