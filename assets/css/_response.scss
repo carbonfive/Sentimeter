@@ -130,7 +130,7 @@
 }
 .answer-form__axis-value--1:hover,
 .answer-form__axis-value-input:checked + .answer-form__axis-value--1 {
-  background-color: rgba($purple, 0.7)
+  background-color: lighten($purple, 20%)
 }
 
 .answer-form__axis-value--2 {
@@ -138,7 +138,7 @@
 }
 .answer-form__axis-value--2:hover,
 .answer-form__axis-value-input:checked + .answer-form__axis-value--2 {
-  background-color: rgba($blue, 0.8)
+  background-color: lighten($blue, 20%)
 }
 
 .answer-form__axis-value--3{
@@ -147,21 +147,21 @@
 
 .answer-form__axis-value--3:hover,
 .answer-form__axis-value-input:checked + .answer-form__axis-value--3 {
-  background-color: rgba($light-blue, 0.8)
+  background-color: lighten($light-blue, 20%)
 }
 .answer-form__axis-value--4 {
   background-color: rgba($turquise, 0.5)
 }
 .answer-form__axis-value--4:hover,
 .answer-form__axis-value-input:checked + .answer-form__axis-value--4 {
-  background-color: rgba($turquise, 0.8)
+  background-color: lighten($turquise, 10%)
 }
 .answer-form__axis-value--5 {
   background-color: rgba($bright-light-green, 0.5)
 }
 .answer-form__axis-value--5:hover,
 .answer-form__axis-value-input:checked + .answer-form__axis-value--5 {
-  background-color: rgba($bright-light-green, 0.8)
+  background-color: lighten($bright-light-green, 10%)
 }
 
 .answer-form__bottom {
