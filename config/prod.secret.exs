@@ -45,3 +45,16 @@ config :sentimeter, Sentimeter.Repo,
 config :sentimeter, Sentimeter.Invitations.Mailer,
   adapter: Bamboo.SendGridAdapter,
   api_key: {:system, "SENDGRID_API_KEY"}
+
+# Configure redis
+redis_url =
+  System.get_env("REDIS_URL") ||
+    raise """
+    environment variable REDIS_URL is missing.
+    For example: redis://HOST:PORT
+    """
+
+config :redix_pool,
+  redis_url: redis_url,
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  pool_max_overflow: 1

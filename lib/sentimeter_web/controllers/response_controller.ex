@@ -39,7 +39,10 @@ defmodule SentimeterWeb.ResponseController do
 
   def edit(conn, %{"guid" => guid}) do
     conn = assign(conn, :dark, true)
-    live_render(conn, SentimeterWeb.ResponseLive.Edit, session: %{guid: guid})
+
+    live_render(conn, SentimeterWeb.ResponseLive.Edit,
+      session: %{guid: guid, session_guid: Ecto.UUID.generate()}
+    )
   end
 
   def delete(conn, %{"guid" => guid}) do

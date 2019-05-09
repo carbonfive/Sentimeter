@@ -46,7 +46,8 @@ defmodule Sentimeter.MixProject do
       {:mox, "~> 0.5", only: :test},
       {:earmark, "~> 1.3"},
       {:bamboo, "~> 1.2"},
-      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"}
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
+      {:redix_pool, "~> 0.1.0"}
     ]
   end
 

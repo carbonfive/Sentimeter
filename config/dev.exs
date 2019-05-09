@@ -21,6 +21,11 @@ config :sentimeter, SentimeterWeb.Endpoint,
     ]
   ]
 
+config :redix_pool,
+  redis_url: "redis://localhost:6379",
+  pool_size: 10,
+  pool_max_overflow: 1
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

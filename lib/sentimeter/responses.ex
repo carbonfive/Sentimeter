@@ -88,6 +88,7 @@ defmodule Sentimeter.Responses do
 
   """
   @callback change_response(response :: %Response{}) :: %Ecto.Changeset{}
+  @callback change_response(response :: %Response{}, attrs :: Map.t()) :: %Ecto.Changeset{}
 
   @doc """
   Create multiple responses from list of emails for the given survey guid
@@ -108,4 +109,7 @@ defmodule Sentimeter.Responses do
   alias Sentimeter.Responses.TrendChoiceForm
   @callback trend_choice_form(response :: %Response{}) :: %TrendChoiceForm{}
   @callback change_trend_choice_form(trend_choice_form :: %TrendChoiceForm{}) :: %Ecto.Changeset{}
+  @callback apply_trend_choice_form(response :: %Response{}) :: %Ecto.Changeset{}
+  @callback apply_trend_choice_form(response :: %Response{}, attrs :: Map.t()) ::
+              %Ecto.Changeset{}
 end

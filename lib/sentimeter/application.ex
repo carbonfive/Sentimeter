@@ -14,7 +14,8 @@ defmodule Sentimeter.Application do
       SentimeterWeb.Endpoint,
       # Starts a worker by calling: Sentimeter.Worker.start_link(arg)
       # {Sentimeter.Worker, arg},
-      {Task.Supervisor, name: Sentimeter.Invitations.InvitationsSender}
+      {Task.Supervisor, name: Sentimeter.Invitations.InvitationsSender},
+      {Task.Supervisor, name: SentimeterWeb.StateCacher}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
