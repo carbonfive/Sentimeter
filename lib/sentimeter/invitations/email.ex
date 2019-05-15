@@ -11,6 +11,15 @@ defmodule Sentimeter.Invitations.Email do
     |> render(:invitation_email, %{response_guid: invitation.response_guid})
   end
 
+  @spec reminder_email(invitation :: %Invitation{}) :: %Bamboo.Email{}
+  def reminder_email(%Invitation{} = invitation) do
+    base_email()
+    |> to(invitation.email)
+    |> subject("Reminder: You have 1 day left to take your Sentimeter survey")
+    |> put_header("Reply-To", "sentimeter@carbonfive.com")
+    |> render(:reminder_email, %{response_guid: invitation.response_guid})
+  end
+
   @spec base_email() :: Bamboo.Email.t()
   def base_email do
     new_email()
