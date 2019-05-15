@@ -1,3 +1,3 @@
-<p>You're Sentimeter survey is closing in one day! Don't forget to respond before it closes.</p>
+<p>Your Sentimeter survey is closing in one day! Don't forget to respond before it closes.</p>
 
 <p><%= link("Click here to take the survey now!", to: Routes.response_url(SentimeterWeb.Endpoint, :edit, @response_guid)) %></p>
