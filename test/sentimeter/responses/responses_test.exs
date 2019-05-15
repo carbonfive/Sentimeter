@@ -406,4 +406,62 @@ defmodule Sentimeter.ResponsesTest do
       assert new_answer_3.soft_delete == false
     end
   end
+
+  describe "send_reminders/1" do
+    setup do
+      InvitationsMock |> stub(:send_reminder, fn _ -> nil end)
+      matching_response_guid = "7488a646-e31f-11e4-aace-600308960662"
+      not_matching_response_guid = "7488a646-e31f-11e4-aace-600308960668"
+      answer_guid_1 = "7488a646-e31f-11e4-aace-600308960669"
+      answer_guid_2 = "7488a646-e31f-11e4-aace-600308960671"
+      survey_guid = "7488a646-e31f-11e4-aace-600308960672"
+
+      matching_response =
+        Fixtures.response(%{
+          guid: matching_response_guid,
+          survey_guid: survey_guid,
+          answers: []
+        })
+
+      not_matching_response =
+        Fixtures.response(%{
+          guid: not_matching_response_guid,
+          survey_guid: survey_guid,
+          answers: [
+            Fixtures.answer_attrs(%{survey_trend_guid: answer_guid_1}),
+            Fixtures.answer_attrs(%{survey_trend_guid: answer_guid_2})
+          ]
+        })
+
+      %{
+        matching_response: matching_response,
+        not_matching_response: not_matching_response,
+        survey_guid: survey_guid
+      }
+    end
+
+    test "send_reminders/1 sends reminders to responses with no answers", %{
+      survey_guid: survey_guid,
+      matching_response: matching_response
+    } do
+      InvitationsMock
+      |> expect(:send_reminder, 1, fn invitation_attrs ->
+        assert invitation_attrs[:email] == matching_response.email
+        assert invitation_attrs[:response_guid] == matching_response.guid
+      end)
+
+      assert {:ok, responses} = Responses.send_reminders_for_survey(survey_guid)
+      assert Enum.find(responses, fn response -> response.id == matching_response.id end) != nil
+    end
+
+    test "send_reminders/1 does not send reminders to responses with answers", %{
+      survey_guid: survey_guid,
+      not_matching_response: not_matching_response
+    } do
+      assert {:ok, responses} = Responses.send_reminders_for_survey(survey_guid)
+
+      assert Enum.find(responses, fn response -> response.id == not_matching_response.id end) ==
+               nil
+    end
+  end
 end

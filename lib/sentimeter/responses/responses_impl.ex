@@ -22,9 +22,7 @@ defmodule Sentimeter.Responses.ResponsesImpl do
 
   """
   def responses_for_survey_guid(survey_guid) do
-    Repo.all(
-      from(response in Response, where: response.survey_guid == ^survey_guid, preload: [:answers])
-    )
+    Repo.all(responses_for_survey_query(survey_guid)) |> Repo.preload(:answers)
   end
 
   @doc """
@@ -309,5 +307,29 @@ defmodule Sentimeter.Responses.ResponsesImpl do
       |> Enum.reverse()
 
     response |> Response.changeset(%{answers: answers})
+  end
+
+  def send_reminders_for_survey(survey_guid) do
+    responses =
+      Repo.all(
+        from response in responses_for_survey_query(survey_guid),
+          left_join: answer in assoc(response, :answers),
+          where: is_nil(answer.id)
+      )
+
+    Task.Supervisor.async_stream_nolink(
+      Sentimeter.Invitations.InvitationsSender,
+      responses,
+      fn response ->
+        @invitations.send_reminder(%{email: response.email, response_guid: response.guid})
+      end
+    )
+    |> Stream.run()
+
+    {:ok, responses}
+  end
+
+  defp responses_for_survey_query(survey_guid) do
+    from(response in Response, where: response.survey_guid == ^survey_guid)
   end
 end
