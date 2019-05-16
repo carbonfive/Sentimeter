@@ -32,6 +32,8 @@ defmodule SentimeterWeb.Router do
       only: [:show, :edit, :update, :delete]
 
     resources("/trends", TrendController)
+
+    resources("/reports", ReportController, param: "guid", only: [:show])
   end
 
   scope "/api", SentimeterWeb do

@@ -21,6 +21,7 @@ config :logger, level: :info
 config(:sentimeter, :surveys, Sentimeter.Surveys.SurveysImpl)
 config(:sentimeter, :responses, Sentimeter.Responses.ResponsesImpl)
 config(:sentimeter, :invitations, Sentimeter.Invitations.InvitationsImpl)
+config(:sentimeter, :reports, Sentimeter.Reports.ReportsImpl)
 
 # ## SSL Support
 #
