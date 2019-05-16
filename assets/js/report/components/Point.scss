@@ -1,0 +1,39 @@
+@import "../colors";
+
+.Point {
+  fill: $bubble-color;
+  opacity: 0.4;
+
+  transition-duration: 100ms;
+  cursor: default;
+
+  &:hover {
+    opacity: 1;
+
+    .Point__highlight {
+      opacity: 1;
+    }
+
+    .Point__label--small {
+      visibility: visible;
+    }
+  }
+}
+
+.Point__highlight {
+  fill: none;
+  stroke: $bubble-color;
+  stroke-width: 0.005;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.Point__label {
+  font-size: 0.1px;
+  fill: white;
+  pointer-events: none;
+}
+
+.Point__label--small {
+  visibility: hidden;
+}

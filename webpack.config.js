@@ -13,16 +13,17 @@ module.exports = (env, options) => ({
     ]
   },
   entry: {
-    "./js/app.js": ["./js/app.js"].concat(glob.sync("./vendor/**/*.js"))
+    app: "./assets/js/app.js",
+    report: "./assets/js/report/index.js"
   },
   output: {
-    filename: "app.js",
-    path: path.resolve(__dirname, "../priv/static/js")
+    filename: "[name].js",
+    path: path.resolve(__dirname, "priv/static/js")
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader"
@@ -35,7 +36,10 @@ module.exports = (env, options) => ({
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: "../css/app.css" }),
-    new CopyWebpackPlugin([{ from: "static/", to: "../" }])
-  ]
+    new MiniCssExtractPlugin({ filename: "../css/[name].css" }),
+    new CopyWebpackPlugin([{ from: "assets/static/", to: "../" }])
+  ],
+  resolve: {
+    extensions: [".js", ".jsx", ".json"]
+  }
 });

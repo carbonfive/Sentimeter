@@ -17,7 +17,8 @@ config :sentimeter, SentimeterWeb.Endpoint,
       "--mode",
       "development",
       "--watch-stdin",
-      cd: Path.expand("../assets", __DIR__)
+      "--colors",
+      cd: Path.expand("..", __DIR__)
     ]
   ]
 

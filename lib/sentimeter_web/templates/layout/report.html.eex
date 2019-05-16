@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Sentimeter</title>
+    <link rel="stylesheet" href="https://use.typekit.net/lzv2gmb.css">
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/report.css") %>"/>
+  </head>
+  <body class="<%= body_class(@conn) %>">
+    <header id="header" class="<%= header_class(@conn) %>" >
+      <div class="title">
+        <img class="title__logo" src="<%= Routes.static_path(@conn, "/images/sentimeter_icon.svg") %>"/>
+        <span class="title__text">Sentimeter</span>
+      </div>
+    </header>
+    <main role="main" class="container">
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= render @view_module, @view_template, assigns %>
+    </main>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/report.js") %>"></script>
+  </body>
+</html>
