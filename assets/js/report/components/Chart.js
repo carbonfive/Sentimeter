@@ -67,6 +67,7 @@ export default ({ surveyData, width }) => {
           </g>
         </svg>
         <DetailedView
+          surveyData={surveyData}
           point={curPoint}
           modalOpen={modalOpen}
           closeModal={closeModal}

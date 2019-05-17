@@ -2,6 +2,7 @@ import React from "react";
 import Popup from "reactjs-popup";
 import "./DetailedView.scss";
 import Response from "./Response";
+import Distribution from "./Distribution";
 
 //alternate ways of doing confidence and interest
 // Example 1: flat array
@@ -22,7 +23,7 @@ const defaultStyle = {
   paddingRight: "0px"
 };
 
-const DetailedView = ({ point, modalOpen, closeModal }) => {
+const DetailedView = ({ surveyData, point, modalOpen, closeModal }) => {
   return (
     <Popup
       modal={true}
@@ -39,14 +40,34 @@ const DetailedView = ({ point, modalOpen, closeModal }) => {
             </div>
             <div className="DetailedView__highlights-box">
               <div className="DetailedView__highlights">
-                <strong>{point && point.influential} people</strong> consider{" "}
-                {point && point.name} influential
+                <span className="DetailedView__highlights--emphasized">
+                  {point && point.influential} people
+                </span>{" "}
+                consider {point && point.name} influential
               </div>
               <div className="DetailedView__highlights">
-                <strong>{point && point.would_recommend} people</strong> would
-                recommend using {point && point.name} on a project at Carbon
-                Five
+                <span className="DetailedView__highlights--emphasized">
+                  {point && point.would_recommend} people
+                </span>{" "}
+                would recommend using {point && point.name} on a project at
+                Carbon Five
               </div>
+            </div>
+            <div className="DetailedView__distributions">
+              {point && (
+                <Distribution
+                  distribution={point.x_axis_distribution}
+                  minLabel={surveyData.x_min_label}
+                  maxLabel={surveyData.x_max_label}
+                />
+              )}
+              {point && (
+                <Distribution
+                  distribution={point.y_axis_distribution}
+                  minLabel={surveyData.y_min_label}
+                  maxLabel={surveyData.y_max_label}
+                />
+              )}
             </div>
           </div>
           <div className="DetailedView__responses">
