@@ -19,7 +19,15 @@ defmodule Sentimeter.Responses.Answer do
   @doc false
   def changeset(answer, attrs) do
     answer
-    |> cast(attrs, [:survey_trend_guid, :x, :y, :would_recommend, :thoughts, :soft_delete])
+    |> cast(attrs, [
+      :response_id,
+      :survey_trend_guid,
+      :x,
+      :y,
+      :would_recommend,
+      :thoughts,
+      :soft_delete
+    ])
     |> validate_number(:x, greater_than: 0, less_than_or_equal_to: 5)
     |> validate_number(:y, greater_than: 0, less_than_or_equal_to: 5)
     |> validate_required([:survey_trend_guid, :x, :y, :would_recommend, :soft_delete])
