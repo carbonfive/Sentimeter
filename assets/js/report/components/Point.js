@@ -12,10 +12,15 @@ const Point = ({
   point,
   index,
   scale,
+  hovered,
+  hover,
+  unhover,
   setCurIndex,
   setCurPoint,
   setModalOpen
 }) => {
+  const opacity = 0.6 * scale + 0.2;
+
   const { pos, name } = point,
     { x: cx, y: cy } = viewMatrix.transformPoint(pos),
     radius = scale * MAX_RADIUS,
@@ -32,6 +37,10 @@ const Point = ({
     "Point__label--small": scale < 0.5
   });
 
+  const pointClasses = classnames("Point", {
+    "Point--hovered": hovered
+  });
+
   const openModal = point => {
     setCurPoint(point);
     setCurIndex(index);
@@ -39,7 +48,12 @@ const Point = ({
   };
 
   return (
-    <g className="Point">
+    <g
+      className={pointClasses}
+      onMouseEnter={hover}
+      onMouseLeave={unhover}
+      opacity={opacity}
+    >
       <circle
         className="Point__highlight"
         transform={transform}

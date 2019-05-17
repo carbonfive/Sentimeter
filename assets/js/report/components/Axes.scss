@@ -1,10 +1,9 @@
 @import "../colors";
 
 .Axes {
-  stroke: $axis-color;
+  stroke: rgba($axis-color, 0.6);
   stroke-width: 6px;
   fill: none;
-
   text {
     font-size: 15px;
     stroke: none;

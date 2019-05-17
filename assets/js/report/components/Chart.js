@@ -22,6 +22,7 @@ export default ({ surveyData, width }) => {
   const [curPoint, setCurPoint] = useState(null);
   const [curIndex, setCurIndex] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const aspect = 16 / 10,
     height = width / aspect,
     padding = 0.05,
@@ -55,6 +56,8 @@ export default ({ surveyData, width }) => {
     setCurPoint(nextPoint);
   };
 
+  const hover = () => setHovered(true);
+  const unhover = () => setHovered(false);
   return (
     <div>
       <ChartHeader surveyData={surveyData} curPoint={curPoint} />
@@ -71,6 +74,9 @@ export default ({ surveyData, width }) => {
           <g>
             {points.map((point, index) => (
               <Point
+                hover={hover}
+                unhover={unhover}
+                hovered={hovered}
                 key={point.name}
                 point={point}
                 index={index}

@@ -2,10 +2,13 @@
 
 .Point {
   fill: $bubble-color;
-  opacity: 0.4;
 
   transition-duration: 100ms;
   cursor: pointer;
+
+  &.Point--hovered {
+    opacity: 0.3
+  }
 
   &:hover {
     opacity: 1;
