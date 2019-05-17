@@ -89,7 +89,6 @@ const VerticalAxis = ({ viewMatrix, minLabel, maxLabel }) => {
 };
 
 export default ({ surveyData, viewMatrix }) => {
-  console.log(surveyData);
   return (
     <g className="Axes">
       <VerticalAxis

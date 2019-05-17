@@ -30,10 +30,10 @@ export default ({ surveyData, width }) => {
 
   const maxCount = _.maxBy(points, "influential").influential,
     viewMatrix = geom
-      .scale(1, -1)
-      .scale(dataWidth, dataHeight)
+      .scaleNonUniform(1, -1)
+      .scaleNonUniform(dataWidth, dataHeight)
       .translate(padding, -(1.0 + padding)),
-    scaleMatrix = geom.scale(dataWidth, dataWidth);
+    scaleMatrix = geom.scaleNonUniform(dataWidth, dataWidth);
 
   const closeModal = () => {
     setModalOpen(false);

@@ -19,11 +19,11 @@ const Point = ({
     radius = scale * MAX_RADIUS,
     transform = geom
       .translate(cx, cy)
-      .scale(radius, radius)
+      .scaleNonUniform(radius, radius)
       .multiply(scaleMatrix),
     textTransform = geom
       .translate(cx, cy)
-      .scale(MAX_RADIUS, MAX_RADIUS)
+      .scaleNonUniform(MAX_RADIUS, MAX_RADIUS)
       .multiply(scaleMatrix);
 
   const textClasses = classnames("Point__label", {
