@@ -13,23 +13,22 @@ const preprocessResponses = responses =>
   responses
     .map(p => ({
       ...p,
-      pos: geom.point(p.x, p.y)
+      pos: geom.point(p.x_plot, p.y_plot)
     }))
-    .sort((a, b) => b.count - a.count);
+    .sort((a, b) => b.influential - a.influential);
 
 export default ({ surveyData, width }) => {
   const [curPoint, setCurPoint] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false)
-
+  const [modalOpen, setModalOpen] = useState(false);
   const aspect = 16 / 10,
     height = width / aspect,
     padding = 0.1,
     dataWidth = width / (1 + 2 * padding),
     dataHeight = height / (1 + 2 * padding);
 
-  const points = preprocessResponses(surveyData.responses);
+  const points = preprocessResponses(surveyData.report_trends);
 
-  const maxCount = _.maxBy(points, "count").count,
+  const maxCount = _.maxBy(points, "influential").influential,
     viewMatrix = geom
       .scale(1, -1)
       .scale(dataWidth, dataHeight)
@@ -37,8 +36,8 @@ export default ({ surveyData, width }) => {
     scaleMatrix = geom.scale(dataWidth, dataWidth);
 
   const closeModal = () => {
-    setModalOpen(false)
-  }
+    setModalOpen(false);
+  };
 
   return (
     <div>
@@ -56,18 +55,22 @@ export default ({ surveyData, width }) => {
           <g>
             {points.map(point => (
               <Point
-                key={point.trend}
+                key={point.name}
                 point={point}
                 viewMatrix={viewMatrix}
                 scaleMatrix={scaleMatrix}
-                scale={point.count / maxCount}
+                scale={point.influential / maxCount}
                 setCurPoint={setCurPoint}
                 setModalOpen={setModalOpen}
               />
             ))}
           </g>
         </svg>
-        <DetailedView point={curPoint} modalOpen={modalOpen} closeModal={closeModal} />
+        <DetailedView
+          point={curPoint}
+          modalOpen={modalOpen}
+          closeModal={closeModal}
+        />
       </React.Fragment>
     </div>
   );

@@ -6,6 +6,7 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
     "classnames": "^2.2.6",
     "jquery": "^3.4.1",
     "node-sass": "^4.12.0",

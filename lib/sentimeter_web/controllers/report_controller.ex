@@ -1,8 +1,6 @@
 defmodule SentimeterWeb.ReportController do
   use SentimeterWeb, :controller
 
-  @reports Application.get_env(:sentimeter, :reports)
-
   def show(conn, %{"guid" => guid}) do
     conn = assign(conn, :dark, true)
 

@@ -156,7 +156,8 @@ defmodule Sentimeter.ReportsTest do
     } do
       report = Reports.get_report_by_survey_guid!(survey.guid)
 
-      plots = [{0, 0}, {0.125, 0.25}, {0.25, 0.5}, {0.375, 0.75}]
+      # values get normalized to the overall range
+      plots = [{0, 0}, {0.333, 0.333}, {0.667, 0.667}, {1.0, 1.0}]
 
       survey_trends
       |> Enum.zip(plots)
@@ -169,8 +170,8 @@ defmodule Sentimeter.ReportsTest do
           end)
 
         assert %ReportTrend{} = report_trend
-        assert report_trend.x_plot == x_plot
-        assert report_trend.y_plot == y_plot
+        assert abs(report_trend.x_plot - x_plot) < 0.001
+        assert abs(report_trend.y_plot - y_plot) < 0.001
       end)
     end
 
