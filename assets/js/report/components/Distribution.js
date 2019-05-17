@@ -6,7 +6,6 @@ function toPercent(value) {
 }
 
 const DistributionChart = ({ distribution }) => {
-  console.log(distribution);
   const medianPercent = toPercent(distribution.median);
   const medianStyle =
     medianPercent == 100

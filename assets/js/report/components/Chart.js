@@ -6,6 +6,7 @@ import Axes from "./Axes";
 import ChartHeader from "./ChartHeader";
 import geom from "../geom";
 import DetailedView from "./DetailedView";
+import ChangeDetail from "./ChangeDetail";
 
 import "./Chart.scss";
 
@@ -19,6 +20,7 @@ const preprocessResponses = responses =>
 
 export default ({ surveyData, width }) => {
   const [curPoint, setCurPoint] = useState(null);
+  const [curIndex, setCurIndex] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const aspect = 16 / 10,
     height = width / aspect,
@@ -39,6 +41,20 @@ export default ({ surveyData, width }) => {
     setModalOpen(false);
   };
 
+  const incrementIndex = () => {
+    const nextIndex = (curIndex + 1) % points.length;
+    const nextPoint = points[nextIndex];
+    setCurIndex(nextIndex);
+    setCurPoint(nextPoint);
+  };
+
+  const decrementIndex = () => {
+    const nextIndex = (curIndex - 1 + points.length) % points.length;
+    const nextPoint = points[nextIndex];
+    setCurIndex(nextIndex);
+    setCurPoint(nextPoint);
+  };
+
   return (
     <div>
       <ChartHeader surveyData={surveyData} curPoint={curPoint} />
@@ -53,13 +69,15 @@ export default ({ surveyData, width }) => {
           <Axes surveyData={surveyData} viewMatrix={viewMatrix} />
 
           <g>
-            {points.map(point => (
+            {points.map((point, index) => (
               <Point
                 key={point.name}
                 point={point}
+                index={index}
                 viewMatrix={viewMatrix}
                 scaleMatrix={scaleMatrix}
                 scale={point.influential / maxCount}
+                setCurIndex={setCurIndex}
                 setCurPoint={setCurPoint}
                 setModalOpen={setModalOpen}
               />
@@ -71,6 +89,16 @@ export default ({ surveyData, width }) => {
           point={curPoint}
           modalOpen={modalOpen}
           closeModal={closeModal}
+        />
+        <ChangeDetail
+          modifier="left"
+          isOpen={modalOpen}
+          action={decrementIndex}
+        />
+        <ChangeDetail
+          modifier="right"
+          isOpen={modalOpen}
+          action={incrementIndex}
         />
       </React.Fragment>
     </div>

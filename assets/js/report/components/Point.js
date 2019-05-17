@@ -10,7 +10,9 @@ const Point = ({
   viewMatrix,
   scaleMatrix,
   point,
+  index,
   scale,
+  setCurIndex,
   setCurPoint,
   setModalOpen
 }) => {
@@ -32,6 +34,7 @@ const Point = ({
 
   const openModal = point => {
     setCurPoint(point);
+    setCurIndex(index);
     setModalOpen(true);
   };
 

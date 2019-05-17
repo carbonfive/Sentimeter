@@ -30,6 +30,16 @@
 .DetailedViewContainer {
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.DetailedView__close {
+  position: absolute;
+  top: 25px;
+  right: 32px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
 }
 
 .DetailedView__top {
