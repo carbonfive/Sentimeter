@@ -1,37 +1,7 @@
 import React from "react";
-import ReactDom from "react-dom";
 import Popup from "reactjs-popup";
 import "./DetailedView.scss";
-
-const vueExample = {
-  title: "Vue.js",
-  description:
-    "An alternative JS MVC framework to both React and Angular that follows some of the syntax and styles of Angular.js 1.x, but with significantly better speed and modern tooling. Allows progressive adoption so it can be “dropped in” to existing server side applications more easily.",
-  influential: 32,
-  recommend: 14,
-  confidence: {
-    lower_extreme: 0.25,
-    lower_quartile: 2.4,
-    median: 3,
-    upper_quartile: 3.5,
-    upper_extreme: 4.2
-  },
-  interest: {
-    lower_extreme: 2.4,
-    lower_quartile: 3.5,
-    median: 4.2,
-    upper_quartile: 4.5,
-    upper_extreme: 5
-  },
-  responses: [
-    {
-      name: "Rudy Jahchan",
-      email: "rudy@carbonfive.com",
-      text:
-        "This is a great framework for replacing Angular. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    }
-  ]
-};
+import Response from "./Response";
 
 //alternate ways of doing confidence and interest
 // Example 1: flat array
@@ -45,7 +15,11 @@ const defaultStyle = {
   borderRadius: "3px",
   width: "auto",
   marginRight: "50px",
-  marginLeft: "50px"
+  marginLeft: "50px",
+  marginTop: "50px",
+  marginBottom: "50px",
+  paddingLeft: "0px",
+  paddingRight: "0px"
 };
 
 const DetailedView = ({ point, modalOpen, closeModal }) => {
@@ -58,19 +32,28 @@ const DetailedView = ({ point, modalOpen, closeModal }) => {
     >
       <div className="DetailedView">
         <div className="DetailedViewContainer">
-          <div className="DetailedView__title">{point && point.name}</div>
-          <div className="DetailedView__description">
-            {point && point.description}
+          <div className="DetailedView__top">
+            <div className="DetailedView__title">{point && point.name}</div>
+            <div className="DetailedView__description">
+              {point && point.description}
+            </div>
+            <div className="DetailedView__highlights-box">
+              <div className="DetailedView__highlights">
+                <strong>{point && point.influential} people</strong> consider{" "}
+                {point && point.name} influential
+              </div>
+              <div className="DetailedView__highlights">
+                <strong>{point && point.would_recommend} people</strong> would
+                recommend using {point && point.name} on a project at Carbon
+                Five
+              </div>
+            </div>
           </div>
-          <div className="DetailedView__highlights-box">
-            <div className="DetailedView__highlights">
-              <strong>{point && point.influential} people</strong> consider{" "}
-              {point && point.name} influential
-            </div>
-            <div className="DetailedView__highlights">
-              <strong>{point && point.would_recommend} people</strong> would
-              recommend using {point && point.name} on a project at Carbon Five
-            </div>
+          <div className="DetailedView__responses">
+            {point &&
+              point.responses.map((response, index) => (
+                <Response key={index} response={response} />
+              ))}
           </div>
         </div>
       </div>

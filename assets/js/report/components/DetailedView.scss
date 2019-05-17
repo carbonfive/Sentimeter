@@ -2,8 +2,12 @@
 
 .DetailedView {
   min-width: 500px;
+  max-height: 100%;
   background-color: $white;
   color: $dark-text-color;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch
 }
 
 .DetailedView--hidden {
@@ -11,6 +15,11 @@
 }
 
 .DetailedViewContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.DetailedView__top {
   padding-top: 25px;
   padding-bottom: 25px;
   padding-right: 70px;
@@ -45,4 +54,26 @@
   font-weight: 300;
   line-height: 26px;
   flex: 1;
+}
+
+.DetailedView__responses {
+  border-top: 2px solid rgba($background-color, 0.15);
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-right: 70px;
+  padding-left: 70px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba($axis-color, 0.7);
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-track-piece {
+    background-color: transparent
+  }
+
 }
