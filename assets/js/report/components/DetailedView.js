@@ -1,11 +1,12 @@
-import React from "react"
-import ReactDom from "react-dom"
+import React from "react";
+import ReactDom from "react-dom";
 import Popup from "reactjs-popup";
-import './DetailedView.scss'
+import "./DetailedView.scss";
 
 const vueExample = {
   title: "Vue.js",
-  description: "An alternative JS MVC framework to both React and Angular that follows some of the syntax and styles of Angular.js 1.x, but with significantly better speed and modern tooling. Allows progressive adoption so it can be “dropped in” to existing server side applications more easily.",
+  description:
+    "An alternative JS MVC framework to both React and Angular that follows some of the syntax and styles of Angular.js 1.x, but with significantly better speed and modern tooling. Allows progressive adoption so it can be “dropped in” to existing server side applications more easily.",
   influential: 32,
   recommend: 14,
   confidence: {
@@ -26,10 +27,11 @@ const vueExample = {
     {
       name: "Rudy Jahchan",
       email: "rudy@carbonfive.com",
-      text: "This is a great framework for replacing Angular. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
+      text:
+        "This is a great framework for replacing Angular. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    }
   ]
-}
+};
 
 //alternate ways of doing confidence and interest
 // Example 1: flat array
@@ -38,13 +40,12 @@ const vueExample = {
 // Example 2: nested array
 // confidence: [3, [2.4, 3.5], [0.25, 4.2]],
 
-
 const defaultStyle = {
-  "backgroundColor":"#FFFFFF",
-  "borderRadius": "3px",
-  "width": "auto",
-  "margin-right": "50px",
-  "margin-left": "50px",
+  backgroundColor: "#FFFFFF",
+  borderRadius: "3px",
+  width: "auto",
+  marginRight: "50px",
+  marginLeft: "50px"
 };
 
 const DetailedView = ({ point, modalOpen, closeModal }) => {
@@ -54,23 +55,27 @@ const DetailedView = ({ point, modalOpen, closeModal }) => {
       open={modalOpen}
       contentStyle={defaultStyle}
       onClose={closeModal}
-      >
+    >
       <div className="DetailedView">
         <div className="DetailedViewContainer">
-          <div className="DetailedView__title">{point && point.trend}</div>
-          <div className="DetailedView__description">{vueExample.description}</div>
+          <div className="DetailedView__title">{point && point.name}</div>
+          <div className="DetailedView__description">
+            {point && point.description}
+          </div>
           <div className="DetailedView__highlights-box">
             <div className="DetailedView__highlights">
-              <strong>{vueExample.influential} people</strong> consider {point && point.trend} influential
+              <strong>{point && point.influential} people</strong> consider{" "}
+              {point && point.name} influential
             </div>
             <div className="DetailedView__highlights">
-              <strong>{vueExample.recommend} people</strong> would recommend using {point && point.trend} on a project at Carbon Five
+              <strong>{point && point.would_recommend} people</strong> would
+              recommend using {point && point.name} on a project at Carbon Five
             </div>
           </div>
         </div>
       </div>
     </Popup>
-  )
-}
+  );
+};
 
-export default DetailedView
+export default DetailedView;

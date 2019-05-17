@@ -15,6 +15,7 @@
         <%= link "Show", to: Routes.survey_path(@conn, :show, survey) %> |
         <%= link "Edit", to: Routes.survey_path(@conn, :edit, survey) %> |
         <%= link "Responses", to: Routes.survey_response_path(@conn, :index, survey) %> |
+        <%= link "Report", to: Routes.report_path(@conn, :show, survey.guid) %> |
         <%= link "Delete", to: Routes.survey_path(@conn, :delete, survey), method: :delete, data: [confirm: "Are you sure?"] %> |
       </td>
     </tr>

@@ -23,6 +23,25 @@ defmodule Sentimeter.Reports.ReportsImpl do
     responses = @responses.responses_for_survey_guid(survey_guid)
     trends_by_survey_trend_guid = @surveys.get_trends_by_survey_guid(survey_guid)
 
+    report_trends =
+      trends_by_survey_trend_guid
+      |> trends_with_response_answer_pairs(responses)
+      |> Enum.map(fn {trend, response_answer_pairs} ->
+        %{
+          name: trend.name,
+          description: trend.description,
+          influential: length(response_answer_pairs),
+          would_recommend: would_recommend(response_answer_pairs),
+          x_plot: x_plot(response_answer_pairs),
+          y_plot: y_plot(response_answer_pairs),
+          x_axis_distribution: x_axis_distribution(response_answer_pairs),
+          y_axis_distribution: y_axis_distribution(response_answer_pairs),
+          responses: responses(response_answer_pairs)
+        }
+      end)
+
+    normalized_trends = normalize_report_trends(report_trends)
+
     report_changes =
       %Report{}
       |> Report.changeset(%{
@@ -32,22 +51,7 @@ defmodule Sentimeter.Reports.ReportsImpl do
         y_max_label: survey.y_max_label,
         y_min_label: survey.y_min_label,
         response_count: length(responses),
-        report_trends:
-          trends_by_survey_trend_guid
-          |> trends_with_response_answer_pairs(responses)
-          |> Enum.map(fn {_, trend, response_answer_pairs} ->
-            %{
-              name: trend.name,
-              description: trend.description,
-              influential: length(response_answer_pairs),
-              would_recommend: would_recommend(response_answer_pairs),
-              x_plot: x_plot(response_answer_pairs),
-              y_plot: y_plot(response_answer_pairs),
-              x_axis_distribution: x_axis_distribution(response_answer_pairs),
-              y_axis_distribution: y_axis_distribution(response_answer_pairs),
-              responses: responses(response_answer_pairs)
-            }
-          end)
+        report_trends: normalized_trends
       })
 
     if report_changes.valid? do
@@ -71,7 +75,7 @@ defmodule Sentimeter.Reports.ReportsImpl do
 
     trends_by_survey_trend_guid
     |> Enum.map(fn {survey_trend_guid, trend} ->
-      {survey_trend_guid, trend,
+      {trend,
        responses_with_mapped_survey_guids
        |> Enum.map(fn {response, answers_by_survey_guid} ->
          {response, Map.get(answers_by_survey_guid, survey_trend_guid)}
@@ -80,12 +84,35 @@ defmodule Sentimeter.Reports.ReportsImpl do
     end)
   end
 
+  defp normalize_report_trends(report_trends) do
+    x_min = report_trends |> Enum.map(& &1[:x_plot]) |> Enum.min()
+    x_max = report_trends |> Enum.map(& &1[:x_plot]) |> Enum.max()
+    y_min = report_trends |> Enum.map(& &1[:y_plot]) |> Enum.min()
+    y_max = report_trends |> Enum.map(& &1[:y_plot]) |> Enum.max()
+
+    report_trends
+    |> Enum.map(fn report_trend ->
+      Map.merge(report_trend, %{
+        x_plot: normalize(report_trend[:x_plot], x_min, x_max),
+        y_plot: normalize(report_trend[:y_plot], y_min, y_max)
+      })
+    end)
+  end
+
+  defp normalize(val, min, max) when min == max do
+    (val - 1) / 4
+  end
+
+  defp normalize(val, min, max) do
+    (val - min) / (max - min)
+  end
+
   defp plot(vals) when length(vals) == 0 do
     0
   end
 
   defp plot(vals) do
-    (Enum.sum(vals) / length(vals) - 1) / 4
+    Enum.sum(vals) / length(vals)
   end
 
   defp distribution(vals) when length(vals) == 0 do

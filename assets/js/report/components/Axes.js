@@ -1,18 +1,18 @@
-import React from "react"
-import geom from "../geom"
+import React from "react";
+import geom from "../geom";
 
-import "./Axes.scss"
+import "./Axes.scss";
 
 const LABEL_X_OFFSET = 20,
   LABEL_Y_OFFSET = 20,
-  TIP_ALLOWANCE = 4
+  TIP_ALLOWANCE = 4;
 
 const ArrowTip = ({ transform }) => (
   <path
     d="M10 10 L0 0 L10 -10"
     transform={transform.translate(TIP_ALLOWANCE, 0)}
   />
-)
+);
 
 const LeftArrowTip = ({ label, transform, labelAboveAxis }) => (
   <g className="Axes__left-arrow" transform={transform}>
@@ -21,7 +21,7 @@ const LeftArrowTip = ({ label, transform, labelAboveAxis }) => (
       {label}
     </text>
   </g>
-)
+);
 
 const RightArrowTip = ({ label, transform, labelAboveAxis }) => (
   <g className="Axes__right-arrow" transform={transform}>
@@ -30,14 +30,13 @@ const RightArrowTip = ({ label, transform, labelAboveAxis }) => (
       {label}
     </text>
   </g>
-)
+);
 
-const HorizontalAxis = ({ viewMatrix, labels }) => {
+const HorizontalAxis = ({ viewMatrix, minLabel, maxLabel }) => {
   const minPoint = geom.transform(viewMatrix, geom.point(0, 0.5)),
     maxPoint = geom.transform(viewMatrix, geom.point(1, 0.5)),
     minPointMat = geom.translate(minPoint.x, minPoint.y),
-    maxPointMat = geom.translate(maxPoint.x, maxPoint.y),
-    [minLabel, maxLabel] = labels
+    maxPointMat = geom.translate(maxPoint.x, maxPoint.y);
 
   return (
     <g className="Axis">
@@ -58,15 +57,14 @@ const HorizontalAxis = ({ viewMatrix, labels }) => {
         transform={maxPointMat}
       />
     </g>
-  )
-}
+  );
+};
 
-const VerticalAxis = ({ viewMatrix, labels }) => {
+const VerticalAxis = ({ viewMatrix, minLabel, maxLabel }) => {
   const minPoint = geom.transform(viewMatrix, geom.point(0.5, 0)),
     maxPoint = geom.transform(viewMatrix, geom.point(0.5, 1)),
     minPointMat = geom.translate(minPoint.x, minPoint.y),
-    maxPointMat = geom.translate(maxPoint.x, maxPoint.y),
-    [minLabel, maxLabel] = labels
+    maxPointMat = geom.translate(maxPoint.x, maxPoint.y);
 
   return (
     <g className="Axis">
@@ -87,20 +85,23 @@ const VerticalAxis = ({ viewMatrix, labels }) => {
         transform={minPointMat.rotate(90)}
       />
     </g>
-  )
-}
+  );
+};
 
 export default ({ surveyData, viewMatrix }) => {
+  console.log(surveyData);
   return (
     <g className="Axes">
       <VerticalAxis
         viewMatrix={viewMatrix}
-        labels={surveyData.survey.y_axis_labels}
+        minLabel={surveyData.y_min_label}
+        maxLabel={surveyData.y_max_label}
       />
       <HorizontalAxis
         viewMatrix={viewMatrix}
-        labels={surveyData.survey.x_axis_labels}
+        minLabel={surveyData.x_min_label}
+        maxLabel={surveyData.x_max_label}
       />
     </g>
-  )
-}
+  );
+};
