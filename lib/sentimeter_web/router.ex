@@ -36,8 +36,9 @@ defmodule SentimeterWeb.Router do
     resources("/reports", ReportController, param: "guid", only: [:show])
   end
 
-  scope "/api", SentimeterWeb do
+  scope "/api", SentimeterWeb.Api, as: :api do
     pipe_through(:api)
+    resources("/reports", ReportController, param: "guid", only: [:show])
   end
 
   # Other scopes may use custom stacks.

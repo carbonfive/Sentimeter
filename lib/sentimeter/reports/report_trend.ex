@@ -4,6 +4,7 @@ defmodule Sentimeter.Reports.ReportTrend do
   alias Sentimeter.Reports.Distribution
   alias Sentimeter.Reports.ReportResponse
 
+  @derive Jason.Encoder
   embedded_schema do
     field :name, :string
     field :description, :string

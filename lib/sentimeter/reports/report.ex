@@ -3,6 +3,7 @@ defmodule Sentimeter.Reports.Report do
   import Ecto.Changeset
   alias Sentimeter.Reports.ReportTrend
 
+  @derive Jason.Encoder
   embedded_schema do
     field(:name, :string)
     field(:x_max_label, :string)
