@@ -22,7 +22,7 @@ export default ({ surveyData, width }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const aspect = 16 / 10,
     height = width / aspect,
-    padding = 0.1,
+    padding = 0.05,
     dataWidth = width / (1 + 2 * padding),
     dataHeight = height / (1 + 2 * padding);
 
@@ -46,8 +46,8 @@ export default ({ surveyData, width }) => {
       <React.Fragment>
         <svg
           className="Chart"
-          width={width}
-          height={width / aspect}
+          viewBox={`0 0 ${width} ${height}`}
+          width="100%"
           xmlns="http://www.w3.org/2000/svg"
         >
           <Axes surveyData={surveyData} viewMatrix={viewMatrix} />

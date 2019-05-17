@@ -1,7 +1,42 @@
+@import "../../../css/colors.scss";
+@import "../../../css/fonts.scss";
+
 .ChartHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   h1 {
-    display: inline-block;
+    font-size: 36px;
+    line-height: 46px;
+    @include font-light;
     margin: 0;
+  }
+}
+
+.ChartHeader__details {
+  display: flex;
+  flex-direction: row;
+}
+
+.ChartHeader__detail {
+  padding-left: 25px;
+  padding-right: 25px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $light-grey;
+  h4 {
+    margin: 0px;
+    font-size: 36px;
+    line-height: 40px;
+  }
+  p {
+    font-size: 15px;
+    line-height: 22px;
+    @include font-medium;
+    margin: 0px;
   }
 }
 
