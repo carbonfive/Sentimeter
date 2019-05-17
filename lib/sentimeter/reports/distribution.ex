@@ -2,6 +2,7 @@ defmodule Sentimeter.Reports.Distribution do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive Jason.Encoder
   embedded_schema do
     field :lower_extreme, :float
     field :lower_quartile, :float
