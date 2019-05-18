@@ -1,8 +1,13 @@
-$icon-font-path: "/fonts/"; /* use fonts from priv/static/fonts/ */
-@import "bootstrap"; /* imports node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss */
-body {
-    padding-top: 65px;
-}
-/* Custom Stuff */
-@import "tech_radar";
 /* This file is for your main application css. */
+@import "../../deps/phoenix_live_view/assets/css/live_view.css";
+@import "./normalize.css.scss";
+@import "./media.scss";
+@import "./colors.scss";
+@import "./fonts.scss";
+@import "./base.scss";
+@import "./layout.scss";
+@import "./common.scss";
+@import "./survey-trends-fields.scss";
+@import "./markdown-styling.scss";
+@import "./response.scss";
+ 

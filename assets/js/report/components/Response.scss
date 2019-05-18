@@ -1,0 +1,40 @@
+@import "../../../css/colors.scss";
+@import "../../../css/fonts.scss";
+
+.Response {
+  padding-left: 50px;
+  padding-right: 50px;
+  margin-bottom: 30px;
+}
+
+.Response:last-child {
+  margin-bottom: 0px;
+}
+
+.Response__quote {
+  @include secondary-font;
+  @include font-regular;
+  color: rgba($black, 0.7);
+  font-size: 13px;	
+  letter-spacing: 0.2px;	
+  line-height: 18px;
+  margin-bottom: 8px;
+}
+
+.Response__attribution {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Response__attribution-image {
+  border-radius: 24px;
+  height: 50px;
+  overflow: hidden;
+}
+
+.Response__attribution-name {
+  font-size: 14px;
+  margin-left: 15px;
+  @include font-medium;
+}

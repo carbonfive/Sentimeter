@@ -1,7 +1,0 @@
-<h2>Edit Survey response</h2>
-
-<%= render TechRadarWeb.SurveyView, "form.html", Map.merge(assigns, 
-  %{ action: survey_response_path(@conn, :update, @survey_response),
-     method: "PUT" }) %>
-
-<span><%= link "Back", to: survey_response_path(@conn, :show, @survey_response) %></span>

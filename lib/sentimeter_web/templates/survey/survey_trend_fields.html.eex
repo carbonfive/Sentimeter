@@ -1,0 +1,8 @@
+<%= inputs_for @f, :survey_trends, fn st -> %>
+  <div class="survey-trends-fields__row">
+    <div class="survey-trends-fields__trend form-group-inline">
+      <%= label st, :trend_id, "Trend", class: "control-label" %>
+      <%= select st, :trend_id, Enum.map(@trends, &{&1.name, &1.id}), class: "form-control" %>
+    </div>
+  </div>
+<% end %>

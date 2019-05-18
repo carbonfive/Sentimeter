@@ -1,0 +1,23 @@
+// Set box-sizing globally to handle padding and border widths
+*,
+*:after,
+*:before {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box
+}
+
+body {
+  @include default-font;
+  @include font-regular;
+}
+
+.body {
+  background-color: $white;
+}
+
+.body--dark {
+  background-color: $black;
+}

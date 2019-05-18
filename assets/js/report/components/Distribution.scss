@@ -1,0 +1,86 @@
+@import "../../../css/colors.scss";
+@import "../../../css/fonts.scss";
+
+.Distribution {
+  margin-left: 140px;
+  margin-right: 140px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.Distribution__chart {
+  flex: 1 1;
+  margin-left: 10px;
+  margin-right: 10px;
+
+}
+
+.Distribution__bar {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+}
+
+.Distribution__bar--median {
+  width: 3px;
+  z-index: 3;
+  background-color: $black
+}
+
+.Distribution__bar--quartile {
+  z-index: 2;
+  background-color: $light-green;
+}
+
+.Distribution__bar--tail {
+  z-index: 1;
+  background-color: rgba(7,238,181,0.2)
+}
+.Distribution__chart-legend {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.Distribution__marker {
+  color: $dark-grey;
+  @include font-light;
+  font-size: 15px;
+  line-height: 20px;
+}
+.Distribution__chart-graph {
+  position: relative;
+  border: 1px solid $light-grey;
+  height: 43px;
+}
+
+.Distribution__max-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 43px;
+  width: 140px;
+  color: rgba($black, 0.7);
+  font-size: 13px;	
+  letter-spacing: 0.2px;	
+  line-height: 18px;
+  @include secondary-font
+}
+.Distribution__min-label {
+  height: 43px;
+
+  width: 140px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  color: rgba($black, 0.7);
+  font-size: 13px;	
+  letter-spacing: 0.2px;	
+  line-height: 18px;
+  @include secondary-font
+
+}

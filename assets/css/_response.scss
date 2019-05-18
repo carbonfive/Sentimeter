@@ -1,0 +1,206 @@
+.survey-intro__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px;
+}
+
+.trend-choice {
+  display: grid;
+  grid-template-columns: 26px auto;
+  grid-template-rows: auto auto;
+  flex-direction: row;
+  padding: 14px 30px;
+  border: 1px solid rgba($white, 0.15);	
+  border-radius: 3px;	
+  background-color: rgba($white,0.075);
+  margin-bottom: 10px;
+}
+
+.trend-choice__choice {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  margin-right: 7px;
+}
+
+.trend-choice__name {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  color: $white;
+  @include font-bold;
+  font-size: 16px;
+  line-height: 16px;
+  letter-spacing: 0.3px;	
+  margin-bottom: 7px;
+}
+
+.trend-choice__description {
+  grid-column-start: 2;
+  grid-row-start: 2;
+
+  @include secondary-font;
+  color: $light-grey;
+  font-size: 14px;	
+  letter-spacing: 0.2px;	
+  line-height: 18px;
+  p {
+    margin: 0px;
+  }
+  a, a:visited {
+    color: $light-grey
+  }
+}
+
+.answer-form {
+  padding: 28px 40px;
+  border: 1px solid rgba($white, 0.15);	
+  background-color: rgba($white,0.075);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.answer-form--deleted {
+  display: none;
+}
+
+.answer-form__name {
+  align-self: stretch;
+  color: $white;
+  @include font-medium;
+  font-size: 30px;	
+  line-height: 38px;
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.answer-form__soft-delete {
+  display: none;
+}
+
+.answer-form__x-axis, .answer-form__y-axis {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.answer-form__description, .answer-form__axis-min, .answer-form__axis-max {
+  align-self: stretch;
+  color: $light-grey;
+  @include secondary-font;
+  font-size: 14px;	
+  letter-spacing: 0.2px;	
+  line-height: 18px;
+}
+
+.answer-form__description {
+  a, a:visited {
+    color: $light-grey
+  }
+}
+.answer-form__axis-min, .answer-form__axis-max {
+  width: 133px;
+}
+.answer-form__axis-value-input {
+  visibility: hidden;
+  position: absolute;
+}
+.answer-form__axis-value {
+  cursor: pointer;
+  font-size: 18px;	
+  @include font-bold;
+  line-height: 23px;	
+  width: 40px;
+  padding-top: 8px;
+  padding-bottom: 9px;
+  text-align: center;
+  color: $white;
+  border: 1px solid rgba($white, 0.05);
+  margin-right: 8px;
+}
+
+.answer-form__axis-value--1 {
+  background-color: rgba($purple, 0.5)
+}
+.answer-form__axis-value--1:hover,
+.answer-form__axis-value-input:checked + .answer-form__axis-value--1 {
+  background-color: lighten($purple, 20%)
+}
+
+.answer-form__axis-value--2 {
+  background-color: rgba($blue, 0.5)
+}
+.answer-form__axis-value--2:hover,
+.answer-form__axis-value-input:checked + .answer-form__axis-value--2 {
+  background-color: lighten($blue, 20%)
+}
+
+.answer-form__axis-value--3{
+  background-color: rgba($light-blue, 0.5)
+}
+
+.answer-form__axis-value--3:hover,
+.answer-form__axis-value-input:checked + .answer-form__axis-value--3 {
+  background-color: lighten($light-blue, 20%)
+}
+.answer-form__axis-value--4 {
+  background-color: rgba($turquise, 0.5)
+}
+.answer-form__axis-value--4:hover,
+.answer-form__axis-value-input:checked + .answer-form__axis-value--4 {
+  background-color: lighten($turquise, 10%)
+}
+.answer-form__axis-value--5 {
+  background-color: rgba($bright-light-green, 0.5)
+}
+.answer-form__axis-value--5:hover,
+.answer-form__axis-value-input:checked + .answer-form__axis-value--5 {
+  background-color: lighten($bright-light-green, 10%)
+}
+
+.answer-form__bottom {
+  margin-top: 32px;
+}
+.answer-form__would-recommend-intro, .answer-form__thoughts-intro {
+  margin-top: 0px;
+  color: $light-grey;	
+  font-size: 18px;	
+  @include font-light;
+  line-height: 26px;
+}
+
+.answer-form__would-recommend {
+  margin-bottom: 34px;
+}
+
+.answer-form__would-recommend-option {
+  display: block;
+  color: $light-grey;	
+  font-size: 16px;	
+  line-height: 18px;
+  margin-bottom: 16px;
+  input {
+    margin-right: 7px
+  }
+}
+
+.answer-form__index {
+  display: inline-block;
+  margin-right: 21px;
+  font-size: 20px;
+  line-height: 26px;
+  @include font-medium;
+  color: $light-grey;
+}
+.answer-form__footer {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+}

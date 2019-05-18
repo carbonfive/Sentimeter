@@ -1,0 +1,41 @@
+<h1>Responses For <%= @survey.name %></h1>
+
+<%= form_for @conn, Routes.survey_response_path(@conn, :create, @survey), [as: :response], fn f -> %>
+  <div class="form-group">
+    <%= label f, :emails, class: "control-label" do %>
+      Send Invites To:
+    <% end %>
+    <%= textarea f, :emails, rows: "8", class: "form-control", placeholder: "Enter emails on seperate lines" %>
+    <%= error_tag f, :emails %>
+  </div>
+  <div class="form-footer">
+    <%= submit "Save", class: "button button--wide" %>
+  </div>
+<% end %>
+
+<h2>Listing Responses</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Guid</th>
+      <th># Answered</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for response <- @responses do %>
+    <tr>
+      <td><%= response.email %></td>
+      <td><%= response.guid %></td>
+      <td><%= length(response.answers) %></td>
+      <td>
+        <%= link "Show", to: Routes.response_path(@conn, :show, response.guid) %>
+        <%= link "Edit", to: Routes.response_path(@conn, :edit, response.guid) %>
+        <%= link "Delete", to: Routes.response_path(@conn, :delete, response.guid), method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

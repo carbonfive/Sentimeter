@@ -1,0 +1,102 @@
+<%= case @page do %>
+<% "intro" -> %>
+  <div class="survey-intro">
+    <div class="markdown">
+      <%= @survey.intro |> Earmark.as_html! |> raw %>
+    </div>
+    <div class="survey-intro__footer">
+      <button phx-click="intro-complete" class="button button--wide button--clickable">Begin Survey</button>
+    </div>
+  </div>
+<% "trend-choices" -> %>
+  <div class="markdown">
+    <h1>Part One</h1>
+    <%= @survey.section_1_desc |> Earmark.as_html! |> raw %>
+  </div>
+  <%= form_for @trend_choice_form, "#", [phx_submit: "save-choices"], fn f-> %>
+    <%= inputs_for f, :trend_choices, fn tc -> %>
+      <%= hidden_input tc, :survey_trend_guid %>
+      <label>
+        <div class="trend-choice">
+          <%= checkbox tc, :chosen, class: "trend-choice__choice" %>
+          <div class="trend-choice__name"><%= input_value(tc, :trend).name %></div>
+          <div class="trend-choice__description"><%= (input_value(tc, :trend).description) |> Earmark.as_html!(%Earmark.Options{breaks: false}) |> raw %></div>
+        </div>
+      </label>
+    <% end %>
+    <div class="form-footer">
+      <%= submit "Next", onclick: 'window.scroll({top: 0, behavior: "smooth"});', class: "button button--wide" %>
+    </div>
+  <% end %>
+<% "answers" -> %>
+  <div class="markdown">
+    <h1>Part Two</h1>
+    <%= @survey.section_2_desc |> Earmark.as_html! |> raw %>
+  </div>
+  <%= form_for @changeset, "#", [phx_change: "validate-answers", phx_submit: "save-answers"], fn f -> %>
+    <%= inputs_for f, :answers, fn fa -> %>
+      <%= hidden_input fa, :survey_trend_guid %>
+      <%= hidden_input fa, :soft_delete %>
+
+      <div data-index="<%= index_string(fa) %>" class='<%= if Enum.member?([false, "false"], input_value(fa, :soft_delete)), do: "answer-form", else: "answer-form--deleted" %>'>
+        <h2 class="answer-form__name"><%= @trends_by_guid[input_value(fa, :survey_trend_guid)].name %></h2>
+        <div class="answer-form__description"><%= (@trends_by_guid[input_value(fa, :survey_trend_guid)].description) |> Earmark.as_html! |> raw %></div>
+        <div >
+          <div class="answer-form__x-axis">
+          <span class="answer-form__axis-min"><%= @survey.x_min_label %></span>
+          <%= for num <- 1..5 do %>
+            <%= radio_button(fa, :x, num, class: "answer-form__axis-value-input") %>
+            <label for='<%= "#{fa.id}_x_#{num}" %>' class="answer-form__axis-value answer-form__axis-value--<%= num%>">
+            <%= num %>
+            </label>
+          <% end %>
+          <span class="answer-form__axis-max"><%= @survey.x_max_label %></span>
+          </div>
+          <%= error_tag fa, :x %>
+        </div>
+        <div>
+          <div class="answer-form__y-axis">
+          <span class="answer-form__axis-min"><%= @survey.y_min_label %></span>
+          <%= for num <- 1..5 do %>
+            <%= radio_button(fa, :y, num, class: "answer-form__axis-value-input") %>
+            <label for='<%= "#{fa.id}_y_#{num}" %>' class="answer-form__axis-value answer-form__axis-value--<%= num%>">
+            <%= num %>
+            </label>
+          <% end %>
+          <span class="answer-form__axis-max"><%= @survey.y_max_label %></span>
+          </div>
+          <%= error_tag fa, :y %>
+        </div>
+        <div class="answer-form__bottom">
+          <div class="answer-form__would-recommend">
+            <p class="answer-form__would-recommend-intro">If appropriate to the project needs, would you recommend using this tool/process for a project at Carbon Five?<p>
+            <label class="answer-form__would-recommend-option"><%= radio_button(fa, :would_recommend, "yes") %>Yes</label>
+            <label class="answer-form__would-recommend-option"><%= radio_button(fa, :would_recommend, "no") %>No</label>
+            <label class="answer-form__would-recommend-option"><%= radio_button(fa, :would_recommend, "unsure") %>I don't know/Unsure</label>
+            <%= error_tag fa, :would_recommend %>
+          </div>
+          <div class="form-group answer-form__thoughts">
+            <p class="answer-form__thoughts-intro">Do you have any other comments about this tool/process you'd like to share?</p>
+            <%= textarea fa, :thoughts, rows: "8", class: "form-control" %>
+            <%= error_tag fa, :thoughts %>
+          </div>
+          <div class="answer-form__footer">
+            <span class="answer-form__index"><%= index_string(fa) %>/<%= length(input_value(f, :answers)) %></span>
+            <%= if index_string(fa) != "#{length(input_value(f, :answers))}" do %>
+              <button type="button" onclick="scrollButton(this)" class="button button--wide button--clickable button--next">Next</button>
+            <% else %>
+              <%= submit "Submit Responses", class: "button button--wide" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+  <% end %>
+<% "finish" -> %>
+  <div class="survey-finish">
+    <div class="markdown">
+      <%= @survey.closing |> Earmark.as_html! |> raw %>
+    </div>
+  </div>
+<% end %>

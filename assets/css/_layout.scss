@@ -1,0 +1,40 @@
+#header {
+  background-color: $black;
+  height: 70px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.header--dark {
+  border-bottom: 2px solid rgba($white, 0.31)
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.title__text {
+  margin-left: 9px;
+  color: $white;
+  @include tertiary-font;
+  @include font-bold;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.container {
+  width: auto;
+  margin-left: 16px;
+  margin-right: 16px;
+  @include desktop-to-large-breakpoint() {
+    width: 960px;
+    margin: 0 auto;
+  }
+  @include wider-than-large-breakpoint() {
+    margin-left: 240px;
+    margin-right: 240px;
+  }
+}

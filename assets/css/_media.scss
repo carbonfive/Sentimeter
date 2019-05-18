@@ -1,0 +1,81 @@
+// Breakpoints
+$large-breakpoint: 1440px;
+$desktop-breakpoint: 960px;
+$medium-breakpoint: 768px;
+$small-breakpoint: 415px;
+
+// large breakpoints
+
+@mixin wider-than-large-breakpoint() {
+  @media (min-width: $large-breakpoint + 1) {
+    @content;
+  }
+}
+
+@mixin narrower-than-large-breakpoint() {
+  @media (max-width: $large-breakpoint) {
+    @content;
+  }
+}
+
+// desktop breakpoint
+
+@mixin narrower-than-desktop-breakpoint() {
+  @media (max-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+// medium breakpoints
+
+@mixin wider-than-medium-breakpoint() {
+  @media (min-width: $medium-breakpoint + 1) {
+    @content;
+  }
+}
+
+@mixin narrower-than-medium-breakpoint() {
+  @media (max-width: $medium-breakpoint) {
+    @content;
+  }
+}
+
+// small breakpoints
+
+@mixin wider-than-small-breakpoint() {
+  @media (min-width: $small-breakpoint + 1) {
+    @content;
+  }
+}
+
+@mixin narrower-than-small-breakpoint() {
+  @media (max-width: $small-breakpoint) {
+    @content;
+  }
+}
+
+// breakpoint ranges
+
+@mixin desktop-to-large-breakpoint() {
+  @media (max-width: $large-breakpoint) and (min-width: $desktop-breakpoint + 1) {
+    @content;
+  }
+}
+
+@mixin small-to-large-breakpoint() {
+  @media (max-width: $large-breakpoint) and (min-width: $small-breakpoint + 1) {
+    @content;
+  }
+}
+
+@mixin medium-to-large-breakpoint() {
+  @media (max-width: $large-breakpoint) and (min-width: $medium-breakpoint + 1) {
+    @content;
+  }
+}
+
+@mixin small-to-medium-breakpoint() {
+  @media (max-width: $medium-breakpoint) and (min-width: $small-breakpoint + 1) {
+    @content;
+  }
+}

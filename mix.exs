@@ -1,18 +1,15 @@
-defmodule TechRadar.Mixfile do
+defmodule Sentimeter.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :tech_radar,
-      version: "0.0.1",
-      elixir: "~> 1.6",
+      app: :sentimeter,
+      version: "0.1.0",
+      elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
-      build_embedded: Mix.env() == :prod,
-      start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
@@ -22,16 +19,7 @@ defmodule TechRadar.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {TechRadar.Application, []},
-      applications: [
-        :phoenix,
-        :phoenix_pubsub,
-        :phoenix_html,
-        :cowboy,
-        :gettext,
-        :phoenix_ecto,
-        :postgrex
-      ],
+      mod: {Sentimeter.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -45,19 +33,21 @@ defmodule TechRadar.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0"},
-      {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.2"},
+      {:phoenix, "~> 1.4.4"},
+      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix_ecto, "~> 4.0"},
+      {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.10"},
-      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:phoenix_html, "~> 2.11"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
-      {:phoenix_slime, "~> 0.9.0"},
-      {:wallaby, "~> 0.19.2", only: :test},
-      {:ex_machina, "~> 2.2", only: :test},
-      {:mox, "~> 0.3", only: :test},
-      {:earmark, "~> 1.1"}
+      {:jason, "~> 1.0"},
+      {:plug_cowboy, "~> 2.0"},
+      {:mox, "~> 0.5", only: :test},
+      {:earmark, "~> 1.3"},
+      {:bamboo, "~> 1.2"},
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
+      {:redix_pool, "~> 0.1.0"}
     ]
   end
 

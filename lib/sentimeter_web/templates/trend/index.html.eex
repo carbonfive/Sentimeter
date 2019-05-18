@@ -1,0 +1,27 @@
+<h1>Listing Trends</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for trend <- @trends do %>
+    <tr>
+      <td><%= trend.name %></td>
+      <td><%= trend.description |> Earmark.as_html! |> raw %></td>
+
+      <td>
+        <%= link "Show", to: Routes.trend_path(@conn, :show, trend), class: "button" %>
+        <%= link "Edit", to: Routes.trend_path(@conn, :edit, trend), class: "button" %>
+        <%= link "Delete", to: Routes.trend_path(@conn, :delete, trend), class: "button button--warning", method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Trend", to: Routes.trend_path(@conn, :new) %></span>

@@ -1,0 +1,23 @@
+<h1>Show Response</h1>
+
+<ul>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @response.email %>
+  </li>
+
+  <li>
+    <strong>Survey guid:</strong>
+    <%= @response.survey_guid %>
+  </li>
+
+  <li>
+    <strong>Guid:</strong>
+    <%= @response.guid %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.response_path(@conn, :edit, @response.guid) %></span>
+<span><%= link "Back", to: Routes.survey_response_path(@conn, :index, @survey) %></span>

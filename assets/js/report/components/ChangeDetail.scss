@@ -1,0 +1,26 @@
+.ChangeDetail {
+  pointer-events: none;
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  z-index: 99999;
+  width: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ChangeDetail--left {
+  left: 0px;
+}
+
+.ChangeDetail--right {
+  right: 0px;
+}
+
+.ChangeDetail__button {
+  width: 48px;
+  height: 48px;
+  pointer-events: auto;
+  cursor: pointer;
+}

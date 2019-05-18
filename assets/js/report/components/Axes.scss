@@ -1,0 +1,17 @@
+@import "../colors";
+
+.Axes {
+  stroke: $axis-color;
+  stroke-width: 3px;
+  fill: none;
+  text {
+    font-size: 15px;
+    stroke: none;
+    fill: $axis-text-color;
+    alignment-baseline: middle;
+  }
+}
+
+.Axes__right-arrow {
+  text-anchor: end;
+}
