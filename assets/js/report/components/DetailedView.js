@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import Popup from "reactjs-popup";
 import "./DetailedView.scss";
 import Response from "./Response";
@@ -24,6 +24,13 @@ const defaultStyle = {
 };
 
 const DetailedView = ({ surveyData, point, modalOpen, closeModal }) => {
+  const containerRef = useRef(null);
+  useEffect(() => {
+    if (containerRef.current != null) {
+      containerRef.current.scrollTo(0, 0);
+    }
+  }, [point]);
+
   return (
     <Popup
       modal={true}
@@ -32,7 +39,7 @@ const DetailedView = ({ surveyData, point, modalOpen, closeModal }) => {
       onClose={closeModal}
     >
       {triggerClose => (
-        <div className="DetailedView">
+        <div className="DetailedView" ref={containerRef}>
           <div className="DetailedViewContainer">
             <div className="DetailedView__close" onClick={triggerClose}>
               <svg

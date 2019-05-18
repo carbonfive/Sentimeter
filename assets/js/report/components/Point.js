@@ -17,7 +17,8 @@ const Point = ({
   unhover,
   setCurIndex,
   setCurPoint,
-  setModalOpen
+  setModalOpen,
+  commentQuadrant
 }) => {
   const opacity = 0.6 * scale + 0.2;
 
@@ -37,10 +38,14 @@ const Point = ({
     "Point__label--small": scale < 0.5
   });
 
-  const pointClasses = classnames("Point", {
+  const pointClasses = classnames("Point", `Point--${commentQuadrant}`, {
     "Point--hovered": hovered
   });
 
+  const highlightClasses = classnames(
+    "Point__highlight",
+    `Point__highlight--${commentQuadrant}`
+  );
   const openModal = point => {
     setCurPoint(point);
     setCurIndex(index);
@@ -55,7 +60,7 @@ const Point = ({
       opacity={opacity}
     >
       <circle
-        className="Point__highlight"
+        className={highlightClasses}
         transform={transform}
         r={MAX_RADIUS * 1.05}
       />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import _ from "lodash";
 
 import Point from "./Point";
@@ -9,14 +9,6 @@ import DetailedView from "./DetailedView";
 import ChangeDetail from "./ChangeDetail";
 
 import "./Chart.scss";
-
-const preprocessResponses = responses =>
-  responses
-    .map(p => ({
-      ...p,
-      pos: geom.point(p.x_plot, p.y_plot)
-    }))
-    .sort((a, b) => b.influential - a.influential);
 
 export default ({ surveyData, width }) => {
   const [curPoint, setCurPoint] = useState(null);
@@ -29,8 +21,7 @@ export default ({ surveyData, width }) => {
     dataWidth = width / (1 + 2 * padding),
     dataHeight = height / (1 + 2 * padding);
 
-  const points = preprocessResponses(surveyData.report_trends);
-
+  const points = surveyData.report_trends;
   const maxCount = _.maxBy(points, "influential").influential,
     viewMatrix = geom
       .scaleNonUniform(1, -1)
@@ -56,6 +47,22 @@ export default ({ surveyData, width }) => {
     setCurPoint(nextPoint);
   };
 
+  useEffect(() => {
+    const listener = event => {
+      if (curPoint != null) {
+        if (event.keyCode == 37) {
+          decrementIndex();
+        } else if (event.keyCode == 39) {
+          incrementIndex();
+        }
+      }
+    };
+    document.addEventListener("keydown", listener);
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
+  }, [curPoint]);
+
   const hover = () => setHovered(true);
   const unhover = () => setHovered(false);
   return (
@@ -80,6 +87,9 @@ export default ({ surveyData, width }) => {
                 key={point.name}
                 point={point}
                 index={index}
+                commentQuadrant={
+                  Math.floor((point.commentIndex * 5) / points.length) + 1
+                }
                 viewMatrix={viewMatrix}
                 scaleMatrix={scaleMatrix}
                 scale={point.influential / maxCount}

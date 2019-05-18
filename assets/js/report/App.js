@@ -2,8 +2,22 @@ import React, { Component } from "react";
 import getSurveyData from "./surveyData";
 import Chart from "./components/Chart";
 import "./App.scss";
+import geom from "./geom";
 
 const CHART_WIDTH = 1200;
+
+const preprocessResponses = responses => {
+  const byComments = responses.sort(
+    (a, b) => a.responses.length - b.responses.length
+  );
+  return responses
+    .map(p => ({
+      ...p,
+      pos: geom.point(p.x_plot, p.y_plot),
+      commentIndex: byComments.findIndex(q => p.name == q.name)
+    }))
+    .sort((a, b) => b.influential - a.influential);
+};
 
 class App extends Component {
   constructor(props) {
@@ -13,7 +27,9 @@ class App extends Component {
 
   componentDidMount = async () => {
     const surveyData = await getSurveyData();
-    this.setState({ surveyData });
+    const points = preprocessResponses(surveyData.report_trends);
+
+    this.setState({ surveyData: { ...surveyData, report_trends: points } });
   };
   render() {
     return (

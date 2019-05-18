@@ -1,13 +1,13 @@
 @import "../colors";
 
 .Axes {
-  stroke: rgba($axis-color, 0.6);
-  stroke-width: 6px;
+  stroke: $axis-color;
+  stroke-width: 3px;
   fill: none;
   text {
     font-size: 15px;
     stroke: none;
-    fill: $axis-color;
+    fill: $axis-text-color;
     alignment-baseline: middle;
   }
 }

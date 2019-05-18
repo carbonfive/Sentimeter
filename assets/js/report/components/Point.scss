@@ -1,7 +1,6 @@
-@import "../colors";
+@import "../../../css/colors";
 
 .Point {
-  fill: $bubble-color;
 
   transition-duration: 100ms;
   cursor: pointer;
@@ -23,12 +22,46 @@
   }
 }
 
+.Point--1 {
+  fill: $purple;
+}
+.Point--2 {
+  fill: $blue;
+}
+.Point--3 {
+  fill: $light-blue;
+}
+.Point--4 {
+  fill: $turquise;
+}
+.Point--5 {
+  fill: $bright-light-green;
+}
 .Point__highlight {
   fill: none;
-  stroke: $bubble-color;
   stroke-width: 0.005;
   opacity: 0;
   pointer-events: none;
+}
+
+.Point__highlight--1 {
+  stroke: $purple;
+}
+
+.Point__highlight--2 {
+  stroke: $light-blue;
+}
+
+.Point__highlight--3 {
+  stroke: $blue;
+}
+
+.Point__highlight--4 {
+  stroke: $turquise;
+}
+
+.Point__highlight--5 {
+  stroke: $bright-light-green;
 }
 
 .Point__label {
