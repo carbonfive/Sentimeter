@@ -3,6 +3,7 @@ import geom from "../geom";
 import classnames from "classnames";
 
 import "./Point.scss";
+import compatibleScale from "../compatibleScale";
 
 const MAX_RADIUS = 0.2;
 
@@ -25,14 +26,16 @@ const Point = ({
   const { pos, name } = point,
     { x: cx, y: cy } = viewMatrix.transformPoint(pos),
     radius = scale * MAX_RADIUS,
-    transform = geom
-      .translate(cx, cy)
-      .scaleNonUniform(radius, radius)
-      .multiply(scaleMatrix),
-    textTransform = geom
-      .translate(cx, cy)
-      .scaleNonUniform(MAX_RADIUS, MAX_RADIUS)
-      .multiply(scaleMatrix);
+    transform = compatibleScale(
+      geom.translate(cx, cy),
+      radius,
+      radius
+    ).multiply(scaleMatrix),
+    textTransform = compatibleScale(
+      geom.translate(cx, cy),
+      MAX_RADIUS,
+      MAX_RADIUS
+    ).multiply(scaleMatrix);
 
   const textClasses = classnames("Point__label", {
     "Point__label--small": scale < 0.5

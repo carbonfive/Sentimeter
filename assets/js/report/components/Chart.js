@@ -9,6 +9,7 @@ import DetailedView from "./DetailedView";
 import ChangeDetail from "./ChangeDetail";
 
 import "./Chart.scss";
+import compatibleScale from "../compatibleScale";
 
 export default ({ surveyData, width }) => {
   const [curPoint, setCurPoint] = useState(null);
@@ -23,11 +24,12 @@ export default ({ surveyData, width }) => {
 
   const points = surveyData.report_trends;
   const maxCount = _.maxBy(points, "influential").influential,
-    viewMatrix = geom
-      .scaleNonUniform(1, -1)
-      .scaleNonUniform(dataWidth, dataHeight)
-      .translate(padding, -(1.0 + padding)),
-    scaleMatrix = geom.scaleNonUniform(dataWidth, dataWidth);
+    viewMatrix = compatibleScale(
+      geom.scale(1, -1),
+      dataWidth,
+      dataHeight
+    ).translate(padding, -(1.0 + padding)),
+    scaleMatrix = geom.scale(dataWidth, dataWidth);
 
   const closeModal = () => {
     setModalOpen(false);
