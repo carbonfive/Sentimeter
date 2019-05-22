@@ -5,6 +5,8 @@ defmodule SentimeterWeb.Api.ReportController do
 
   action_fallback SentimeterWeb.FallbackController
 
+  plug SentimeterWeb.Plug.AllowIframe
+
   def show(conn, %{"guid" => guid}) do
     report = @reports.get_report_by_survey_guid!(guid)
     render(conn, "show.json", report: report)
