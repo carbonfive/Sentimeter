@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Disable dependabot updates…
+    open-pull-requests-limit: 0
+  - package-ecosystem: "mix"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Disable dependabot updates…
+    open-pull-requests-limit: 0
